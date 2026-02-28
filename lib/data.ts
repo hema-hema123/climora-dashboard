@@ -1,0 +1,564 @@
+import type {
+  City,
+  CityStats,
+  GreenInfrastructureRecommendation,
+  HeatDataPoint,
+  HeatZone,
+  InfrastructurePoint,
+  SensorLocation,
+  TemperatureRecord,
+  VegetationArea,
+} from '@/types';
+
+// Seeded random number generator for deterministic values
+function seededRandom(seed: string): () => number {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    const char = seed.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  let value = Math.abs(hash) / 2147483647;
+  return () => {
+    value = (value * 9301 + 49297) % 233280;
+    return value / 233280;
+  };
+}
+
+// Indian cities with their coordinates
+export const INDIAN_CITIES: City[] = [
+  {
+    id: 'delhi',
+    name: 'Delhi',
+    province: 'Delhi',
+    coordinates: [28.6139, 77.209],
+    population: 32900000,
+    area: 1484,
+  },
+  {
+    id: 'mumbai',
+    name: 'Mumbai',
+    province: 'Maharashtra',
+    coordinates: [19.076, 72.8777],
+    population: 20400000,
+    area: 603,
+  },
+  {
+    id: 'bengaluru',
+    name: 'Bengaluru',
+    province: 'Karnataka',
+    coordinates: [12.9716, 77.5946],
+    population: 13100000,
+    area: 709,
+  },
+  {
+    id: 'hyderabad',
+    name: 'Hyderabad',
+    province: 'Telangana',
+    coordinates: [17.385, 78.4867],
+    population: 10400000,
+    area: 650,
+  },
+  {
+    id: 'chennai',
+    name: 'Chennai',
+    province: 'Tamil Nadu',
+    coordinates: [13.0827, 80.2707],
+    population: 11300000,
+    area: 426,
+  },
+  {
+    id: 'kolkata',
+    name: 'Kolkata',
+    province: 'West Bengal',
+    coordinates: [22.5726, 88.3639],
+    population: 15000000,
+    area: 205,
+  },
+  {
+    id: 'ahmedabad',
+    name: 'Ahmedabad',
+    province: 'Gujarat',
+    coordinates: [23.0225, 72.5714],
+    population: 8400000,
+    area: 505,
+  },
+  {
+    id: 'pune',
+    name: 'Pune',
+    province: 'Maharashtra',
+    coordinates: [18.5204, 73.8567],
+    population: 7200000,
+    area: 516,
+  },
+  {
+    id: 'jaipur',
+    name: 'Jaipur',
+    province: 'Rajasthan',
+    coordinates: [26.9124, 75.7873],
+    population: 4100000,
+    area: 467,
+  },
+  {
+    id: 'lucknow',
+    name: 'Lucknow',
+    province: 'Uttar Pradesh',
+    coordinates: [26.8467, 80.9462],
+    population: 3800000,
+    area: 631,
+  },
+];
+
+// Generate mock heat zones for a city
+export function generateHeatZones(city: City, date: Date = new Date()): HeatZone[] {
+  const random = seededRandom(city.id);
+  const zones: HeatZone[] = [];
+
+  // Vary base temperature based on month (summer months are hotter)
+  const month = date.getMonth(); // 0-11 (Jan-Dec)
+  const seasonalVariation = month >= 5 && month <= 8 ? 5 : month >= 3 && month <= 9 ? 2 : -2; // Summer: +5°C, Spring/Fall: +2°C, Winter: -2°C
+  const baseTemp = 36 + random() * 10 + seasonalVariation;
+
+  const zoneNames = [
+    'Market Area',
+    'Bus Stand Zone',
+    'Metro Station Area',
+    'Residential Layout',
+    'IT Corridor',
+    'Lake Surroundings',
+    'School Zone',
+    'Highway Junction',
+  ];
+
+  const severities: Array<'low' | 'moderate' | 'high' | 'extreme'> = [
+    'low',
+    'moderate',
+    'high',
+    'extreme',
+  ];
+
+  for (let i = 0; i < 6; i++) {
+    const offset = 0.02 + random() * 0.03;
+    const lat = city.coordinates[0] + (random() - 0.5) * offset * 2;
+    const lng = city.coordinates[1] + (random() - 0.5) * offset * 2;
+    // Add some variation per zone, but keep seasonal base
+    const temp = baseTemp + random() * 10 - 2;
+
+    zones.push({
+      id: `zone-${city.id}-${i}`,
+      name: zoneNames[i % zoneNames.length],
+      severity: severities[Math.min(3, Math.floor((temp - 28) / 4))],
+      avgTemperature: temp,
+      maxTemperature: temp + 2 + random() * 3,
+      area: 0.5 + random() * 2,
+      coordinates: generatePolygon(lat, lng, 0.01 + random() * 0.01, random),
+      vulnerabilityScore: 30 + random() * 60,
+    });
+  }
+
+  return zones.sort((a, b) => b.avgTemperature - a.avgTemperature);
+}
+
+function generatePolygon(
+  centerLat: number,
+  centerLng: number,
+  radius: number,
+  random: () => number,
+): [number, number][] {
+  const points: [number, number][] = [];
+  const numPoints = 6;
+
+  for (let i = 0; i < numPoints; i++) {
+    const angle = (i / numPoints) * Math.PI * 2;
+    const r = radius * (0.8 + random() * 0.4);
+    points.push([centerLat + Math.cos(angle) * r, centerLng + Math.sin(angle) * r * 1.5]);
+  }
+
+  return points;
+}
+
+// Generate temperature history for a city
+export function generateTemperatureHistory(_city: City, months: number = 12): TemperatureRecord[] {
+  const records: TemperatureRecord[] = [];
+  const today = new Date();
+
+  for (let i = months - 1; i >= 0; i--) {
+    const date = new Date(today);
+    date.setMonth(date.getMonth() - i);
+
+    // Seasonal variation
+    const month = date.getMonth();
+    const seasonalFactor = Math.sin(((month - 1) * Math.PI) / 6) * 15;
+
+    const baseUrban = 15 + seasonalFactor + (Math.random() - 0.5) * 5;
+    const baseRural = baseUrban - 3 - Math.random() * 4;
+
+    records.push({
+      date: date.toISOString().slice(0, 7),
+      urban: Math.round(baseUrban * 10) / 10,
+      rural: Math.round(baseRural * 10) / 10,
+      differential: Math.round((baseUrban - baseRural) * 10) / 10,
+    });
+  }
+
+  return records;
+}
+
+// Generate green infrastructure recommendations
+export function generateRecommendations(
+  city: City,
+  _date: Date = new Date(),
+): GreenInfrastructureRecommendation[] {
+  const random = seededRandom(city.id);
+  const types: GreenInfrastructureRecommendation['type'][] = [
+    'urban_park',
+    'green_roof',
+    'tree_planting',
+    'cool_pavement',
+    'bioswale',
+    'permeable_surface',
+    'water_feature',
+  ];
+
+  const priorities: Array<'low' | 'medium' | 'high' | 'critical'> = [
+    'low',
+    'medium',
+    'high',
+    'critical',
+  ];
+
+  const recommendations: GreenInfrastructureRecommendation[] = [];
+
+  const names = [
+    'Metro Station Tree Belt',
+    'Lake Restoration & Tree Buffer',
+    'School Road Tree Plantation',
+    'Bus Stop Green Roof',
+    'Residential Layout Mini Park',
+    'Flyover Vertical Garden',
+    'Highway Roadside Tree Belt',
+    'Parking Lot Cool Pavement',
+    'Temple Ground Community Garden',
+    'Market Area Shade Trees',
+  ];
+
+  const descriptions = [
+    'Strategic placement of native trees and vegetation to create cooling corridors.',
+    'Installation of green roof systems on commercial buildings to reduce heat absorption.',
+    'Comprehensive tree planting initiative targeting high-heat zones.',
+    'Replacement of traditional asphalt with reflective cool pavement materials.',
+    'Creation of bioswales for stormwater management and urban cooling.',
+    'Installation of permeable surfaces to reduce heat island effect.',
+    'Development of water features for evaporative cooling benefits.',
+  ];
+
+  for (let i = 0; i < 8; i++) {
+    const type = types[Math.floor(random() * types.length)];
+    const priority = priorities[Math.floor(random() * priorities.length)];
+
+    recommendations.push({
+      id: `rec-${city.id}-${i}`,
+      type,
+      location: [
+        city.coordinates[0] + (random() - 0.5) * 0.06,
+        city.coordinates[1] + (random() - 0.5) * 0.08,
+      ],
+      name: names[i % names.length],
+      priority,
+      estimatedCost: Math.round((500000 + random() * 4500000) / 10000) * 10000,
+      estimatedCoolingEffect: 0.5 + random() * 2.5,
+      area: Math.round(1000 + random() * 49000),
+      benefitScore: Math.round(40 + random() * 55),
+      description: descriptions[Math.floor(random() * descriptions.length)],
+    });
+  }
+
+  return recommendations.sort((a, b) => {
+    const priorityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
+    return priorityOrder[a.priority] - priorityOrder[b.priority];
+  });
+}
+
+// Generate city statistics
+export function generateCityStats(
+  city: City,
+  implementedRecommendations: GreenInfrastructureRecommendation[] = [],
+): CityStats {
+  const random = seededRandom(city.id);
+  const baseTemp = 20 + random() * 10;
+  const ruralTemp = baseTemp - 4 - random() * 3;
+
+  // Base stats
+  const baseHotspotCount = Math.floor(5 + random() * 15);
+  const baseGreenCoverage = Math.round((15 + random() * 25) * 10) / 10;
+  const baseVulnerablePopulation = Math.round(city.population * (0.08 + random() * 0.12));
+
+  // Calculate impact from implemented recommendations
+  // Different types contribute differently to green coverage:
+  // - High vegetation types (parks, trees) = 100% contribution
+  // - Medium vegetation types (green roofs, bioswales) = 60% contribution
+  // - Low vegetation types (cool pavement, permeable) = 20% contribution (infrastructure, not green)
+  // - Water features = 40% contribution (water, not vegetation)
+  const greenCoverageMultipliers: Record<string, number> = {
+    urban_park: 1.0, // 100% - full green coverage
+    tree_planting: 1.0, // 100% - full green coverage
+    green_roof: 0.6, // 60% - vegetation but on buildings
+    bioswale: 0.6, // 60% - vegetation with water management
+    water_feature: 0.4, // 40% - water, not vegetation
+    cool_pavement: 0.2, // 20% - infrastructure, minimal green
+    permeable_surface: 0.2, // 20% - infrastructure, minimal green
+  };
+
+  const effectiveGreenArea = implementedRecommendations.reduce((sum, rec) => {
+    const multiplier = greenCoverageMultipliers[rec.type] || 0.5; // Default 50% if unknown type
+    return sum + (rec.area || 0) * multiplier;
+  }, 0);
+
+  const cityAreaKm2 = city?.area || 1; // city.area is in km², default to 1 to avoid division by zero
+  const cityAreaM2 = cityAreaKm2 * 1000000; // Convert to m²
+  // Calculate additional green coverage percentage
+  // Multiply by 10 to make the impact more visible (each recommendation adds ~0.1-0.5% instead of ~0.01-0.05%)
+  const additionalGreenCoveragePercent =
+    cityAreaM2 > 0 && !Number.isNaN(effectiveGreenArea)
+      ? (effectiveGreenArea / cityAreaM2) * 100 * 10
+      : 0;
+
+  // Each recommendation reduces hotspots (more green = fewer hotspots)
+  // Assume each recommendation can reduce 1-3 hotspots depending on area and type
+  // Increased from 0.5-1.5 to make the impact more visible
+  const hotspotReduction = implementedRecommendations.reduce((sum, rec) => {
+    const reductionFactor = rec.area > 20000 ? 3.0 : rec.area > 10000 ? 2.0 : 1.0;
+    return sum + reductionFactor;
+  }, 0);
+
+  // Each recommendation reduces vulnerable population by providing cooling and better access
+  // Larger projects and higher priority ones have more impact
+  // Assume each recommendation can reduce 2-5% of base vulnerable population
+  // Increased from 1-3% to make the impact more visible
+  const vulnerablePopulationReduction = implementedRecommendations.reduce((sum, rec) => {
+    let reductionPercent = 0.02; // Base 2% reduction (increased from 1%)
+    if (rec.area > 20000) reductionPercent += 0.02; // Large projects reduce more
+    if (rec.priority === 'critical' || rec.priority === 'high') reductionPercent += 0.01; // High priority reduces more
+    return sum + reductionPercent;
+  }, 0);
+
+  return {
+    avgUrbanTemp: Math.round(baseTemp * 10) / 10,
+    avgRuralTemp: Math.round(ruralTemp * 10) / 10,
+    heatIslandIntensity: Math.round((baseTemp - ruralTemp) * 10) / 10,
+    hotspotCount: Math.max(0, Math.floor(baseHotspotCount - hotspotReduction)),
+    greenCoverage: Math.min(
+      100,
+      Math.round((baseGreenCoverage + additionalGreenCoveragePercent) * 10) / 10,
+    ),
+    vulnerablePopulation: Math.max(
+      0,
+      Math.round(baseVulnerablePopulation * (1 - vulnerablePopulationReduction)),
+    ),
+    projectedTempIncrease: Math.round((1.5 + random() * 2) * 10) / 10,
+  };
+}
+
+// Generate heat data points for the map
+export function generateHeatMapData(city: City, resolution: number = 20): HeatDataPoint[] {
+  const points: HeatDataPoint[] = [];
+  const centerLat = city.coordinates[0];
+  const centerLng = city.coordinates[1];
+  const spread = 0.08; // Increased spread for better coverage
+
+  const landUses: HeatDataPoint['landUse'][] = [
+    'residential',
+    'commercial',
+    'industrial',
+    'park',
+    'water',
+    'forest',
+    'agricultural',
+    'bare',
+  ];
+
+  // Create a smooth gradient with higher density in center
+  for (let i = 0; i < resolution; i++) {
+    for (let j = 0; j < resolution; j++) {
+      // Normalized position (-1 to 1)
+      const normalizedI = (i / resolution - 0.5) * 2;
+      const normalizedJ = (j / resolution - 0.5) * 2;
+
+      // Small jitter to break up perfect grid (much smaller)
+      const jitterLat = (Math.random() - 0.5) * (spread / resolution) * 0.3;
+      const jitterLng = (Math.random() - 0.5) * (spread / resolution) * 0.3;
+
+      const lat = centerLat + normalizedI * spread + jitterLat;
+      const lng = centerLng + normalizedJ * spread * 1.2 + jitterLng;
+
+      // Distance from center (0 to ~1.4 for corners)
+      const distFromCenter = Math.sqrt(normalizedI ** 2 + normalizedJ ** 2);
+
+      // Create smooth gradient: hot in center, cooler at edges
+      // Use exponential decay for more realistic heat island effect
+      const gradientFactor = Math.exp(-distFromCenter * 1.2);
+
+      // Base temperature: ~45°C in center, ~28°C at edges (Indian climate)
+      const baseTemp = 28 + gradientFactor * 18;
+
+      // Add natural variation (smaller range to maintain gradient)
+      const variation = (Math.random() - 0.5) * 3;
+      const finalTemp = Math.max(24, Math.min(48, baseTemp + variation));
+
+      // Surface temp is typically higher
+      const surfaceTemp = finalTemp + 3 + Math.random() * 4;
+
+      // Vegetation index inversely related to temperature
+      const ndvi = Math.max(
+        -0.2,
+        Math.min(0.8, 0.5 - (finalTemp - 25) * 0.05 + (Math.random() - 0.5) * 0.2),
+      );
+
+      points.push({
+        lat,
+        lng,
+        temperature: Math.round(finalTemp * 10) / 10,
+        surfaceTemperature: Math.round(surfaceTemp * 10) / 10,
+        ndvi: Math.round(ndvi * 100) / 100,
+        albedo: 0.15 + Math.random() * 0.3,
+        landUse: landUses[Math.floor(Math.random() * landUses.length)],
+      });
+    }
+  }
+
+  return points;
+}
+
+// Generate vegetation areas for the map
+export function generateVegetationAreas(city: City): VegetationArea[] {
+  const random = seededRandom(`${city.id}-vegetation`);
+  const areas: VegetationArea[] = [];
+  const baseLat = city.coordinates[0];
+  const baseLng = city.coordinates[1];
+
+  const types: VegetationArea['type'][] = ['park', 'forest', 'garden', 'greenway'];
+  const names = [
+    'City Lake Park',
+    'Temple Garden',
+    'Community Ground',
+    'Urban Forest Patch',
+    'Lake Restoration Zone',
+    'Botanical Garden',
+    'Roadside Green Corridor',
+    'Neighborhood Park',
+  ];
+
+  for (let i = 0; i < 5; i++) {
+    const lat = baseLat + (random() - 0.5) * 0.08;
+    const lng = baseLng + (random() - 0.5) * 0.08;
+    const radius = 0.005 + random() * 0.01;
+
+    areas.push({
+      id: `veg-${city.id}-${i}`,
+      name: names[i % names.length],
+      type: types[Math.floor(random() * types.length)],
+      coordinates: generatePolygon(lat, lng, radius, random),
+      area: 0.2 + random() * 1.5,
+      ndvi: 0.4 + random() * 0.4,
+    });
+  }
+
+  return areas;
+}
+
+// Generate infrastructure points for the map
+export function generateInfrastructurePoints(city: City): InfrastructurePoint[] {
+  const random = seededRandom(`${city.id}-infrastructure`);
+  const points: InfrastructurePoint[] = [];
+  const baseLat = city.coordinates[0];
+  const baseLng = city.coordinates[1];
+
+  const types: InfrastructurePoint['type'][] = ['building', 'road', 'bridge', 'parking'];
+  const names = [
+    'BBMP Office',
+    'Metro Station',
+    'Flyover Junction',
+    'Shopping Complex',
+    'Tech Park',
+    'Bus Depot',
+    'Parking Lot',
+    'Industrial Area',
+  ];
+
+  for (let i = 0; i < 8; i++) {
+    const lat = baseLat + (random() - 0.5) * 0.1;
+    const lng = baseLng + (random() - 0.5) * 0.1;
+
+    points.push({
+      id: `infra-${city.id}-${i}`,
+      name: names[i % names.length],
+      type: types[Math.floor(random() * types.length)],
+      location: [lat, lng],
+      size: 0.5 + random() * 1.5,
+    });
+  }
+
+  return points;
+}
+
+// Generate sensor locations for the map
+export function generateSensorLocations(city: City): SensorLocation[] {
+  const random = seededRandom(`${city.id}-sensors`);
+  const sensors: SensorLocation[] = [];
+  const baseLat = city.coordinates[0];
+  const baseLng = city.coordinates[1];
+
+  const names = [
+    'Downtown Sensor',
+    'Park Monitoring Station',
+    'Residential Area Sensor',
+    'Industrial Zone Monitor',
+    'Waterfront Station',
+    'Transit Hub Sensor',
+    'University Campus Monitor',
+    'Suburban Station',
+  ];
+
+  for (let i = 0; i < 6; i++) {
+    const lat = baseLat + (random() - 0.5) * 0.1;
+    const lng = baseLng + (random() - 0.5) * 0.1;
+    const temp = 20 + random() * 12;
+    const lastReading = new Date(Date.now() - random() * 3600000).toISOString();
+
+    sensors.push({
+      id: `sensor-${city.id}-${i}`,
+      name: names[i % names.length],
+      location: [lat, lng],
+      temperature: Math.round(temp * 10) / 10,
+      lastReading,
+    });
+  }
+
+  return sensors;
+}
+
+// Time series data for charts
+export function generateDailyTemperatures(
+  days: number = 30,
+): { date: string; high: number; low: number; avg: number }[] {
+  const data = [];
+  const today = new Date();
+
+  for (let i = days - 1; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+
+    const baseTemp = 25 + Math.sin(i / 5) * 5 + Math.random() * 8;
+    const high = baseTemp + 3 + Math.random() * 5;
+    const low = baseTemp - 5 - Math.random() * 3;
+
+    data.push({
+      date: date.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' }),
+      high: Math.round(high * 10) / 10,
+      low: Math.round(low * 10) / 10,
+      avg: Math.round(baseTemp * 10) / 10,
+    });
+  }
+
+  return data;
+}
