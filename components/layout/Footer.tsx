@@ -26,7 +26,7 @@ export default function Footer() {
         {/* Right Side Content */}
         <div className="text-center lg:absolute lg:right-[15px] lg:top-1/2 lg:-translate-y-1/2">
           <a
-            href="https://github.com/martinlcam/verdant"
+            href="https://github.com/hema-hema123/climora-dashboard.git"
             target="_blank"
             rel="noopener noreferrer"
             className="font-alliance text-sm sm:text-[15px] leading-normal text-[#cfcfcf] mb-2 hover:text-[#ecefe8] transition-colors inline-block"
