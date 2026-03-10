@@ -51,26 +51,26 @@ export function ImpactProjections() {
   return (
     <Card className="h-full">
       <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2 text-base font-semibold">
+        <CardTitle className="flex items-center gap-2 text-sm sm:text-base font-semibold">
           <TrendingDown className="h-4 w-4 text-emerald-500" />
           Projected Temperature Reduction
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="h-[240px]">
+      <CardContent className="px-3 sm:px-6">
+        <div className="h-[200px] sm:h-[240px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={data}
               layout="vertical"
-              margin={{ top: 5, right: 20, left: 0, bottom: 5 }}
+              margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
             >
               <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
               <XAxis
                 type="number"
-                tick={{ fontSize: 11 }}
+                tick={{ fontSize: 10 }}
                 tickFormatter={(value) => `-${value}°C`}
               />
-              <YAxis type="category" dataKey="name" tick={{ fontSize: 10 }} width={100} />
+              <YAxis type="category" dataKey="name" tick={{ fontSize: 9 }} width={80} />
               <Tooltip
                 contentStyle={{
                   backgroundColor: 'white',

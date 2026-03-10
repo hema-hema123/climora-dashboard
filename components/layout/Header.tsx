@@ -133,9 +133,9 @@ export function Header() {
         </Link>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         <Select value={selectedCity.id} onValueChange={handleCityChange}>
-          <SelectTrigger className="w-[240px]">
+          <SelectTrigger className="w-[140px] sm:w-[240px]">
             <SelectValue placeholder="Select a city" />
           </SelectTrigger>
           <SelectContent>

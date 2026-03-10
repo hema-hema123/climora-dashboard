@@ -105,8 +105,8 @@ export const useDashboardStore = create<DashboardStore>((set) => {
     timeSliderValue: 100,
     setTimeSliderValue: (value) => set({ timeSliderValue: value }),
 
-    // Sidebar
-    sidebarOpen: true,
+    // Sidebar - default closed on mobile, open on desktop
+    sidebarOpen: typeof window !== 'undefined' ? window.innerWidth >= 1024 : false,
     setSidebarOpen: (open) => set({ sidebarOpen: open }),
 
     // Temperature unit

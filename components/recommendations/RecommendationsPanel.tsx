@@ -61,7 +61,7 @@ export function RecommendationsPanel() {
   }, [recommendations]);
 
   return (
-    <Card className="h-full flex flex-col font-alliance mr-0 border-r-0 rounded-r-none">
+    <Card className="h-full flex flex-col font-alliance lg:mr-0 lg:border-r-0 lg:rounded-r-none">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center justify-between text-base font-semibold font-alliance">
           <span className="flex items-center gap-2">
@@ -206,8 +206,9 @@ function RecommendationCard({ recommendation, isSelected }: RecommendationCardPr
           </button>
         </TooltipTrigger>
         <TooltipContent
-          side="left"
-          className="max-w-sm p-4 text-sm !bg-gray-900 !border-gray-800 !text-gray-100 shadow-xl backdrop-blur-sm font-alliance"
+          side="top"
+          align="start"
+          className="max-w-[280px] sm:max-w-sm p-3 sm:p-4 text-sm !bg-gray-900 !border-gray-800 !text-gray-100 shadow-xl backdrop-blur-sm font-alliance"
         >
           <div className="space-y-3">
             <div>

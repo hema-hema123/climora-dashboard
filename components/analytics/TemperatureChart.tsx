@@ -40,12 +40,12 @@ export function TemperatureChart() {
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base font-semibold">
+          <CardTitle className="text-sm sm:text-base font-semibold">
             Temperature Trends (NASA POWER Data)
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex h-[240px] items-center justify-center">
+          <div className="flex h-[200px] sm:h-[240px] items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
             <span className="ml-2 text-sm text-gray-500">Loading NASA data...</span>
           </div>
@@ -58,10 +58,10 @@ export function TemperatureChart() {
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base font-semibold">Temperature Trends</CardTitle>
+          <CardTitle className="text-sm sm:text-base font-semibold">Temperature Trends</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex h-[240px] items-center justify-center text-sm text-gray-500">
+          <div className="flex h-[200px] sm:h-[240px] items-center justify-center text-sm text-gray-500">
             Unable to load NASA data. Please try again later.
           </div>
         </CardContent>
@@ -73,12 +73,12 @@ export function TemperatureChart() {
     <Card className="h-full">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-semibold">Temperature Trends (30 Days)</CardTitle>
-          <span className="text-xs text-gray-400">Source: NASA POWER</span>
+          <CardTitle className="text-sm sm:text-base font-semibold">Temperature Trends (30 Days)</CardTitle>
+          <span className="text-[10px] sm:text-xs text-gray-400">Source: NASA POWER</span>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="h-[240px]">
+      <CardContent className="px-3 sm:px-6">
+        <div className="h-[200px] sm:h-[240px]">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <defs>

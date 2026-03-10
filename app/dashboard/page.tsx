@@ -30,8 +30,8 @@ export default function DashboardPage() {
     <DashboardShell>
       <div className="flex h-full flex-col overflow-hidden">
         {/* Mobile Tabs */}
-        <div className="lg:hidden">
-          <Tabs defaultValue="map" className="h-full flex flex-col">
+        <div className="flex flex-col flex-1 overflow-hidden lg:hidden">
+          <Tabs defaultValue="map" className="flex-1 flex flex-col overflow-hidden">
             <div className="border-b border-gray-200 bg-white px-4 py-2 dark:border-gray-800 dark:bg-gray-950">
               <TabsList className="w-full">
                 <TabsTrigger value="map" className="flex-1 gap-2">
@@ -97,7 +97,7 @@ export default function DashboardPage() {
               </div>
 
               {/* Right Panel - Charts & Analytics */}
-              <div className="w-[400px] shrink-0 overflow-y-auto border-l border-gray-200 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-900">
+              <div className="w-[320px] xl:w-[400px] shrink-0 overflow-y-auto border-l border-gray-200 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-900">
                 <div className="space-y-4">
                   <TemperatureChart />
                   <HeatZoneList />
@@ -109,7 +109,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Recommendations Panel */}
-          <div className="w-[350px] shrink-0 overflow-y-auto border-l border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950">
+          <div className="w-[280px] xl:w-[350px] shrink-0 overflow-y-auto border-l border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950">
             <RecommendationsPanel />
           </div>
         </div>

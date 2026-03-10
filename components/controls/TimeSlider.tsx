@@ -95,13 +95,13 @@ export function TimeSlider() {
   };
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+    <div className="rounded-xl border border-gray-200 bg-white p-3 sm:p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Calendar className="h-4 w-4 text-emerald-600" />
-          <span className="text-sm font-medium text-gray-900 dark:text-white">Time Period</span>
+          <span className="text-xs sm:text-sm font-medium text-gray-900 dark:text-white">Time Period</span>
         </div>
-        <span className="text-sm font-semibold text-emerald-600">{currentMonth}</span>
+        <span className="text-xs sm:text-sm font-semibold text-emerald-600">{currentMonth}</span>
       </div>
 
       <div className="mb-3">
@@ -114,8 +114,8 @@ export function TimeSlider() {
         />
       </div>
 
-      <div className="flex items-center justify-end">
-        <div className="flex gap-1 text-xs text-gray-500">
+      <div className="flex items-center justify-end overflow-x-auto">
+        <div className="flex gap-0.5 sm:gap-1 text-[10px] sm:text-xs text-gray-500">
           {months.map((month, index) => {
             // index here is the calendar month (0=Jan, 1=Feb, ..., 11=Dec)
             // Check if this calendar month matches the selected month

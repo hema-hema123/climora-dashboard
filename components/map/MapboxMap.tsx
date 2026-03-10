@@ -24,6 +24,7 @@ export function MapboxMap() {
   const [isMounted, setIsMounted] = useState(false);
   const [bearing, setBearing] = useState(0);
   const [pitch, setPitch] = useState(60);
+  const [mapError, setMapError] = useState<string | null>(null);
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<any>(null);
   const isDraggingSlider = useRef(false);
@@ -36,6 +37,11 @@ export function MapboxMap() {
   // Initialize map
   useEffect(() => {
     if (!isMounted || !mapContainer.current || map.current) return;
+
+    if (!MAPBOX_TOKEN) {
+      setMapError('Mapbox token is missing. Add NEXT_PUBLIC_MAPBOX_TOKEN to your .env.local file to enable the 3D map.');
+      return;
+    }
 
     // Dynamically import mapbox-gl to avoid SSR issues
     import('mapbox-gl').then((mapboxgl) => {
@@ -354,6 +360,25 @@ export function MapboxMap() {
     }
   };
 
+  if (mapError) {
+    return (
+      <div className="flex h-full w-full items-center justify-center bg-gray-100 dark:bg-gray-800 p-4">
+        <div className="text-center max-w-md space-y-3">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30">
+            <svg className="h-7 w-7 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+            </svg>
+          </div>
+          <h3 className="text-base font-semibold text-gray-800 dark:text-gray-200 font-alliance">3D Map Unavailable</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{mapError}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-500">
+            Add <code className="rounded bg-gray-200 px-1.5 py-0.5 text-xs dark:bg-gray-700">NEXT_PUBLIC_MAPBOX_TOKEN</code> to your <code className="rounded bg-gray-200 px-1.5 py-0.5 text-xs dark:bg-gray-700">.env.local</code> file and restart the dev server.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (!isMounted) {
     return (
       <div className="flex h-full w-full items-center justify-center bg-gray-100 dark:bg-gray-800">
@@ -370,9 +395,9 @@ export function MapboxMap() {
       <div ref={mapContainer} className="h-full w-full" />
 
       {/* Rotation Slider */}
-      <div className="absolute bottom-0 left-0 right-0 z-[1000] border-t border-gray-200 bg-white px-4 py-3 dark:border-gray-800 dark:bg-gray-950">
-        <div className="flex items-center gap-3">
-          <RotateCw className="h-4 w-4 text-gray-600 dark:text-gray-400 shrink-0" />
+      <div className="absolute bottom-0 left-0 right-0 z-[1000] border-t border-gray-200 bg-white px-3 py-2 sm:px-4 sm:py-3 dark:border-gray-800 dark:bg-gray-950">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <RotateCw className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-600 dark:text-gray-400 shrink-0" />
           <div className="flex-1">
             <Slider
               value={[bearing]}
@@ -384,18 +409,18 @@ export function MapboxMap() {
               className="w-full"
             />
           </div>
-          <span className="text-xs text-gray-600 dark:text-gray-400 w-12 text-right font-alliance">
+          <span className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 w-10 sm:w-12 text-right font-alliance">
             {Math.round(bearing)}°
           </span>
         </div>
       </div>
 
       {/* Tilt Control */}
-      <div className="absolute left-4 top-1/2 z-[1000] -translate-y-1/2">
-        <div className="rounded-lg bg-white/90 p-3 shadow-lg backdrop-blur dark:bg-gray-900/90">
-          <div className="flex flex-col items-center gap-3">
-            <TrendingUp className="h-4 w-4 text-gray-600 dark:text-gray-400 rotate-90" />
-            <div className="h-32 w-6">
+      <div className="absolute left-2 sm:left-4 top-1/2 z-[1000] -translate-y-1/2 hidden sm:block">
+        <div className="rounded-lg bg-white/90 p-2 sm:p-3 shadow-lg backdrop-blur dark:bg-gray-900/90">
+          <div className="flex flex-col items-center gap-2 sm:gap-3">
+            <TrendingUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-gray-600 dark:text-gray-400 rotate-90" />
+            <div className="h-24 sm:h-32 w-6">
               <Slider
                 value={[pitch]}
                 onValueChange={handleTiltChange}
@@ -406,7 +431,7 @@ export function MapboxMap() {
                 className="h-full"
               />
             </div>
-            <span className="text-xs text-gray-600 dark:text-gray-400 font-alliance">
+            <span className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 font-alliance">
               {Math.round(pitch)}°
             </span>
           </div>
@@ -414,12 +439,12 @@ export function MapboxMap() {
       </div>
 
       {/* Map Controls Overlay */}
-      <div className="absolute bottom-16 left-4 z-[1000] flex flex-col gap-2">
-        <div className="rounded-lg bg-white/90 p-3 shadow-lg backdrop-blur dark:bg-gray-900/90">
-          <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+      <div className="absolute bottom-12 sm:bottom-16 left-2 sm:left-4 z-[1000] flex flex-col gap-2">
+        <div className="rounded-lg bg-white/90 p-2 sm:p-3 shadow-lg backdrop-blur dark:bg-gray-900/90">
+          <p className="text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5 sm:mb-1">
             {selectedCity.name}, {selectedCity.province}
           </p>
-          <p className="text-xs text-gray-500 dark:text-gray-500">
+          <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-500">
             Pop: {selectedCity.population.toLocaleString()}
           </p>
         </div>

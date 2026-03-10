@@ -132,16 +132,16 @@ export function StatsCards() {
 
   return (
     <TooltipProvider delayDuration={200}>
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
+      <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-6">
         {cards.map((card) => (
           <Card key={card.title} className="overflow-hidden">
-            <CardContent className="p-4">
+            <CardContent className="p-3 sm:p-4">
               <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
+                <div className="flex-1 min-w-0">
+                  <p className="text-[10px] sm:text-xs font-medium text-gray-500 dark:text-gray-400 truncate">
                     {card.title}
                   </p>
-                  <p className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">
+                  <p className="mt-1 text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">
                     {card.isLoading ? (
                       <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
                     ) : (

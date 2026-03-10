@@ -291,12 +291,12 @@ export function HeatMap() {
       </MapContainer>
 
       {/* Map Controls Overlay */}
-      <div className="absolute bottom-4 left-4 z-[1000] flex flex-col gap-2">
-        <div className="rounded-lg bg-white/90 p-3 shadow-lg backdrop-blur dark:bg-gray-900/90">
-          <p className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
+      <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 z-[1000] flex flex-col gap-2">
+        <div className="rounded-lg bg-white/90 p-2 sm:p-3 shadow-lg backdrop-blur dark:bg-gray-900/90">
+          <p className="text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5 sm:mb-1">
             {selectedCity.name}, {selectedCity.province}
           </p>
-          <p className="text-xs text-gray-500 dark:text-gray-500">
+          <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-500">
             Pop: {selectedCity.population.toLocaleString()}
           </p>
         </div>
