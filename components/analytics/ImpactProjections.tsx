@@ -53,7 +53,7 @@ export function ImpactProjections() {
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-sm sm:text-base font-semibold">
           <TrendingDown className="h-4 w-4 text-emerald-500" />
-          Projected Temperature Reduction
+          Projected Cooling · {selectedCity.name}
         </CardTitle>
       </CardHeader>
       <CardContent className="px-3 sm:px-6">

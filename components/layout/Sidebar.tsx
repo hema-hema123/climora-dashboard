@@ -68,8 +68,15 @@ const layers: {
 ];
 
 export function Sidebar() {
-  const { sidebarOpen, setSidebarOpen, activeLayers, toggleLayer, enable3D, setEnable3D } =
-    useDashboardStore();
+  const {
+    sidebarOpen,
+    desktopSidebarOpen,
+    setSidebarOpen,
+    activeLayers,
+    toggleLayer,
+    enable3D,
+    setEnable3D,
+  } = useDashboardStore();
 
   return (
     <>
@@ -84,9 +91,11 @@ export function Sidebar() {
       )}
 
       <aside
+        id="dashboard-sidebar"
         className={cn(
           'fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-gray-200 bg-white transition-transform duration-300 dark:border-gray-800 dark:bg-gray-950 lg:static lg:translate-x-0',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full',
+          !desktopSidebarOpen && 'lg:hidden',
         )}
       >
         <div className="flex h-16 items-center justify-between border-b border-gray-200 px-4 dark:border-gray-800 lg:hidden">

@@ -1,6 +1,7 @@
 'use client';
 
 import { Loader2 } from 'lucide-react';
+import { useMemo } from 'react';
 import {
   Area,
   AreaChart,
@@ -13,18 +14,26 @@ import {
 } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useHeatIslandComparison } from '@/hooks/useClimateData';
+import { generateTemperatureHistory } from '@/lib/data';
 import { useDashboardStore } from '@/lib/store';
 
 export function TemperatureChart() {
   const { selectedCity } = useDashboardStore();
   const { data: heatIslandData, isLoading, error } = useHeatIslandComparison(selectedCity);
+  const estimatedHistory = useMemo(() => generateTemperatureHistory(selectedCity), [selectedCity]);
 
-  const chartData =
-    heatIslandData?.comparison.map((record) => ({
-      date: record.date,
-      urban: Math.round(record.urban * 10) / 10,
-      rural: Math.round(record.rural * 10) / 10,
-    })) || [];
+  const hasLiveData = Boolean(heatIslandData?.comparison.length);
+  const chartData = hasLiveData
+    ? heatIslandData?.comparison.map((record) => ({
+        date: record.date,
+        urban: Math.round(record.urban * 10) / 10,
+        rural: Math.round(record.rural * 10) / 10,
+      })) || []
+    : estimatedHistory.map((record) => ({
+        date: record.date,
+        urban: record.urban,
+        rural: record.rural,
+      }));
 
   const formatDate = (dateStr: string) => {
     // NASA date format: YYYYMMDD
@@ -54,27 +63,20 @@ export function TemperatureChart() {
     );
   }
 
-  if (error) {
-    return (
-      <Card className="h-full">
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm sm:text-base font-semibold">Temperature Trends</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex h-[200px] sm:h-[240px] items-center justify-center text-sm text-gray-500">
-            Unable to load NASA data. Please try again later.
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
     <Card className="h-full">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm sm:text-base font-semibold">Temperature Trends (30 Days)</CardTitle>
-          <span className="text-[10px] sm:text-xs text-gray-400">Source: NASA POWER</span>
+          <CardTitle className="text-sm sm:text-base font-semibold">
+            {selectedCity.name} Temperature Trends
+          </CardTitle>
+          <span className="text-[10px] sm:text-xs text-gray-400">
+            {hasLiveData
+              ? 'NASA POWER · 30 days'
+              : error
+                ? 'Estimated city profile'
+                : '12-month estimate'}
+          </span>
         </div>
       </CardHeader>
       <CardContent className="px-3 sm:px-6">

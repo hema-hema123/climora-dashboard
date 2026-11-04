@@ -2,7 +2,12 @@ import { create } from 'zustand';
 import type { City, GreenInfrastructureRecommendation, HeatZone, LayerType } from '@/types';
 import { INDIAN_CITIES } from './data';
 
+export type DashboardTab = 'map' | 'analytics' | 'actions';
+
 interface DashboardStore {
+  dashboardTab: DashboardTab;
+  setDashboardTab: (tab: DashboardTab) => void;
+
   // City selection
   selectedCity: City;
   setSelectedCity: (city: City) => void;
@@ -40,6 +45,8 @@ interface DashboardStore {
   // Sidebar
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
+  desktopSidebarOpen: boolean;
+  setDesktopSidebarOpen: (open: boolean) => void;
 
   // Temperature unit
   temperatureUnit: 'C' | 'F';
@@ -55,6 +62,9 @@ export const useDashboardStore = create<DashboardStore>((set) => {
   const defaultCity = INDIAN_CITIES[0];
 
   return {
+    dashboardTab: 'map',
+    setDashboardTab: (tab) => set({ dashboardTab: tab }),
+
     // City selection - default to first Indian city
     selectedCity: defaultCity,
     setSelectedCity: (city) =>
@@ -106,8 +116,12 @@ export const useDashboardStore = create<DashboardStore>((set) => {
     setTimeSliderValue: (value) => set({ timeSliderValue: value }),
 
     // Sidebar - default closed on mobile, open on desktop
-    sidebarOpen: typeof window !== 'undefined' ? window.innerWidth >= 1024 : false,
+    // Keep the initial store state identical during SSR and hydration.
+    // The sidebar is always visible at desktop widths through its lg: styles.
+    sidebarOpen: false,
     setSidebarOpen: (open) => set({ sidebarOpen: open }),
+    desktopSidebarOpen: true,
+    setDesktopSidebarOpen: (open) => set({ desktopSidebarOpen: open }),
 
     // Temperature unit
     temperatureUnit: 'C',

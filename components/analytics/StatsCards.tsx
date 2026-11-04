@@ -132,16 +132,19 @@ export function StatsCards() {
 
   return (
     <TooltipProvider delayDuration={200}>
+      <p className="mb-2 text-xs text-gray-500 dark:text-gray-400">
+        City indicators · {selectedCity.name}, {selectedCity.province}
+      </p>
       <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-6">
         {cards.map((card) => (
           <Card key={card.title} className="overflow-hidden">
             <CardContent className="p-3 sm:p-4">
-              <div className="flex items-start justify-between">
-                <div className="flex-1 min-w-0">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0 flex-1">
                   <p className="text-[10px] sm:text-xs font-medium text-gray-500 dark:text-gray-400 truncate">
                     {card.title}
                   </p>
-                  <p className="mt-1 text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">
+                  <p className="mt-1 min-w-0 text-lg font-bold tabular-nums text-gray-900 [overflow-wrap:anywhere] dark:text-white sm:text-2xl">
                     {card.isLoading ? (
                       <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
                     ) : (
@@ -154,7 +157,7 @@ export function StatsCards() {
                 </div>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div className={`rounded-lg p-2 ${card.bgColor} cursor-help`}>
+                    <div className={`shrink-0 rounded-lg p-2 ${card.bgColor} cursor-help`}>
                       <span className={card.color}>{card.icon}</span>
                     </div>
                   </TooltipTrigger>

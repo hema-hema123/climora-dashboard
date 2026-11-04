@@ -2,6 +2,7 @@
 
 import { BarChart3, Map as MapIcon, TreeDeciduous } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { CityComparison } from '@/components/analytics/CityComparison';
 import { HeatZoneList } from '@/components/analytics/HeatZoneList';
 import { ImpactProjections } from '@/components/analytics/ImpactProjections';
 import { StatsCards } from '@/components/analytics/StatsCards';
@@ -11,6 +12,8 @@ import { ExportPanel } from '@/components/export/ExportPanel';
 import { DashboardShell } from '@/components/layout/DashboardShell';
 import { RecommendationsPanel } from '@/components/recommendations/RecommendationsPanel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { type DashboardTab, useDashboardStore } from '@/lib/store';
+import { cn } from '@/lib/utils';
 
 // Dynamic import for HeatMap (uses Leaflet which requires client-side rendering)
 const HeatMap = dynamic(() => import('@/components/map/HeatMap').then((mod) => mod.HeatMap), {
@@ -26,12 +29,18 @@ const HeatMap = dynamic(() => import('@/components/map/HeatMap').then((mod) => m
 });
 
 export default function DashboardPage() {
+  const { dashboardTab, setDashboardTab, desktopSidebarOpen } = useDashboardStore();
+
   return (
     <DashboardShell>
       <div className="flex h-full flex-col overflow-hidden">
         {/* Mobile Tabs */}
         <div className="flex flex-col flex-1 overflow-hidden lg:hidden">
-          <Tabs defaultValue="map" className="flex-1 flex flex-col overflow-hidden">
+          <Tabs
+            value={dashboardTab}
+            onValueChange={(value) => setDashboardTab(value as DashboardTab)}
+            className="flex-1 flex flex-col overflow-hidden"
+          >
             <div className="border-b border-gray-200 bg-white px-4 py-2 dark:border-gray-800 dark:bg-gray-950">
               <TabsList className="w-full">
                 <TabsTrigger value="map" className="flex-1 gap-2">
@@ -63,6 +72,7 @@ export default function DashboardPage() {
 
             <TabsContent value="analytics" className="flex-1 overflow-auto p-4 space-y-4 m-0">
               <StatsCards />
+              <CityComparison />
               <TemperatureChart />
               <HeatZoneList />
               <ImpactProjections />
@@ -87,8 +97,13 @@ export default function DashboardPage() {
             {/* Map and Charts Row */}
             <div className="flex flex-1 overflow-hidden">
               {/* Map Section */}
-              <div className="flex flex-1 flex-col overflow-hidden">
-                <div className="flex-1">
+              <div
+                className={cn(
+                  'flex flex-1 flex-col overflow-hidden transition-all duration-300',
+                  !desktopSidebarOpen && 'bg-gray-100 p-3 dark:bg-gray-800',
+                )}
+              >
+                <div className="min-h-0 min-w-0 flex-1">
                   <HeatMap />
                 </div>
                 <div className="shrink-0 border-t border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950">
@@ -100,6 +115,7 @@ export default function DashboardPage() {
               <div className="w-[320px] xl:w-[400px] shrink-0 overflow-y-auto border-l border-gray-200 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-900">
                 <div className="space-y-4">
                   <TemperatureChart />
+                  <CityComparison />
                   <HeatZoneList />
                   <ImpactProjections />
                   <ExportPanel />

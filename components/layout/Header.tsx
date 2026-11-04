@@ -1,8 +1,20 @@
 'use client';
 
-import { Download, FileImage, FileSpreadsheet, FileText, Info, Menu } from 'lucide-react';
+import {
+  Download,
+  FileImage,
+  FileSpreadsheet,
+  FileText,
+  Info,
+  Menu,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Search,
+  X,
+} from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -10,13 +22,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import {
   generateCityStats,
@@ -27,13 +32,32 @@ import {
 import { useDashboardStore } from '@/lib/store';
 
 export function Header() {
-  const { selectedCity, selectedDate, setSelectedCity, sidebarOpen, setSidebarOpen } =
-    useDashboardStore();
+  const [cityQuery, setCityQuery] = useState('');
+  const [citySearchOpen, setCitySearchOpen] = useState(false);
+  const {
+    selectedCity,
+    selectedDate,
+    setSelectedCity,
+    sidebarOpen,
+    setSidebarOpen,
+    desktopSidebarOpen,
+    setDesktopSidebarOpen,
+  } = useDashboardStore();
+
+  const matchingCities = useMemo(() => {
+    const query = cityQuery.trim().toLocaleLowerCase();
+    if (!query) return INDIAN_CITIES;
+    return INDIAN_CITIES.filter((city) =>
+      `${city.name} ${city.province}`.toLocaleLowerCase().includes(query),
+    );
+  }, [cityQuery]);
 
   const handleCityChange = (cityId: string) => {
     const city = INDIAN_CITIES.find((c) => c.id === cityId);
     if (city) {
       setSelectedCity(city);
+      setCityQuery('');
+      setCitySearchOpen(false);
     }
   };
 
@@ -107,8 +131,26 @@ export function Header() {
           size="icon"
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className="lg:hidden"
+          aria-label={sidebarOpen ? 'Close sidebar' : 'Open sidebar'}
+          aria-controls="dashboard-sidebar"
+          aria-expanded={sidebarOpen}
         >
           <Menu className="h-5 w-5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setDesktopSidebarOpen(!desktopSidebarOpen)}
+          className="hidden lg:inline-flex"
+          aria-label={desktopSidebarOpen ? 'Close sidebar' : 'Open sidebar'}
+          aria-controls="dashboard-sidebar"
+          aria-expanded={desktopSidebarOpen}
+        >
+          {desktopSidebarOpen ? (
+            <PanelLeftClose className="h-5 w-5" />
+          ) : (
+            <PanelLeftOpen className="h-5 w-5" />
+          )}
         </Button>
 
         <Link
@@ -134,18 +176,79 @@ export function Header() {
       </div>
 
       <div className="flex items-center gap-2 sm:gap-3">
-        <Select value={selectedCity.id} onValueChange={handleCityChange}>
-          <SelectTrigger className="w-[140px] sm:w-[240px]">
-            <SelectValue placeholder="Select a city" />
-          </SelectTrigger>
-          <SelectContent>
-            {INDIAN_CITIES.map((city) => (
-              <SelectItem key={city.id} value={city.id}>
-                {city.name}, {city.province}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="relative w-[min(42vw,280px)] min-w-[130px]">
+          <label htmlFor="city-search" className="sr-only">
+            Search cities
+          </label>
+          <Search
+            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
+            aria-hidden="true"
+          />
+          <input
+            id="city-search"
+            type="search"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-expanded={citySearchOpen}
+            aria-controls="city-search-results"
+            placeholder={selectedCity.name}
+            value={cityQuery}
+            onFocus={() => setCitySearchOpen(true)}
+            onBlur={() => setTimeout(() => setCitySearchOpen(false), 150)}
+            onChange={(event) => {
+              setCityQuery(event.target.value);
+              setCitySearchOpen(true);
+            }}
+            onKeyDown={(event) => {
+              if (event.key === 'Escape') setCitySearchOpen(false);
+              if (event.key === 'Enter' && matchingCities[0]) {
+                event.preventDefault();
+                handleCityChange(matchingCities[0].id);
+              }
+            }}
+            className="h-10 w-full rounded-lg border border-gray-700 bg-gray-900 py-2 pl-9 pr-8 text-sm text-gray-100 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-alliance"
+          />
+          {cityQuery && (
+            <button
+              type="button"
+              aria-label="Clear city search"
+              onClick={() => {
+                setCityQuery('');
+                setCitySearchOpen(true);
+              }}
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-gray-400 hover:text-gray-100"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
+          {citySearchOpen && (
+            <div
+              id="city-search-results"
+              role="listbox"
+              className="absolute right-0 top-full z-50 mt-2 max-h-64 w-[min(80vw,280px)] overflow-y-auto rounded-lg border border-gray-700 bg-gray-900 p-1 text-gray-100 shadow-xl"
+            >
+              {matchingCities.length ? (
+                matchingCities.map((city) => (
+                  <div key={city.id}>
+                    <button
+                      type="button"
+                      role="option"
+                      aria-selected={city.id === selectedCity.id}
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={() => handleCityChange(city.id)}
+                      className="flex w-full items-center justify-between rounded-md px-3 py-2 text-left text-sm hover:bg-gray-800 focus:bg-gray-800 focus:outline-none"
+                    >
+                      <span>{city.name}</span>
+                      <span className="text-xs text-gray-400">{city.province}</span>
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <div className="px-3 py-2 text-sm text-gray-400">No matching cities</div>
+              )}
+            </div>
+          )}
+        </div>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

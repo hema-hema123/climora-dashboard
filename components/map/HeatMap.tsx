@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMap } from 'react-leaflet';
 import {
   generateHeatZones,
   generateInfrastructurePoints,
@@ -46,11 +47,26 @@ const CircleMarker = dynamic(() => import('react-leaflet').then((mod) => mod.Cir
 const Polygon = dynamic(() => import('react-leaflet').then((mod) => mod.Polygon), { ssr: false });
 const Popup = dynamic(() => import('react-leaflet').then((mod) => mod.Popup), { ssr: false });
 
+function MapResizeHandler() {
+  const map = useMap();
+
+  useEffect(() => {
+    const container = map.getContainer();
+    const observer = new ResizeObserver(() => map.invalidateSize({ animate: false }));
+    observer.observe(container);
+
+    return () => observer.disconnect();
+  }, [map]);
+
+  return null;
+}
+
 export function HeatMap() {
   const {
     selectedCity,
     selectedDate,
     activeLayers,
+    selectedHeatZone,
     setSelectedHeatZone,
     setSelectedRecommendation,
     mapCenter,
@@ -113,6 +129,7 @@ export function HeatMap() {
         zoomControl={true}
         key={`map-${selectedCity.id}-${mapZoom}-${mapCenter[0]}-${mapCenter[1]}`}
       >
+        <MapResizeHandler />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -135,14 +152,16 @@ export function HeatMap() {
                         : '#facc15',
                 fillOpacity: 0.3,
                 color:
-                  zone.severity === 'extreme'
-                    ? '#7f1d1d'
-                    : zone.severity === 'high'
-                      ? '#dc2626'
-                      : zone.severity === 'moderate'
-                        ? '#f97316'
-                        : '#facc15',
-                weight: 2,
+                  zone.id === selectedHeatZone?.id
+                    ? '#10b981'
+                    : zone.severity === 'extreme'
+                      ? '#7f1d1d'
+                      : zone.severity === 'high'
+                        ? '#dc2626'
+                        : zone.severity === 'moderate'
+                          ? '#f97316'
+                          : '#facc15',
+                weight: zone.id === selectedHeatZone?.id ? 4 : 2,
               }}
               eventHandlers={{
                 click: () => setSelectedHeatZone(zone),
