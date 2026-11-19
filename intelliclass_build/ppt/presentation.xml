@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<p:presentation xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" saveSubsetFonts="1">
+  <p:sldMasterIdLst><p:sldMasterId id="2147483648" r:id="rId1"/></p:sldMasterIdLst>
+  <p:sldIdLst>
+    <p:sldId id="301" r:id="rId_slide_1"/>
+    <p:sldId id="302" r:id="rId_slide_2"/>
+    <p:sldId id="303" r:id="rId_slide_3"/>
+    <p:sldId id="304" r:id="rId_slide_4"/>
+    <p:sldId id="305" r:id="rId_slide_5"/>
+    <p:sldId id="306" r:id="rId_slide_6"/>
+    <p:sldId id="307" r:id="rId_slide_7"/>
+    <p:sldId id="308" r:id="rId_slide_8"/>
+    <p:sldId id="309" r:id="rId_slide_9"/>
+    <p:sldId id="310" r:id="rId_slide_10"/>
+    <p:sldId id="311" r:id="rId_slide_11"/>
+    <p:sldId id="312" r:id="rId_slide_12"/>
+    <p:sldId id="313" r:id="rId_slide_13"/>
+    <p:sldId id="314" r:id="rId_slide_14"/>
+    <p:sldId id="315" r:id="rId_slide_15"/>
+    <p:sldId id="316" r:id="rId_slide_16"/>
+    <p:sldId id="317" r:id="rId_slide_17"/>
+    <p:sldId id="318" r:id="rId_slide_18"/>
+    <p:sldId id="319" r:id="rId_slide_19"/>
+    <p:sldId id="320" r:id="rId_slide_20"/>
+    <p:sldId id="321" r:id="rId_slide_21"/>
+    <p:sldId id="322" r:id="rId_slide_22"/>
+    <p:sldId id="323" r:id="rId_slide_23"/>
+    <p:sldId id="324" r:id="rId_slide_24"/>
+  </p:sldIdLst>
+  <p:sldSz cx="12192000" cy="6858000"/>
+  <p:notesSz cx="6858000" cy="12192000"/>
+</p:presentation>

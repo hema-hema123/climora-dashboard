@@ -62,7 +62,7 @@ export default function DashboardPage() {
               value="map"
               className="flex-1 m-0 data-[state=active]:flex data-[state=active]:flex-col"
             >
-              <div className="flex-1">
+              <div id="climora-map-container-mobile" className="flex-1">
                 <HeatMap />
               </div>
               <div className="p-4 bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800">
@@ -103,7 +103,7 @@ export default function DashboardPage() {
                   !desktopSidebarOpen && 'bg-gray-100 p-3 dark:bg-gray-800',
                 )}
               >
-                <div className="min-h-0 min-w-0 flex-1">
+                <div id="climora-map-container" className="min-h-0 min-w-0 flex-1">
                   <HeatMap />
                 </div>
                 <div className="shrink-0 border-t border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950">

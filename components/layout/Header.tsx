@@ -29,6 +29,7 @@ import {
   generateRecommendations,
   INDIAN_CITIES,
 } from '@/lib/data';
+import { captureMapSnapshot } from '@/lib/snapshot';
 import { useDashboardStore } from '@/lib/store';
 
 export function Header() {
@@ -105,10 +106,7 @@ export function Header() {
       const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
       downloadBlob(blob, `verdant-${selectedCity.id}-data.json`);
     } else if (format === 'png') {
-      // For PNG, we'd capture the map - simplified here
-      alert(
-        'Map screenshot feature would capture the current view. This requires additional setup with html2canvas.',
-      );
+      await captureMapSnapshot(selectedCity.id);
     }
   };
 

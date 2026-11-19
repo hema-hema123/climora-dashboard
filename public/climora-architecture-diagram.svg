@@ -1,0 +1,277 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 950" width="100%" height="100%" style="background:#070d12; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="50%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#13232c" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#0c171e" stop-opacity="0.95"/>
+    </linearGradient>
+
+    <linearGradient id="accentGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+
+    <linearGradient id="accentCyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#0891b2"/>
+    </linearGradient>
+
+    <linearGradient id="accentBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+
+    <linearGradient id="accentAmber" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+
+    <!-- Filters -->
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <!-- Arrow Marker -->
+    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#06b6d4"/>
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#10b981"/>
+    </marker>
+  </defs>
+
+  <!-- Background Grid -->
+  <g opacity="0.06">
+    <path d="M0,0 H1600 M0,50 H1600 M0,100 H1600 M0,150 H1600 M0,200 H1600 M0,250 H1600 M0,300 H1600 M0,350 H1600 M0,400 H1600 M0,450 H1600 M0,500 H1600 M0,550 H1600 M0,600 H1600 M0,650 H1600 M0,700 H1600 M0,750 H1600 M0,800 H1600 M0,850 H1600 M0,900 H1600" stroke="#38bdf8" stroke-width="1"/>
+    <path d="M0,0 V950 M50,0 V950 M100,0 V950 M150,0 V950 M200,0 V950 M250,0 V950 M300,0 V950 M350,0 V950 M400,0 V950 M450,0 V950 M500,0 V950 M550,0 V950 M600,0 V950 M650,0 V950 M700,0 V950 M750,0 V950 M800,0 V950 M850,0 V950 M900,0 V950 M950,0 V950 M1000,0 V950 M1050,0 V950 M1100,0 V950 M1150,0 V950 M1200,0 V950 M1250,0 V950 M1300,0 V950 M1350,0 V950 M1400,0 V950 M1450,0 V950 M1500,0 V950 M1550,0 V950" stroke="#38bdf8" stroke-width="1"/>
+  </g>
+
+  <!-- TITLE BAR -->
+  <g transform="translate(60, 45)">
+    <!-- Logo symbol -->
+    <circle cx="25" cy="25" r="22" fill="none" stroke="#10b981" stroke-width="3" filter="url(#glow)"/>
+    <path d="M 25 10 A 15 15 0 0 1 40 25 L 34 25 A 9 9 0 0 0 25 16 Z" fill="#10b981"/>
+    <path d="M 25 40 A 15 15 0 0 1 10 25 L 16 25 A 9 9 0 0 0 25 34 Z" fill="#06b6d4"/>
+    
+    <text x="65" y="33" fill="#f8fafc" font-size="28" font-weight="700" letter-spacing="-0.5">Climora Climate Intelligence Dashboard</text>
+    <text x="630" y="33" fill="#64748b" font-size="16" font-weight="400">| System Architecture Diagram</text>
+
+    <!-- Meta badges -->
+    <rect x="1270" y="8" width="95" height="30" rx="15" fill="#1e293b" stroke="#334155"/>
+    <text x="1317" y="28" fill="#94a3b8" font-size="12" font-weight="600" text-anchor="middle">Next.js 16</text>
+    <rect x="1375" y="8" width="95" height="30" rx="15" fill="#1e293b" stroke="#334155"/>
+    <text x="1422" y="28" fill="#94a3b8" font-size="12" font-weight="600" text-anchor="middle">React 19</text>
+  </g>
+
+  <!-- LAYER 1: PRESENTATION LAYER -->
+  <g transform="translate(60, 110)">
+    <!-- Tier container -->
+    <rect width="1480" height="120" rx="14" fill="#0b151d" stroke="#1e3a47" stroke-width="1.5" filter="url(#cardShadow)"/>
+    <!-- Left Category Tag -->
+    <rect x="0" y="0" width="220" height="120" rx="14" fill="#0f222d"/>
+    <rect x="210" y="0" width="10" height="120" fill="#0f222d"/>
+    <line x1="220" y1="0" x2="220" y2="120" stroke="#1e3a47" stroke-width="1.5"/>
+    <text x="30" y="55" fill="#38bdf8" font-size="16" font-weight="700" letter-spacing="0.5">PRESENTATION</text>
+    <text x="30" y="78" fill="#94a3b8" font-size="13">App Router &amp; UI Shell</text>
+
+    <!-- Block 1: Next.js App Router -->
+    <g transform="translate(250, 20)">
+      <rect width="360" height="80" rx="10" fill="url(#cardGrad)" stroke="#10b981" stroke-width="1.5"/>
+      <circle cx="35" cy="40" r="16" fill="#064e3b" stroke="#10b981"/>
+      <text x="35" y="45" fill="#34d399" font-size="14" font-weight="700" text-anchor="middle">N</text>
+      <text x="65" y="37" fill="#f8fafc" font-size="16" font-weight="600">Next.js 16 App Router</text>
+      <text x="65" y="57" fill="#94a3b8" font-size="12">app/page.tsx • app/dashboard/page.tsx</text>
+    </g>
+
+    <!-- Block 2: Responsive Shell -->
+    <g transform="translate(640, 20)">
+      <rect width="400" height="80" rx="10" fill="url(#cardGrad)" stroke="#0284c7" stroke-width="1.5"/>
+      <rect x="22" y="27" width="26" height="26" rx="5" fill="#0c4a6e" stroke="#38bdf8"/>
+      <text x="35" y="45" fill="#38bdf8" font-size="14" text-anchor="middle">⊞</text>
+      <text x="62" y="37" fill="#f8fafc" font-size="16" font-weight="600">Responsive DashboardShell</text>
+      <text x="62" y="57" fill="#94a3b8" font-size="12">Header • Sidebar • Multi-pane Grid</text>
+    </g>
+
+    <!-- Block 3: Mobile View Switcher -->
+    <g transform="translate(1070, 20)">
+      <rect width="370" height="80" rx="10" fill="url(#cardGrad)" stroke="#0284c7" stroke-width="1.5"/>
+      <rect x="22" y="27" width="26" height="26" rx="5" fill="#0c4a6e" stroke="#38bdf8"/>
+      <text x="35" y="45" fill="#38bdf8" font-size="14" text-anchor="middle">⊡</text>
+      <text x="62" y="37" fill="#f8fafc" font-size="16" font-weight="600">Adaptive Mobile Tabs</text>
+      <text x="62" y="57" fill="#94a3b8" font-size="12">Radix UI Tabs: Map | Analytics | Actions</text>
+    </g>
+  </g>
+
+  <!-- Connectors Layer 1 to Layer 2 -->
+  <path d="M 430,230 V 265 M 840,230 V 265 M 1255,230 V 265" fill="none" stroke="#0284c7" stroke-width="1.5" stroke-dasharray="4 4" marker-end="url(#arrow)"/>
+
+  <!-- LAYER 2: UI COMPONENTS & GIS MAPPING -->
+  <g transform="translate(60, 270)">
+    <rect width="1480" height="135" rx="14" fill="#0b151d" stroke="#1e3a47" stroke-width="1.5" filter="url(#cardShadow)"/>
+    <rect x="0" y="0" width="220" height="135" rx="14" fill="#0f222d"/>
+    <rect x="210" y="0" width="10" height="135" fill="#0f222d"/>
+    <line x1="220" y1="0" x2="220" y2="135" stroke="#1e3a47" stroke-width="1.5"/>
+    <text x="30" y="60" fill="#38bdf8" font-size="16" font-weight="700" letter-spacing="0.5">GIS &amp; UI WIDGETS</text>
+    <text x="30" y="83" fill="#94a3b8" font-size="13">Interactive Visualizations</text>
+
+    <!-- Leaflet 2D -->
+    <g transform="translate(250, 18)">
+      <rect width="275" height="95" rx="10" fill="url(#cardGrad)" stroke="#10b981" stroke-width="1.5"/>
+      <text x="20" y="38" fill="#34d399" font-size="15" font-weight="600">🗺️ 2D Leaflet HeatMap</text>
+      <text x="20" y="60" fill="#cbd5e1" font-size="12">• Polygon Heat Zones (UHI)</text>
+      <text x="20" y="78" fill="#94a3b8" font-size="11">Vegetation, Sensors, Interventions</text>
+    </g>
+
+    <!-- Mapbox 3D -->
+    <g transform="translate(545, 18)">
+      <rect width="285" height="95" rx="10" fill="url(#cardGrad)" stroke="#06b6d4" stroke-width="1.5"/>
+      <text x="20" y="38" fill="#38bdf8" font-size="15" font-weight="600">🏢 3D Mapbox GL Map</text>
+      <text x="20" y="60" fill="#cbd5e1" font-size="12">• 3D Building Extrusions</text>
+      <text x="20" y="78" fill="#94a3b8" font-size="11">Pitch &amp; Bearing Controls • Dark Mode</text>
+    </g>
+
+    <!-- Recharts Analytics -->
+    <g transform="translate(850, 18)">
+      <rect width="320" height="95" rx="10" fill="url(#cardGrad)" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="20" y="38" fill="#60a5fa" font-size="15" font-weight="600">📈 Recharts Visualizations</text>
+      <text x="20" y="60" fill="#cbd5e1" font-size="12">• Urban vs Rural Differential Curves</text>
+      <text x="20" y="78" fill="#94a3b8" font-size="11">City Comparison • 2050 Projections</text>
+    </g>
+
+    <!-- Time & Decision Controls -->
+    <g transform="translate(1190, 18)">
+      <rect width="250" height="95" rx="10" fill="url(#cardGrad)" stroke="#f59e0b" stroke-width="1.5"/>
+      <text x="20" y="38" fill="#fbbf24" font-size="15" font-weight="600">⏱️ Interactive Controls</text>
+      <text x="20" y="60" fill="#cbd5e1" font-size="12">• Timeline Scrubber</text>
+      <text x="20" y="78" fill="#94a3b8" font-size="11">Layer Toggles • CSV/PNG Export</text>
+    </g>
+  </g>
+
+  <!-- Connectors Layer 2 to Layer 3 -->
+  <path d="M 387,405 V 440 M 687,405 V 440 M 1010,405 V 440 M 1315,405 V 440" fill="none" stroke="#06b6d4" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- LAYER 3: STATE & DATA ORCHESTRATION -->
+  <g transform="translate(60, 445)">
+    <rect width="1480" height="120" rx="14" fill="#0b151d" stroke="#1e3a47" stroke-width="1.5" filter="url(#cardShadow)"/>
+    <rect x="0" y="0" width="220" height="120" rx="14" fill="#0f222d"/>
+    <rect x="210" y="0" width="10" height="120" fill="#0f222d"/>
+    <line x1="220" y1="0" x2="220" y2="120" stroke="#1e3a47" stroke-width="1.5"/>
+    <text x="30" y="55" fill="#38bdf8" font-size="16" font-weight="700" letter-spacing="0.5">STATE &amp; DATA</text>
+    <text x="30" y="78" fill="#94a3b8" font-size="13">Zustand &amp; React Query</text>
+
+    <!-- Zustand Store -->
+    <g transform="translate(250, 18)">
+      <rect width="580" height="84" rx="10" fill="url(#cardGrad)" stroke="#10b981" stroke-width="1.5"/>
+      <circle cx="35" cy="42" r="16" fill="#064e3b" stroke="#10b981"/>
+      <text x="35" y="47" fill="#34d399" font-size="14" font-weight="700" text-anchor="middle">Z</text>
+      <text x="65" y="35" fill="#f8fafc" font-size="16" font-weight="600">Zustand Central Store (lib/store.ts)</text>
+      <text x="65" y="55" fill="#cbd5e1" font-size="12">Active Layers • Selected City • TimeSliderValue • 2D/3D Mode</text>
+      <text x="65" y="72" fill="#94a3b8" font-size="11">Selected HeatZone • Implemented Interventions Set</text>
+    </g>
+
+    <!-- TanStack Query -->
+    <g transform="translate(860, 18)">
+      <rect width="580" height="84" rx="10" fill="url(#cardGrad)" stroke="#06b6d4" stroke-width="1.5"/>
+      <circle cx="35" cy="42" r="16" fill="#164e63" stroke="#06b6d4"/>
+      <text x="35" y="47" fill="#38bdf8" font-size="14" font-weight="700" text-anchor="middle">Q</text>
+      <text x="65" y="35" fill="#f8fafc" font-size="16" font-weight="600">TanStack React Query Cache (hooks/useClimateData.ts)</text>
+      <text x="65" y="55" fill="#cbd5e1" font-size="12">NASA Daily Temperatures • Monthly Aggregations • Stale-While-Revalidate</text>
+      <text x="65" y="72" fill="#94a3b8" font-size="11">Auto-Retry on failure • 1h–24h Invalidation Lifecycles</text>
+    </g>
+  </g>
+
+  <!-- Connectors Layer 3 to Layer 4 -->
+  <path d="M 540,565 V 600 M 1150,565 V 600" fill="none" stroke="#10b981" stroke-width="1.5" marker-end="url(#arrowGreen)"/>
+
+  <!-- LAYER 4: CLIMATE ENGINE & GEOSPATIAL LOGIC -->
+  <g transform="translate(60, 605)">
+    <rect width="1480" height="135" rx="14" fill="#0b151d" stroke="#1e3a47" stroke-width="1.5" filter="url(#cardShadow)"/>
+    <rect x="0" y="0" width="220" height="135" rx="14" fill="#0f222d"/>
+    <rect x="210" y="0" width="10" height="135" fill="#0f222d"/>
+    <line x1="220" y1="0" x2="220" y2="135" stroke="#1e3a47" stroke-width="1.5"/>
+    <text x="30" y="60" fill="#38bdf8" font-size="16" font-weight="700" letter-spacing="0.5">CLIMATE ENGINE</text>
+    <text x="30" y="83" fill="#94a3b8" font-size="13">Core Modeling &amp; Logic</text>
+
+    <!-- UHI Model -->
+    <g transform="translate(250, 18)">
+      <rect width="365" height="98" rx="10" fill="url(#cardGrad)" stroke="#10b981" stroke-width="1.5"/>
+      <text x="20" y="36" fill="#34d399" font-size="15" font-weight="600">🌡️ UHI Differential Engine</text>
+      <text x="20" y="58" fill="#e2e8f0" font-size="12">ΔT = T_urban(center) - T_rural(+50km)</text>
+      <text x="20" y="78" fill="#94a3b8" font-size="11">Quantifies localized heat stress &amp; intensity</text>
+      <text x="20" y="93" fill="#64748b" font-size="10">Implemented in: hooks/useClimateData.ts</text>
+    </g>
+
+    <!-- Hotspot Classifier -->
+    <g transform="translate(635, 18)">
+      <rect width="380" height="98" rx="10" fill="url(#cardGrad)" stroke="#06b6d4" stroke-width="1.5"/>
+      <text x="20" y="36" fill="#38bdf8" font-size="15" font-weight="600">🎯 Hotspot &amp; Zone Detection</text>
+      <text x="20" y="58" fill="#e2e8f0" font-size="12">Deterministic Seeded Spatial Sampling</text>
+      <text x="20" y="78" fill="#94a3b8" font-size="11">Ranks severity: Low | Moderate | High | Extreme</text>
+      <text x="20" y="93" fill="#64748b" font-size="10">Computes polygon bounds &amp; vulnerability index</text>
+    </g>
+
+    <!-- Dynamic Interventions Loop -->
+    <g transform="translate(1035, 18)">
+      <rect width="405" height="98" rx="10" fill="url(#cardGrad)" stroke="#10b981" stroke-width="1.5"/>
+      <text x="20" y="36" fill="#34d399" font-size="15" font-weight="600">🌿 Dynamic Mitigation Simulator</text>
+      <text x="20" y="58" fill="#e2e8f0" font-size="12">Interactive Project Implementation</text>
+      <text x="20" y="78" fill="#94a3b8" font-size="11">Calculates cooling effect (°C), cost, &amp; population benefit</text>
+      <text x="20" y="93" fill="#64748b" font-size="10">Real-time KPI recalculation in StatsCards &amp; Maps</text>
+    </g>
+  </g>
+
+  <!-- Connectors Layer 4 to Layer 5 -->
+  <path d="M 432,740 V 775 M 825,740 V 775 M 1237,740 V 775" fill="none" stroke="#0284c7" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- LAYER 5: EXTERNAL DATA PROVIDERS -->
+  <g transform="translate(60, 780)">
+    <rect width="1480" height="115" rx="14" fill="#0b151d" stroke="#1e3a47" stroke-width="1.5" filter="url(#cardShadow)"/>
+    <rect x="0" y="0" width="220" height="115" rx="14" fill="#0f222d"/>
+    <rect x="210" y="0" width="10" height="115" fill="#0f222d"/>
+    <line x1="220" y1="0" x2="220" y2="115" stroke="#1e3a47" stroke-width="1.5"/>
+    <text x="30" y="52" fill="#38bdf8" font-size="16" font-weight="700" letter-spacing="0.5">EXTERNAL DATA</text>
+    <text x="30" y="75" fill="#94a3b8" font-size="13">APIs &amp; Tile Servers</text>
+
+    <!-- NASA POWER API -->
+    <g transform="translate(250, 18)">
+      <rect width="280" height="78" rx="10" fill="url(#cardGrad)" stroke="#38bdf8" stroke-width="1.5"/>
+      <text x="20" y="35" fill="#f8fafc" font-size="15" font-weight="600">🛰️ NASA POWER API</text>
+      <text x="20" y="55" fill="#94a3b8" font-size="12">Daily &amp; Monthly T2M satellite data</text>
+      <text x="20" y="70" fill="#64748b" font-size="11">5x5 Spatial Grid Sampling</text>
+    </g>
+
+    <!-- Mapbox Vector Tiles -->
+    <g transform="translate(550, 18)">
+      <rect width="280" height="78" rx="10" fill="url(#cardGrad)" stroke="#38bdf8" stroke-width="1.5"/>
+      <text x="20" y="35" fill="#f8fafc" font-size="15" font-weight="600">🗺️ Mapbox Vector Tiles</text>
+      <text x="20" y="55" fill="#94a3b8" font-size="12">mapbox://styles/mapbox/dark-v11</text>
+      <text x="20" y="70" fill="#64748b" font-size="11">Building height extrusions</text>
+    </g>
+
+    <!-- NOAA / Weather.gov -->
+    <g transform="translate(850, 18)">
+      <rect width="280" height="78" rx="10" fill="url(#cardGrad)" stroke="#38bdf8" stroke-width="1.5"/>
+      <text x="20" y="35" fill="#f8fafc" font-size="15" font-weight="600">🌦️ NOAA / Env Canada</text>
+      <text x="20" y="55" fill="#94a3b8" font-size="12">api.weather.gov &amp; XML feeds</text>
+      <text x="20" y="70" fill="#64748b" font-size="11">Forecast grid fallback endpoints</text>
+    </g>
+
+    <!-- OpenStreetMap / CartoDB -->
+    <g transform="translate(1150, 18)">
+      <rect width="290" height="78" rx="10" fill="url(#cardGrad)" stroke="#38bdf8" stroke-width="1.5"/>
+      <text x="20" y="35" fill="#f8fafc" font-size="15" font-weight="600">🌍 OpenStreetMap / Carto</text>
+      <text x="20" y="55" fill="#94a3b8" font-size="12">Basemap tile rendering</text>
+      <text x="20" y="70" fill="#64748b" font-size="11">Open geospatial reference data</text>
+    </g>
+  </g>
+</svg>

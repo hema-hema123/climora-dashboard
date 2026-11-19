@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
+  <p:cSld name="Slide 20">
+    <p:spTree>
+      <p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr>
+      <p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>
+      
+      <!-- Canvas Background -->
+      <p:pic>
+        <p:nvPicPr><p:cNvPr id="2" name="SlideBg"/><p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr/></p:nvPicPr>
+        <p:blipFill><a:blip r:embed="rId_bg"/><a:stretch><a:fillRect/></a:stretch></p:blipFill>
+        <p:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="12192000" cy="6858000"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr>
+      </p:pic>
+
+      <!-- Footer Brand Logo -->
+      <p:pic>
+        <p:nvPicPr><p:cNvPr id="3" name="FooterLogo"/><p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr/></p:nvPicPr>
+        <p:blipFill><a:blip r:embed="rId_footer"/><a:stretch><a:fillRect/></a:stretch></p:blipFill>
+        <p:spPr><a:xfrm><a:off x="11496675" y="6162675"/><a:ext cx="323850" cy="323850"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr>
+      </p:pic>
+
+      <!-- Top Section Category Pill -->
+      <p:sp>
+        <p:nvSpPr><p:cNvPr id="4" name="SecPill"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>
+        <p:spPr>
+          <a:xfrm><a:off x="800000" y="380000"/><a:ext cx="4600000" cy="320000"/></a:xfrm>
+          <a:prstGeom prst="roundRect"><a:avLst><a:gd name="adj" fmla="val 50000"/></a:avLst></a:prstGeom>
+          <a:solidFill><a:srgbClr val="072230"/></a:solidFill>
+          <a:ln w="12700"><a:solidFill><a:srgbClr val="38BDF8"/></a:solidFill></a:ln>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" lIns="100000" tIns="0" rIns="100000" bIns="0" anchor="ctr"/>
+          <a:lstStyle/>
+          <a:p>
+            <a:r>
+              <a:rPr lang="en-US" sz="1100" b="1"><a:solidFill><a:srgbClr val="38BDF8"/></a:solidFill><a:latin typeface="Segoe UI Semibold"/></a:rPr>
+              <a:t>SECTION 4: MODULES AND IMPLEMENTATION</a:t>
+            </a:r>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+
+      <!-- Slide Title & Number -->
+      <p:sp>
+        <p:nvSpPr><p:cNvPr id="5" name="Title"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>
+        <p:spPr><a:xfrm><a:off x="800000" y="780000"/><a:ext cx="10592000" cy="620000"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:noFill/><a:ln/></p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" lIns="0" tIns="0" rIns="0" bIns="0" anchor="ctr"/>
+          <a:lstStyle/>
+          <a:p>
+            <a:r>
+              <a:rPr lang="en-US" sz="2600" b="1"><a:solidFill><a:srgbClr val="10B981"/></a:solidFill><a:latin typeface="Segoe UI Semibold"/></a:rPr>
+              <a:t>20. </a:t>
+            </a:r>
+            <a:r>
+              <a:rPr lang="en-US" sz="2600" b="1"><a:solidFill><a:srgbClr val="F8FAFC"/></a:solidFill><a:latin typeface="Segoe UI Semibold"/></a:rPr>
+              <a:t>Real-Time Analytics and Mitigation</a:t>
+            </a:r>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+
+      <!-- Left Point-Wise Card -->
+      <p:sp>
+        <p:nvSpPr><p:cNvPr id="6" name="TextCard"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>
+        <p:spPr>
+          <a:xfrm><a:off x="800000" y="1520000"/><a:ext cx="5892000" cy="4900000"/></a:xfrm>
+          <a:prstGeom prst="roundRect"><a:avLst><a:gd name="adj" fmla="val 2400"/></a:avLst></a:prstGeom>
+          <a:solidFill><a:srgbClr val="071A28"/></a:solidFill>
+          <a:ln w="19050"><a:solidFill><a:srgbClr val="1E293B"/></a:solidFill></a:ln>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" lIns="250000" tIns="250000" rIns="250000" bIns="250000" anchor="t"/>
+          <a:lstStyle/>
+          <a:p>
+              <a:pPr marL="280000" indent="-280000"><a:buFont typeface="Arial"/><a:buChar char="•"/></a:pPr>
+              <a:r>
+                <a:rPr lang="en-US" sz="1300" b="1"><a:solidFill><a:srgbClr val="F8FAFC"/></a:solidFill><a:latin typeface="Segoe UI Semibold"/></a:rPr>
+                <a:t>Multi-Year Temperature Profiling: </a:t>
+              </a:r>
+              <a:r>
+                <a:rPr lang="en-US" sz="1300"><a:solidFill><a:srgbClr val="CBD5E1"/></a:solidFill><a:latin typeface="Segoe UI"/></a:rPr>
+                <a:t>Recharts area plots display historical daily highs, 10-year rolling means, and seasonal variance.</a:t>
+              </a:r>
+            </a:p>
+            <a:p><a:endParaRPr sz="350"/></a:p><a:p>
+              <a:pPr marL="280000" indent="-280000"><a:buFont typeface="Arial"/><a:buChar char="•"/></a:pPr>
+              <a:r>
+                <a:rPr lang="en-US" sz="1300" b="1"><a:solidFill><a:srgbClr val="F8FAFC"/></a:solidFill><a:latin typeface="Segoe UI Semibold"/></a:rPr>
+                <a:t>Urban Canopy Expansion: </a:t>
+              </a:r>
+              <a:r>
+                <a:rPr lang="en-US" sz="1300"><a:solidFill><a:srgbClr val="CBD5E1"/></a:solidFill><a:latin typeface="Segoe UI"/></a:rPr>
+                <a:t>Recommends strategic tree planting, estimating cooling drops between 1.2°C and 2.5°C across concrete wards.</a:t>
+              </a:r>
+            </a:p>
+            <a:p><a:endParaRPr sz="350"/></a:p><a:p>
+              <a:pPr marL="280000" indent="-280000"><a:buFont typeface="Arial"/><a:buChar char="•"/></a:pPr>
+              <a:r>
+                <a:rPr lang="en-US" sz="1300" b="1"><a:solidFill><a:srgbClr val="F8FAFC"/></a:solidFill><a:latin typeface="Segoe UI Semibold"/></a:rPr>
+                <a:t>Cool Roofs &amp; Reflective Coatings: </a:t>
+              </a:r>
+              <a:r>
+                <a:rPr lang="en-US" sz="1300"><a:solidFill><a:srgbClr val="CBD5E1"/></a:solidFill><a:latin typeface="Segoe UI"/></a:rPr>
+                <a:t>Identifies high-density residential rooftops where reflective coatings lower surface heat by 3°C to 5°C.</a:t>
+              </a:r>
+            </a:p>
+            <a:p><a:endParaRPr sz="350"/></a:p><a:p>
+              <a:pPr marL="280000" indent="-280000"><a:buFont typeface="Arial"/><a:buChar char="•"/></a:pPr>
+              <a:r>
+                <a:rPr lang="en-US" sz="1300" b="1"><a:solidFill><a:srgbClr val="F8FAFC"/></a:solidFill><a:latin typeface="Segoe UI Semibold"/></a:rPr>
+                <a:t>Quantified Delhi Intervention Summary: </a:t>
+              </a:r>
+              <a:r>
+                <a:rPr lang="en-US" sz="1300"><a:solidFill><a:srgbClr val="CBD5E1"/></a:solidFill><a:latin typeface="Segoe UI"/></a:rPr>
+                <a:t>8 Active Targeted Sites across 224.15 hectares with an average projected cooling of -1.6°C.</a:t>
+              </a:r>
+            </a:p>
+            <a:p><a:endParaRPr sz="350"/></a:p><a:p>
+              <a:pPr marL="280000" indent="-280000"><a:buFont typeface="Arial"/><a:buChar char="•"/></a:pPr>
+              <a:r>
+                <a:rPr lang="en-US" sz="1300" b="1"><a:solidFill><a:srgbClr val="F8FAFC"/></a:solidFill><a:latin typeface="Segoe UI Semibold"/></a:rPr>
+                <a:t>Flyover Vertical Greenery: </a:t>
+              </a:r>
+              <a:r>
+                <a:rPr lang="en-US" sz="1300"><a:solidFill><a:srgbClr val="CBD5E1"/></a:solidFill><a:latin typeface="Segoe UI"/></a:rPr>
+                <a:t>Critical priority, -1.8°C cooling effect across 10.97 hectares.</a:t>
+              </a:r>
+            </a:p>
+            <a:p><a:endParaRPr sz="350"/></a:p><a:p>
+              <a:pPr marL="280000" indent="-280000"><a:buFont typeface="Arial"/><a:buChar char="•"/></a:pPr>
+              <a:r>
+                <a:rPr lang="en-US" sz="1300" b="1"><a:solidFill><a:srgbClr val="F8FAFC"/></a:solidFill><a:latin typeface="Segoe UI Semibold"/></a:rPr>
+                <a:t>Lake Restoration &amp; Bioswales: </a:t>
+              </a:r>
+              <a:r>
+                <a:rPr lang="en-US" sz="1300"><a:solidFill><a:srgbClr val="CBD5E1"/></a:solidFill><a:latin typeface="Segoe UI"/></a:rPr>
+                <a:t>High priority, -1.9°C to -2.1°C cooling effect across 62.58 hectares.</a:t>
+              </a:r>
+            </a:p>
+            <a:p><a:endParaRPr sz="350"/></a:p>
+        </p:txBody>
+      </p:sp>
+
+      <!-- Right Embedded Snapshot -->
+      <p:pic>
+        <p:nvPicPr><p:cNvPr id="7" name="SnapshotImg"/><p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr/></p:nvPicPr>
+        <p:blipFill><a:blip r:embed="rId_snap"/><a:stretch><a:fillRect/></a:stretch></p:blipFill>
+        <p:spPr>
+          <a:xfrm><a:off x="6992000" y="1520000"/><a:ext cx="4400000" cy="4900000"/></a:xfrm>
+          <a:prstGeom prst="roundRect"><a:avLst><a:gd name="adj" fmla="val 2000"/></a:avLst></a:prstGeom>
+          <a:ln w="25400"><a:solidFill><a:srgbClr val="10B981"/></a:solidFill></a:ln>
+        </p:spPr>
+      </p:pic>
+
+    </p:spTree>
+  </p:cSld>
+  <p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr>
+</p:sld>

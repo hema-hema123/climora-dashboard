@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<p:sld xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">
+  <p:cSld name="Slide 13">
+    <p:spTree>
+      <p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr>
+      <p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>
+      
+      <!-- Canvas Background -->
+      <p:pic>
+        <p:nvPicPr><p:cNvPr id="2" name="SlideBg"/><p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr/></p:nvPicPr>
+        <p:blipFill><a:blip r:embed="rId_bg"/><a:stretch><a:fillRect/></a:stretch></p:blipFill>
+        <p:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="12192000" cy="6858000"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr>
+      </p:pic>
+
+      <!-- Footer Brand Logo -->
+      <p:pic>
+        <p:nvPicPr><p:cNvPr id="3" name="FooterLogo"/><p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr/></p:nvPicPr>
+        <p:blipFill><a:blip r:embed="rId_footer"/><a:stretch><a:fillRect/></a:stretch></p:blipFill>
+        <p:spPr><a:xfrm><a:off x="11496675" y="6162675"/><a:ext cx="323850" cy="323850"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr>
+      </p:pic>
+
+      <!-- Top Section Pill -->
+      <p:sp>
+        <p:nvSpPr><p:cNvPr id="4" name="SecPill"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>
+        <p:spPr>
+          <a:xfrm><a:off x="800000" y="380000"/><a:ext cx="4600000" cy="320000"/></a:xfrm>
+          <a:prstGeom prst="roundRect"><a:avLst><a:gd name="adj" fmla="val 50000"/></a:avLst></a:prstGeom>
+          <a:solidFill><a:srgbClr val="072230"/></a:solidFill>
+          <a:ln w="12700"><a:solidFill><a:srgbClr val="38BDF8"/></a:solidFill></a:ln>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" lIns="100000" tIns="0" rIns="100000" bIns="0" anchor="ctr"/>
+          <a:lstStyle/>
+          <a:p><a:r><a:rPr lang="en-US" sz="1100" b="1"><a:solidFill><a:srgbClr val="38BDF8"/></a:solidFill><a:latin typeface="Segoe UI Semibold"/></a:rPr><a:t>SECTION 3: REQUIREMENTS AND SYSTEM DESIGN</a:t></a:r></a:p>
+        </p:txBody>
+      </p:sp>
+
+      <!-- Slide Title -->
+      <p:sp>
+        <p:nvSpPr><p:cNvPr id="5" name="Title"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>
+        <p:spPr><a:xfrm><a:off x="800000" y="780000"/><a:ext cx="10592000" cy="620000"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:noFill/><a:ln/></p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" lIns="0" tIns="0" rIns="0" bIns="0" anchor="ctr"/>
+          <a:lstStyle/>
+          <a:p>
+            <a:r><a:rPr lang="en-US" sz="2600" b="1"><a:solidFill><a:srgbClr val="10B981"/></a:solidFill><a:latin typeface="Segoe UI Semibold"/></a:rPr><a:t>13. </a:t></a:r>
+            <a:r><a:rPr lang="en-US" sz="2600" b="1"><a:solidFill><a:srgbClr val="F8FAFC"/></a:solidFill><a:latin typeface="Segoe UI Semibold"/></a:rPr><a:t>System Architecture</a:t></a:r>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+
+      <!-- Full-Width Architecture Diagram Image (snap_arch_diagram.jpg) -->
+      <p:pic>
+        <p:nvPicPr><p:cNvPr id="6" name="ArchitectureDiagram"/><p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr/></p:nvPicPr>
+        <p:blipFill><a:blip r:embed="rId_arch"/><a:stretch><a:fillRect/></a:stretch></p:blipFill>
+        <p:spPr>
+          <a:xfrm><a:off x="1496000" y="1520000"/><a:ext cx="9200000" cy="4200000"/></a:xfrm>
+          <a:prstGeom prst="roundRect"><a:avLst><a:gd name="adj" fmla="val 1500"/></a:avLst></a:prstGeom>
+          <a:ln w="25400"><a:solidFill><a:srgbClr val="10B981"/></a:solidFill></a:ln>
+        </p:spPr>
+      </p:pic>
+
+      <!-- Architecture Point-Wise Summary Strip Below -->
+      <p:sp>
+        <p:nvSpPr><p:cNvPr id="7" name="ArchSummary"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr>
+        <p:spPr>
+          <a:xfrm><a:off x="800000" y="5850000"/><a:ext cx="10592000" cy="650000"/></a:xfrm>
+          <a:prstGeom prst="roundRect"><a:avLst><a:gd name="adj" fmla="val 20000"/></a:avLst></a:prstGeom>
+          <a:solidFill><a:srgbClr val="071A28"/></a:solidFill>
+          <a:ln w="12700"><a:solidFill><a:srgbClr val="38BDF8"/></a:solidFill></a:ln>
+        </p:spPr>
+        <p:txBody>
+          <a:bodyPr wrap="square" lIns="200000" tIns="100000" rIns="200000" bIns="100000" anchor="ctr"/>
+          <a:lstStyle/>
+          <a:p>
+            <a:r><a:rPr lang="en-US" sz="1200" b="1"><a:solidFill><a:srgbClr val="38BDF8"/></a:solidFill><a:latin typeface="Segoe UI Semibold"/></a:rPr><a:t>Key Architectural Highlights: </a:t></a:r>
+            <a:r><a:rPr lang="en-US" sz="1200"><a:solidFill><a:srgbClr val="CBD5E1"/></a:solidFill><a:latin typeface="Segoe UI"/></a:rPr><a:t>5-Tier Client-Side Architecture (Next.js 16 + React 19) • Local State via Zustand &amp; TanStack Query • Climate Engine executing UHI Differential &amp; Hotspot Models in-browser • Direct telemetry from NASA POWER &amp; NOAA APIs • Zero server hosting costs.</a:t></a:r>
+          </a:p>
+        </p:txBody>
+      </p:sp>
+
+    </p:spTree>
+  </p:cSld>
+  <p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr>
+</p:sld>

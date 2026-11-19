@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster" Target="slideMasters/slideMaster1.xml"/>
+  <Relationship Id="rId_slide_1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide1.xml"/>
+  <Relationship Id="rId_slide_2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide2.xml"/>
+  <Relationship Id="rId_slide_3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide3.xml"/>
+  <Relationship Id="rId_slide_4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide4.xml"/>
+  <Relationship Id="rId_slide_5" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide5.xml"/>
+  <Relationship Id="rId_slide_6" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide6.xml"/>
+  <Relationship Id="rId_slide_7" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide7.xml"/>
+  <Relationship Id="rId_slide_8" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide8.xml"/>
+  <Relationship Id="rId_slide_9" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide9.xml"/>
+  <Relationship Id="rId_slide_10" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide10.xml"/>
+  <Relationship Id="rId_slide_11" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide11.xml"/>
+  <Relationship Id="rId_slide_12" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide12.xml"/>
+  <Relationship Id="rId_slide_13" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide13.xml"/>
+  <Relationship Id="rId_slide_14" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide14.xml"/>
+  <Relationship Id="rId_slide_15" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide15.xml"/>
+  <Relationship Id="rId_slide_16" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide16.xml"/>
+  <Relationship Id="rId_slide_17" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide17.xml"/>
+  <Relationship Id="rId_slide_18" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide18.xml"/>
+  <Relationship Id="rId_slide_19" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide19.xml"/>
+  <Relationship Id="rId_slide_20" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide20.xml"/>
+  <Relationship Id="rId_slide_21" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide21.xml"/>
+  <Relationship Id="rId_slide_22" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide22.xml"/>
+  <Relationship Id="rId_slide_23" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide23.xml"/>
+  <Relationship Id="rId_slide_24" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide" Target="slides/slide24.xml"/>
+</Relationships>

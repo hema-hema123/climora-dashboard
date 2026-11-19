@@ -54,6 +54,7 @@ export function MapboxMap() {
         zoom: 16.5, // Higher zoom to ensure buildings are visible
         pitch: 60,
         bearing: 0,
+        preserveDrawingBuffer: true,
       });
 
       // Add navigation controls
@@ -391,7 +392,7 @@ export function MapboxMap() {
   }
 
   return (
-    <div className="relative h-full w-full">
+    <div id="climora-mapbox-view" className="relative h-full w-full">
       <div ref={mapContainer} className="h-full w-full" />
 
       {/* Rotation Slider */}

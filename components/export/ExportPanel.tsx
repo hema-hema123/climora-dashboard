@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { generateCityStats, generateHeatZones, generateRecommendations } from '@/lib/data';
+import { captureMapSnapshot } from '@/lib/snapshot';
 import { useDashboardStore } from '@/lib/store';
 
 type ExportFormat = 'png' | 'csv' | 'json';
@@ -63,10 +64,7 @@ export function ExportPanel() {
       const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
       downloadBlob(blob, `verdant-${selectedCity.id}-data.json`);
     } else if (format === 'png') {
-      // For PNG, we'd capture the map - simplified here
-      alert(
-        'Map screenshot feature would capture the current view. This requires additional setup with html2canvas.',
-      );
+      await captureMapSnapshot(selectedCity.id);
     }
 
     setExporting(null);

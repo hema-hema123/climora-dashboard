@@ -121,7 +121,7 @@ export function HeatMap() {
 
   // Render 2D Leaflet map
   return (
-    <div ref={containerRef} className="relative h-full w-full">
+    <div ref={containerRef} id="climora-map-view" className="relative h-full w-full">
       <MapContainer
         center={mapCenter}
         zoom={mapZoom}
@@ -133,6 +133,7 @@ export function HeatMap() {
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          crossOrigin=""
         />
 
         {/* Heat layer: Heat zones (polygons) */}

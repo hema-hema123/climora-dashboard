@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Climora: Urban Heat Island Intelligence Platform — 24-Slide Final Presentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: radial-gradient(circle at 50% 0%, #0d2d3a 0%, #07151e 65%, #030a0f 100%);
+      --card-bg: rgba(13, 35, 46, 0.78);
+      --card-border: rgba(56, 189, 248, 0.18);
+      --card-border-green: rgba(16, 185, 129, 0.35);
+      --accent-green: #10b981;
+      --accent-cyan: #38bdf8;
+      --accent-emerald: #059669;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      background: #030a0f;
+      color: var(--text-main);
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      user-select: none;
+    }
+
+    .deck-container {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: var(--bg-gradient);
+    }
+
+    .slide {
+      position: absolute;
+      width: 90vw;
+      max-width: 1360px;
+      height: 84vh;
+      max-height: 820px;
+      padding: 36px 52px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65), 0 0 1px 1px rgba(255, 255, 255, 0.08);
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0.97) translateY(15px);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1) translateY(0);
+      z-index: 2;
+    }
+
+    .slide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--accent-green);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      width: fit-content;
+      margin-bottom: 6px;
+    }
+
+    .slide-title {
+      font-size: 1.95rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .slide-title span.number {
+      color: var(--accent-cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      opacity: 0.85;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      flex: 1;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      flex: 1;
+    }
+
+    .card {
+      background: rgba(10, 24, 34, 0.68);
+      border: 1px solid rgba(56, 189, 248, 0.15);
+      border-radius: 14px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card.highlight {
+      border-color: var(--card-border-green);
+      background: rgba(16, 185, 129, 0.06);
+    }
+
+    .card-title {
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+
+    .card.highlight .card-title {
+      color: var(--accent-green);
+    }
+
+    ul.bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    ul.bullet-list li {
+      font-size: 0.94rem;
+      line-height: 1.48;
+      color: #cbd5e1;
+      position: relative;
+      padding-left: 20px;
+    }
+
+    ul.bullet-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--accent-green);
+      font-size: 1.3rem;
+      line-height: 1;
+      top: -1px;
+    }
+
+    /* College title slide */
+    .college-header { text-align: center; margin-bottom: 12px; }
+    .college-logo-img {
+      width: 82px;
+      height: 82px;
+      object-fit: contain;
+      margin-bottom: 6px;
+      background: #ffffff;
+      border-radius: 50%;
+      padding: 4px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+    }
+    .college-name { font-size: 1.25rem; font-weight: 800; color: #fff; letter-spacing: 0.04em; }
+    .college-sub { font-size: 0.88rem; font-weight: 600; color: var(--accent-cyan); }
+    .project-banner {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(56, 189, 248, 0.1) 100%);
+      border: 1px solid var(--card-border-green);
+      border-radius: 12px;
+      padding: 14px 20px;
+      text-align: center;
+      margin: 10px 0 20px 0;
+    }
+    .project-code { font-size: 0.85rem; font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--accent-green); margin-bottom: 4px; }
+    .project-title { font-size: 1.55rem; font-weight: 800; color: #ffffff; }
+    .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .meta-box { background: rgba(8, 20, 29, 0.7); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 16px 20px; }
+    .meta-label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent-cyan); margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 4px; }
+    .student-row { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: 0.92rem; }
+    .student-name { font-weight: 600; color: #e2e8f0; }
+    .student-usn { font-family: 'JetBrains Mono', monospace; color: var(--accent-green); font-weight: 600; font-size: 0.86rem; }
+    .staff-entry { margin-bottom: 10px; }
+    .staff-title { font-size: 0.76rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; }
+    .staff-name { font-size: 1.02rem; font-weight: 700; color: #ffffff; }
+    .staff-role { font-size: 0.82rem; color: #cbd5e1; }
+
+    /* Snapshot Visual Slides */
+    .snap-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .snap-img {
+      max-width: 100%;
+      max-height: 520px;
+      object-fit: contain;
+      border-radius: 12px;
+      border: 1px solid var(--card-border-green);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Math formula container */
+    .math-formula {
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 10px 14px;
+      border-radius: 8px;
+      color: #34d399;
+      font-size: 0.92rem;
+      margin: 6px 0;
+      display: inline-block;
+    }
+
+    /* Controls */
+    .controls {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(8, 20, 29, 0.88);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      backdrop-filter: blur(12px);
+      padding: 8px 18px;
+      border-radius: 9999px;
+      z-index: 100;
+    }
+    .btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn:hover { background: rgba(16, 185, 129, 0.2); border-color: var(--accent-green); color: #34d399; }
+    .page-indicator { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: #94a3b8; padding: 0 8px; }
+
+    @media print {
+      body { overflow: visible; background: #000; }
+      .deck-container { display: block; height: auto; }
+      .slide { position: relative; opacity: 1 !important; visibility: visible !important; transform: none !important; page-break-after: always; height: 100vh; width: 100vw; max-width: none; border: none; border-radius: 0; }
+      .controls { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="deck-container">
+
+  <!-- SLIDE 1 -->
+  <div class="slide active" id="slide-1">
+    <div class="college-header">
+      <img src="/college-logo.jpg" alt="SJMIT Chitradurga Logo" class="college-logo-img">
+      <div class="college-name">S.J.M. INSTITUTE OF TECHNOLOGY, CHITRADURGA</div>
+      <div class="college-sub">DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING • S.J.M. VIDYAPEETHA ®</div>
+    </div>
+    <div class="project-banner">
+      <div class="project-code">Project Phase-I & Major Project Phase-Ⅱ • Course Code: BCS685 / BCS786</div>
+      <div class="project-title">CLIMORA: URBAN HEAT ISLAND INTELLIGENCE PLATFORM</div>
+    </div>
+    <div class="meta-grid">
+      <div class="meta-box">
+        <div class="meta-label">Presented By (Team Members)</div>
+        <div class="student-row"><span class="student-name">SAHANA G S</span><span class="student-usn">4SM34CS083</span></div>
+        <div class="student-row"><span class="student-name">HEMA S</span><span class="student-usn">4SM23CS037</span></div>
+        <div class="student-row"><span class="student-name">RAKSHITHA M H</span><span class="student-usn">4SM23CS079</span></div>
+        <div class="student-row"><span class="student-name">ASHWINI B C</span><span class="student-usn">4SM24CS400</span></div>
+      </div>
+      <div class="meta-box">
+        <div class="meta-label">Faculty Supervision</div>
+        <div class="staff-entry">
+          <div class="staff-title">Project Guide</div>
+          <div class="staff-name">Prof. Sagar K R, <span style="font-size:0.85rem; font-weight:400; color:var(--accent-green);">M.Tech.</span></div>
+          <div class="staff-role">Assistant Professor, Department of CS&E</div>
+        </div>
+        <div class="staff-entry" style="margin-top:10px;">
+          <div class="staff-title">Head of the Department</div>
+          <div class="staff-name">Dr. Krishnareddy K R, <span style="font-size:0.85rem; font-weight:400; color:var(--accent-green);">M.Tech., Ph.D.</span></div>
+          <div class="staff-role">Professor & HOD, Department of CS&E, S.J.M.I.T</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2 -->
+  <div class="slide" id="slide-2">
+    <div class="slide-badge">Live Production Release</div>
+    <div class="slide-title">Climora: Urban Heat Intelligence Dashboard</div>
+    <div class="grid-2">
+      <div class="card highlight" style="justify-content:center;">
+        <div style="font-size:1.7rem; font-weight:800; color:#fff; line-height:1.2;">
+          AI-Assisted Climate Insights for Cooler, Healthier Cities
+        </div>
+        <p style="color:#94a3b8; font-size:1.02rem; line-height:1.6; margin-top:10px;">
+          Transforming satellite thermal observations and urban topography into hyper-local heat mitigation strategies.
+        </p>
+        <div style="margin-top:20px; padding:14px; background:rgba(0,0,0,0.35); border-radius:10px; border:1px solid rgba(16,185,129,0.3);">
+          <div style="font-size:0.75rem; text-transform:uppercase; color:var(--accent-green); font-weight:700;">Active Cloud Deployment</div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:1.05rem; color:#fff; margin-top:4px;">
+            <a href="https://climora-dashboard.vercel.app/" target="_blank" style="color:#38bdf8; text-decoration:none;">https://climora-dashboard.vercel.app/ ↗</a>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="padding:0; overflow:hidden; border-color:var(--card-border-green);">
+        <img src="/dashboard-preview.png" alt="Climora Dashboard" style="width:100%; height:100%; object-fit:cover;">
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 3 -->
+  <div class="slide" id="slide-3">
+    <div class="slide-badge">00 / Overview</div>
+    <div class="slide-title"><span class="number">03</span> Executive Summary & Motivation</div>
+    <div class="grid-2">
+      <div class="card highlight">
+        <div class="card-title">Project Motivation & Vision</div>
+        <ul class="bullet-list">
+          <li>Rapid urbanization creates dense concrete thermal masses and heat traps.</li>
+          <li>Urban Heat Island (UHI) elevates urban core temperatures 3°C to 7°C above rural baselines.</li>
+          <li>Climora bridges complex satellite earth observation and actionable urban planning.</li>
+          <li>Enables municipalities to transition from reactive cooling to proactive spatial interventions.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Core Engineering Goals</div>
+        <ul class="bullet-list">
+          <li>Democratize satellite-derived climate telemetry with zero IoT ground station overhead.</li>
+          <li>Delineate microclimate heat severity boundaries at ward and street scales.</li>
+          <li>Model return-on-investment (ROI) for targeted nature-based cooling infrastructures.</li>
+          <li>100% serverless client-first architecture for global accessibility and sub-second edge response.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 4 -->
+  <div class="slide" id="slide-4">
+    <div class="slide-badge">Presentation Structure</div>
+    <div class="slide-title"><span class="number">04</span> Table of Contents & Agenda</div>
+    <div class="grid-2">
+      <div class="card">
+        <ul class="bullet-list">
+          <li><strong>01. Microclimate Dynamics & Background:</strong> Urban heat challenges</li>
+          <li><strong>02. The UHI Phenomenon:</strong> Physical mechanisms and radiation retention</li>
+          <li><strong>03. Problem Statement:</strong> Street-level tooling gaps and sensor scarcity</li>
+          <li><strong>04. Objectives & Literature:</strong> Benchmark papers (NASA, EPA, IPCC AR6)</li>
+          <li><strong>05. Conceptual Framework:</strong> Ingestion, analytics, and prescriptions</li>
+          <li><strong>06. Mathematical Modeling:</strong> UHI differential formula & hazard zoning</li>
+        </ul>
+      </div>
+      <div class="card highlight">
+        <ul class="bullet-list">
+          <li><strong>07. System Architecture:</strong> Client-first 5-tier blueprint</li>
+          <li><strong>08. Website Snapshots (Live UI):</strong> Full dashboard, GIS heatmap, analytics, recommendations</li>
+          <li><strong>09. Experimental Outcomes:</strong> Case studies in Indian metropolises (Bengaluru, Delhi, Mumbai)</li>
+          <li><strong>10. Performance & Verification:</strong> WebGL 60fps rendering & security</li>
+          <li><strong>11. Technology Stack:</strong> Next.js 16, React 19, Mapbox GL, NASA APIs</li>
+          <li><strong>12. Future Scope & Conclusion:</strong> Phase-II extensions & committee discussion</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 5 -->
+  <div class="slide" id="slide-5">
+    <div class="slide-badge">01 / Background</div>
+    <div class="slide-title"><span class="number">05</span> Introduction to Urban Microclimates</div>
+    <div class="grid-2">
+      <div class="card highlight">
+        <div class="card-title">Microclimate Deterioration Dynamics</div>
+        <ul class="bullet-list">
+          <li>Urban morphology alters wind ventilation canyons and traps solar radiation.</li>
+          <li>Low-albedo construction materials (asphalt: 0.05-0.15) absorb up to 90% of solar flux.</li>
+          <li>Lack of vegetative evapotranspiration suppresses natural thermodynamic cooling.</li>
+          <li>Anthropogenic heat emissions from vehicular fleets and HVAC systems compound heat loads.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Socio-Economic & Ecological Impact</div>
+        <ul class="bullet-list">
+          <li>Public Health Hazards: Spike in heat strokes, cardiovascular fatigue, and nocturnal stress.</li>
+          <li>Vulnerability Skew: Slums and dense low-income zones bear the highest thermal burden.</li>
+          <li>Peak Energy Surges: Exponential air conditioning load strains regional electricity grids.</li>
+          <li>Ecological Degradation: Formation of ground-level tropospheric ozone and air stagnation.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 6 -->
+  <div class="slide" id="slide-6">
+    <div class="slide-badge">02 / Physics</div>
+    <div class="slide-title"><span class="number">06</span> The Urban Heat Island Phenomenon</div>
+    <div class="grid-2">
+      <div class="card highlight">
+        <div class="card-title">Day vs Night Heat Trapping Mechanics</div>
+        <ul class="bullet-list">
+          <li><strong>Daytime Absorption:</strong> Dark pavements and concrete building facades act as giant thermal sponges, storing megajoules of solar radiation.</li>
+          <li><strong>Nighttime Radiation Blockade:</strong> Tall narrow street canyons prevent infrared heat from radiating back into the upper atmosphere.</li>
+          <li><strong>Nocturnal Heat Stress:</strong> Prevents human physiological thermal recovery, leading to dangerous heat-related chronic illnesses.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">The Rural Baseline Contrast</div>
+        <ul class="bullet-list">
+          <li>Surrounding rural and forested zones experience high evapotranspiration from moist soil and lush foliage.</li>
+          <li>Rural areas cool rapidly after sunset, creating significant temperature deltas of +3°C to +7°C between the downtown center and countryside.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 7 -->
+  <div class="slide" id="slide-7">
+    <div class="slide-badge">03 / Gap Analysis</div>
+    <div class="slide-title"><span class="number">07</span> Problem Statement & Industry Gaps</div>
+    <div class="grid-2">
+      <div class="card highlight">
+        <div class="card-title">Limitations of Existing Weather Apps</div>
+        <ul class="bullet-list">
+          <li><strong>Macro-Level Averaging:</strong> Reports a single city number (e.g. 'Bengaluru: 32°C'), masking 38°C+ hot zones.</li>
+          <li><strong>Ground Station Scarcity:</strong> Physical weather stations are sparse, stationary, and costly to calibrate.</li>
+          <li><strong>No Spatial Context:</strong> Fails to correlate local heat stress with road density or tree coverage.</li>
+          <li><strong>Non-Actionable Data:</strong> Provides raw metrics without indicating where cooling projects will succeed.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">The Climora Intervention</div>
+        <ul class="bullet-list">
+          <li>Continuous multi-spectral satellite surface temperature observations.</li>
+          <li>Automated spatial clustering identifying neighborhood thermal hazards.</li>
+          <li>Interactive 3D building extrusions illustrating height-to-heat relationships.</li>
+          <li>Prescriptive decision support with estimated temperature reduction and capital expenditure.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8 -->
+  <div class="slide" id="slide-8">
+    <div class="slide-badge">04 / Objectives</div>
+    <div class="slide-title"><span class="number">08</span> Project Objectives & Scope</div>
+    <div class="grid-2">
+      <div class="card highlight">
+        <div class="card-title">Primary Technical Objectives</div>
+        <ul class="bullet-list">
+          <li><strong>Direct Ingestion:</strong> Interfacing with NASA POWER API for real-time 2m surface temperature (T2M).</li>
+          <li><strong>Differential Engine:</strong> Automated calculation of delta T against 50km rural baselines.</li>
+          <li><strong>Hazard Zoning:</strong> Delineating GeoJSON polygons into Low, Moderate, High, and Extreme risk.</li>
+          <li><strong>3D Geospatial Engine:</strong> WebGL hardware-accelerated Mapbox rendering with building heights.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Practical Municipal Scope</div>
+        <ul class="bullet-list">
+          <li><strong>Mitigation Simulator:</strong> Recommending urban tree canopies, cool roofs, and micro-parks.</li>
+          <li><strong>ROI Estimation:</strong> Algorithmic modeling of expected temperature drop vs municipal expenditure.</li>
+          <li><strong>Multi-Format Reporting:</strong> Instant CSV raw telemetry and PNG map dossiers for governance.</li>
+          <li><strong>Universal Scalability:</strong> Instant support for Indian metropolises and global urban coordinates.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 9 -->
+  <div class="slide" id="slide-9">
+    <div class="slide-badge">05 / Benchmarks</div>
+    <div class="slide-title"><span class="number">09</span> Literature Survey & Feasibility</div>
+    <div class="grid-2">
+      <div class="card highlight">
+        <div class="card-title">Scientific Literature References</div>
+        <ul class="bullet-list">
+          <li><strong>NASA Earth Observatory (2023):</strong> Validated satellite Land Surface Temperature (LST) protocols.</li>
+          <li><strong>U.S. EPA Urban Heat Island Compendium:</strong> Empirical cooling coefficients for reflective pavements.</li>
+          <li><strong>IPCC AR6 Working Group II:</strong> High-confidence mandate for nature-based urban cooling.</li>
+          <li><strong>Oke (1982) Urban Canyon Geometry:</strong> Thermal radiation retention models in dense building corridors.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Technological Comparative Feasibility</div>
+        <ul class="bullet-list">
+          <li><strong>Satellite vs IoT:</strong> Satellite eliminates physical hardware lifecycle and battery failures.</li>
+          <li><strong>OpenStreetMap GIS:</strong> Open-access building footprints provide high-fidelity land use.</li>
+          <li><strong>Edge Acceleration:</strong> Eliminates server latency, delivering 60 FPS 3D map interactions.</li>
+          <li><strong>Deterministic Seeding:</strong> Ensures reproducible baseline assessments across multi-temporal runs.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 10 -->
+  <div class="slide" id="slide-10">
+    <div class="slide-badge">06 / Methodology</div>
+    <div class="slide-title"><span class="number">10</span> Conceptual Framework & 3-Pillar Philosophy</div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title">📡 1. Ingestion</div>
+        <ul class="bullet-list">
+          <li>NASA POWER Satellite API for T2M temperature grids.</li>
+          <li>OpenStreetMap building & road footprint geometries.</li>
+          <li>Vegetative canopy density metrics.</li>
+        </ul>
+      </div>
+      <div class="card highlight">
+        <div class="card-title">🧠 2. Analytics</div>
+        <ul class="bullet-list">
+          <li>Thermal differential computation against rural baselines.</li>
+          <li>4-Tier spatial clustering (Low to Extreme).</li>
+          <li>Cooling impact modeling for planned projects.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">📊 3. Prescriptions</div>
+        <ul class="bullet-list">
+          <li>2D/3D extruded building thermal maps.</li>
+          <li>Targeted cooling solutions with budget ROI.</li>
+          <li>Instant CSV, GeoJSON, and PNG dossiers.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 11 -->
+  <div class="slide" id="slide-11">
+    <div class="slide-badge">07 / Solution</div>
+    <div class="slide-title"><span class="number">11</span> Proposed Solution & Value Proposition</div>
+    <div class="grid-2">
+      <div class="card highlight">
+        <div class="card-title">How Climora Solves the Problem</div>
+        <ul class="bullet-list">
+          <li><strong>Satellite Telemetry over Sparse Physical Nodes:</strong> Covers entire urban zones without buying or calibrating costly ground sensors.</li>
+          <li><strong>Hyper-Local Spatial Granularity:</strong> Visualizes thermal variance at neighborhood and corridor scale.</li>
+          <li><strong>Direct Intervention Impact & Cost Estimator:</strong> Planners can simulate temperature drops and budgets.</li>
+          <li><strong>Zero-Barrier Usability:</strong> Responsive modern web application accessible to municipal planners.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Feature Comparison</div>
+        <ul class="bullet-list">
+          <li><strong>Spatial Scope:</strong> Neighborhood & street level (vs city-wide averages).</li>
+          <li><strong>Hardware Cost:</strong> ₹0 infrastructure cost (vs lakhs in IoT stations).</li>
+          <li><strong>Mitigation Modeling:</strong> Real-time dynamic simulation (vs static PDF reports).</li>
+          <li><strong>Visualization:</strong> Hardware-accelerated 2D & 3D WebGL (vs flat static maps).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 12 -->
+  <div class="slide" id="slide-12">
+    <div class="slide-badge">08 / Capabilities</div>
+    <div class="slide-title"><span class="number">12</span> Key Functional Capabilities & Modules</div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title">🗺️ Geospatial Maps</div>
+        <ul class="bullet-list">
+          <li>Interactive 3D building extrusions via Mapbox GL.</li>
+          <li>Leaflet fallback engine for low-bandwidth devices.</li>
+          <li>Continuous heat gradient GeoJSON overlays.</li>
+        </ul>
+      </div>
+      <div class="card highlight">
+        <div class="card-title">🌡️ Analytics & Zoning</div>
+        <ul class="bullet-list">
+          <li>Automated 4-tier heat risk classification.</li>
+          <li>Temporal time slider for historical climate playback.</li>
+          <li>Recharts urban vs rural comparative trend lines.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">🌿 Mitigation Planner</div>
+        <ul class="bullet-list">
+          <li>Nature-based cooling intervention recommender.</li>
+          <li>Cost estimate & cooling impact ROI calculator.</li>
+          <li>Multi-format report export (CSV telemetry, JSON, PNG).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 13 -->
+  <div class="slide" id="slide-13">
+    <div class="slide-badge">09 / Mathematics</div>
+    <div class="slide-title"><span class="number">13</span> Mathematical Modeling & UHI Equations</div>
+    <div class="grid-2">
+      <div class="card highlight">
+        <div class="card-title">1. UHI Thermal Differential Formula</div>
+        <div class="math-formula">ΔT_UHI = T_urban(lat, lon) - T_rural(lat_ref, lon_ref)</div>
+        <ul class="bullet-list" style="margin-top:8px;">
+          <li><strong>Dynamic Reference Sampling:</strong> Baseline evaluated ~50 km outside the municipal core.</li>
+          <li><strong>Temperature Parameter:</strong> NASA POWER T2M (2-meter air temperature).</li>
+          <li><strong>Relative Humidity Integration:</strong> Factored to compute ambient apparent heat index.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">2. Severity Thresholds & Cooling ROI</div>
+        <ul class="bullet-list">
+          <li><span style="color:#38bdf8;">Low Risk:</span> ΔT &lt; 1.0°C | Balanced microclimate</li>
+          <li><span style="color:#facc15;">Moderate Risk:</span> 1.0°C ≤ ΔT &lt; 2.5°C | Mild vegetation loss</li>
+          <li><span style="color:#fb923c;">High Risk:</span> 2.5°C ≤ ΔT &lt; 4.0°C | Dense built infrastructure</li>
+          <li><span style="color:#ef4444;">Extreme Risk:</span> ΔT ≥ 4.0°C | Severe thermal corridor</li>
+        </ul>
+        <div class="math-formula" style="margin-top:10px;">ΔT_cooling = k_v * ln(1 + Canopy_Percent) * Beta</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 14 -->
+  <div class="slide" id="slide-14">
+    <div class="slide-badge">10 / Pipeline</div>
+    <div class="slide-title"><span class="number">14</span> Data Ingestion & Satellite Telemetry</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Data Ingestion Sources</div>
+        <ul class="bullet-list">
+          <li><strong>NASA POWER API:</strong> Primary source for daily and monthly T2M temperature grids.</li>
+          <li><strong>NOAA / Weather.gov:</strong> Regional meteorological forecast verification.</li>
+          <li><strong>OpenStreetMap GIS:</strong> High-resolution building heights and road corridors.</li>
+          <li><strong>Local Data Generators:</strong> Pre-seeded dataset covering top Indian metropolises.</li>
+        </ul>
+      </div>
+      <div class="card highlight">
+        <div class="card-title">Processing & Output Stages</div>
+        <ul class="bullet-list">
+          <li>Normalization and coordinate transformation into spatial bounding boxes.</li>
+          <li>Real-time calculation of localized urban vs rural temperature offsets.</li>
+          <li>Generation of color-coded GeoJSON polygon layers.</li>
+          <li>Instant export to structured CSV and high-resolution PNG dossiers.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 15 -->
+  <div class="slide" id="slide-15">
+    <div class="slide-badge">11 / Architecture</div>
+    <div class="slide-title"><span class="number">15</span> System Architecture & Specifications</div>
+    <div class="grid-2">
+      <div class="card highlight">
+        <div class="card-title">⚡ Client-First Serverless Paradigm</div>
+        <p style="font-size:0.92rem; color:#cbd5e1;">
+          Climora runs 100% serverless on Vercel Edge. By avoiding heavy Express and database overhead, the client orchestrates data directly with high resilience.
+        </p>
+        <ul class="bullet-list" style="margin-top:8px;">
+          <li><strong>Direct Satellite Telemetry:</strong> Client-side queries to NASA POWER point APIs.</li>
+          <li><strong>Zero Database Overhead:</strong> Deterministic spatial seeding ensures ₹0 maintenance costs.</li>
+          <li><strong>Intelligent Query Caching:</strong> TanStack React Query deduplicates identical coordinate requests.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">🏗️ Layered Implementation Details</div>
+        <ul class="bullet-list">
+          <li><strong>Presentation:</strong> Next.js 16 (App Router), React 19, Tailwind CSS 4, Radix UI Primitives.</li>
+          <li><strong>GIS Rendering:</strong> Mapbox GL with vector tiles and client-side hardware-accelerated WebGL.</li>
+          <li><strong>State Synchronization:</strong> Zustand global store binds time slider, selected city, and heat layers.</li>
+          <li><strong>Analytics Visualization:</strong> Responsive AreaChart and BarChart components built with Recharts.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 16 -->
+  <div class="slide" id="slide-16">
+    <div class="slide-badge">12 / Architecture Diagram</div>
+    <div class="slide-title"><span class="number">16</span> System Architecture: 5-Tier Functional Blueprint</div>
+    <div class="snap-container">
+      <img src="/climora-architecture-diagram.jpg" alt="Climora Architecture Diagram" class="snap-img">
+    </div>
+  </div>
+
+  <!-- SLIDE 17 -->
+  <div class="slide" id="slide-17">
+    <div class="slide-badge">13 / Live System</div>
+    <div class="slide-title"><span class="number">17</span> Website Snapshot 1: Full Interactive Dashboard</div>
+    <div class="snap-container">
+      <img src="/snapshots/snapshot1_full_dashboard.png" alt="Full Dashboard Snapshot" class="snap-img">
+    </div>
+  </div>
+
+  <!-- SLIDE 18 -->
+  <div class="slide" id="slide-18">
+    <div class="slide-badge">14 / GIS Engine</div>
+    <div class="slide-title"><span class="number">18</span> Website Snapshot 2: Geospatial Heatmap & Hotspots</div>
+    <div class="snap-container">
+      <img src="/snapshots/snapshot2_gis_heatmap.png" alt="GIS Heatmap Snapshot" class="snap-img">
+    </div>
+  </div>
+
+  <!-- SLIDE 19 -->
+  <div class="slide" id="slide-19">
+    <div class="slide-badge">15 / Analytics</div>
+    <div class="slide-title"><span class="number">19</span> Website Snapshot 3: Temporal Trends & Rankings</div>
+    <div class="snap-container">
+      <img src="/snapshots/snapshot3_analytics_chart.png" alt="Analytics Chart Snapshot" class="snap-img">
+    </div>
+  </div>
+
+  <!-- SLIDE 20 -->
+  <div class="slide" id="slide-20">
+    <div class="slide-badge">16 / Decision Support</div>
+    <div class="slide-title"><span class="number">20</span> Website Snapshot 4: Nature-Based Cooling Prescriptions</div>
+    <div class="snap-container">
+      <img src="/snapshots/snapshot4_recommendations.png" alt="Cooling Recommendations Snapshot" class="snap-img">
+    </div>
+  </div>
+
+  <!-- SLIDE 21 -->
+  <div class="slide" id="slide-21">
+    <div class="slide-badge">17 / Platform Brand</div>
+    <div class="slide-title"><span class="number">21</span> Website Snapshot 5: Platform Landing & Public Blueprint</div>
+    <div class="snap-container">
+      <img src="/snapshots/snapshot5_hero_banner.jpg" alt="Hero Banner Snapshot" class="snap-img">
+    </div>
+  </div>
+
+  <!-- SLIDE 22 -->
+  <div class="slide" id="slide-22">
+    <div class="slide-badge">18 / Evaluation</div>
+    <div class="slide-title"><span class="number">22</span> Implementation & Experimental Outcomes</div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">💻 Implementation Highlights</div>
+        <ul class="bullet-list">
+          <li>Engineered fully in <strong>Next.js 16 + React 19</strong> with strict TypeScript static typing.</li>
+          <li>Pre-configured geographic datasets for <strong>12+ Indian Metropolises</strong> (Bengaluru, Delhi, Mumbai, Hyderabad, Chennai, Ahmedabad, Pune, Jaipur).</li>
+          <li>Seamless <strong>WebGL 3D building extrusions</strong> with interactive bearing, pitch, and zoom camera manipulation.</li>
+          <li>Integrated multi-layer GIS switches for <strong>heat, vegetation, roads, and virtual sensors</strong>.</li>
+        </ul>
+      </div>
+      <div class="card highlight">
+        <div class="card-title">📈 Real-World Experimental Findings</div>
+        <ul class="bullet-list">
+          <li><strong>Identified Real Hotspots:</strong> In Bengaluru, industrial corridors (Peenya, Whitefield) exhibited localized thermal spikes of <strong>+3.4°C to +4.2°C</strong> compared to Hoskote reference.</li>
+          <li><strong>Vegetative Shield Correlation:</strong> Sub-regions with vegetative canopy &lt; 15% consistently registered peak heat indices.</li>
+          <li><strong>Actionable Intervention ROI:</strong> Simulated 25% urban canopy enhancement on arterial roads models a projected <strong>1.4°C microclimate reduction</strong> at estimated ₹18 Lakhs.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 23 -->
+  <div class="slide" id="slide-23">
+    <div class="slide-badge">19 / Stack & Security</div>
+    <div class="slide-title"><span class="number">23</span> Technology Stack & Verification</div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title">🎨 Frontend & GIS</div>
+        <ul class="bullet-list" style="font-size:0.86rem;">
+          <li>Next.js 16 (App Router)</li>
+          <li>React 19 & TypeScript 5</li>
+          <li>Mapbox GL & Leaflet GIS</li>
+          <li>Tailwind CSS & Radix UI</li>
+          <li>Recharts & Lucide Icons</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">🛰️ Climate APIs</div>
+        <ul class="bullet-list" style="font-size:0.86rem;">
+          <li>NASA POWER Satellite API</li>
+          <li>NOAA / Weather.gov API</li>
+          <li>OpenStreetMap Vector Tiles</li>
+          <li>CartoDB Positron Basemaps</li>
+          <li>TanStack React Query v5</li>
+        </ul>
+      </div>
+      <div class="card highlight">
+        <div class="card-title">🔒 Verification & Speed</div>
+        <ul class="bullet-list" style="font-size:0.86rem;">
+          <li>60 FPS WebGL rendering</li>
+          <li>Sub-second edge response</li>
+          <li>Zero server vulnerabilities</li>
+          <li>100% Client-side privacy</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 24 -->
+  <div class="slide" id="slide-24">
+    <div class="college-header" style="margin-top:16px;">
+      <img src="/college-logo.jpg" alt="SJMIT Chitradurga Logo" class="college-logo-img">
+    </div>
+    <div style="text-align:center; margin-top:10px;">
+      <div style="font-size:2.8rem; font-weight:800; color:#fff; letter-spacing:-0.02em;">Thank You!</div>
+      <div style="font-size:1.25rem; font-weight:700; color:var(--accent-green); margin-top:6px;">
+        CLIMORA: Urban Heat Island Intelligence Platform
+      </div>
+      <div style="font-size:0.92rem; color:#94a3b8; margin-top:4px;">
+        Department of Computer Science & Engineering • S.J.M.I.T, Chitradurga
+      </div>
+      <div style="display:inline-flex; gap:16px; margin-top:28px;">
+        <a href="https://climora-dashboard.vercel.app/" target="_blank" class="btn" style="background:var(--accent-green); color:#03140d; font-weight:700; text-decoration:none; padding:10px 24px; font-size:1rem;">
+          🌍 Launch Live Demo
+        </a>
+      </div>
+      <div style="margin-top:32px; font-size:1.05rem; color:#e2e8f0; font-weight:600;">
+        Questions & Discussion with Committee
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM FLOATING CONTROLS -->
+<div class="controls">
+  <button class="btn" id="prevBtn" onclick="prevSlide()">← Prev</button>
+  <span class="page-indicator" id="slideCounter">1 / 24</span>
+  <button class="btn" id="nextBtn" onclick="nextSlide()">Next →</button>
+  <button class="btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+</div>
+
+<script>
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('slideCounter');
+
+  function updateSlide(index) {
+    if (index < 0) index = 0;
+    if (index >= slides.length) index = slides.length - 1;
+    slides.forEach((s, i) => s.classList.toggle('active', i === index));
+    currentSlide = index;
+    counter.innerText = `${index + 1} / ${slides.length}`;
+  }
+
+  function nextSlide() { updateSlide(currentSlide + 1); }
+  function prevSlide() { updateSlide(currentSlide - 1); }
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen().catch(() => {});
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') nextSlide();
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+    else if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+  });
+
+  updateSlide(0);
+</script>
+
+</body>
+</html>
