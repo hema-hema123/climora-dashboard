@@ -16,6 +16,7 @@ import {
   TrendingUp,
   Users,
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { CityComparison } from '@/components/analytics/CityComparison';
 import { HeatZoneList } from '@/components/analytics/HeatZoneList';
@@ -27,6 +28,7 @@ import { generateCityStats, generateHeatZones, INDIAN_CITIES } from '@/lib/data'
 import { useDashboardStore } from '@/lib/store';
 
 export default function AnalyticsPage() {
+  const router = useRouter();
   const { selectedCity, selectedDate, userRole } = useDashboardStore();
   const [selectedTimeframe, setSelectedTimeframe] = useState<'30days' | 'seasonal' | 'annual'>('30days');
 
@@ -252,7 +254,11 @@ export default function AnalyticsPage() {
                       <strong>Municipal Directive:</strong> Mobilize water misting cannons along arterial corridors; ensure night cooling shelters are operational in high-density wards.
                     </p>
                     <div className="pt-2">
-                      <Button size="sm" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs">
+                      <Button
+                        size="sm"
+                        onClick={() => typeof window !== 'undefined' && window.print()}
+                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold"
+                      >
                         Export Official Municipal Heat Advisory (PDF)
                       </Button>
                     </div>
@@ -266,8 +272,13 @@ export default function AnalyticsPage() {
                       <strong>Cooling Centers:</strong> 14 municipal air-conditioned public libraries and transit shelters operational within 2 km of city center.
                     </p>
                     <div className="pt-2">
-                      <Button size="sm" variant="outline" className="w-full border-sky-500 text-sky-400 hover:bg-sky-950/30 text-xs">
-                        Find Nearest Shaded Public Space
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => router.push('/citizen')}
+                        className="w-full border-sky-500 text-sky-400 hover:bg-sky-950/30 text-xs font-semibold"
+                      >
+                        Find Nearest Shaded Public Space →
                       </Button>
                     </div>
                   </>

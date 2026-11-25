@@ -1,18 +1,61 @@
+'use client';
+
+import { Building2, CheckCircle2, ChevronRight, Shield, Sparkles, Users } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Footer from '@/components/layout/Footer';
+import { useDashboardStore } from '@/lib/store';
+import type { UserRole } from '@/types';
 import dashboardImage from './dashboard/verdantimage.png';
 
 export default function LandingPage() {
+  const router = useRouter();
+  const { setUserRole, setUserProfile, setIsAuthenticated } = useDashboardStore();
+
+  const handleEnterPlatform = (role: UserRole) => {
+    setUserRole(role);
+    if (role === 'government') {
+      setUserProfile({
+        name: 'Dr. Rajesh Verma',
+        email: 'r.verma@mcd.gov.in',
+        role: 'government',
+        organization: 'Municipal Corporation of Delhi (MCD)',
+        department: 'Urban Resilience Cell',
+        verified: true,
+      });
+    } else if (role === 'citizen') {
+      setUserProfile({
+        name: 'Priya Sundaram',
+        email: 'priya.s@gmail.com',
+        role: 'citizen',
+        organization: 'Citizen Community Action Group',
+        department: 'Ward 24 Residents',
+        verified: true,
+      });
+    } else {
+      setUserProfile({
+        name: 'Prof. A. Sengupta',
+        email: 'asengupta@iitd.ac.in',
+        role: 'researcher',
+        organization: 'Center for Atmospheric Sciences, IIT Delhi',
+        department: 'Climate Telemetry Lab',
+        verified: true,
+      });
+    }
+    setIsAuthenticated(true);
+    router.push('/dashboard');
+  };
+
   return (
-    <div className="relative min-h-screen overflow-x-clip flex flex-col mb-0">
+    <div className="relative min-h-screen overflow-x-clip flex flex-col mb-0 bg-[#ecefe8]">
       {/* Background Map */}
       <div className="fixed inset-0 -z-10">
-        <Image src="/MAP BG.svg" alt="" fill className="object-cover" />
+        <Image src="/MAP BG.svg" alt="" fill className="object-cover opacity-80" />
       </div>
 
       {/* Header */}
-      <header className="absolute top-0 left-0 right-0 h-[60px] bg-[#1f2b26]/95 backdrop-blur z-30 border-b border-white/10">
+      <header className="sticky top-0 left-0 right-0 h-[64px] bg-[#1f2b26]/95 backdrop-blur z-50 border-b border-white/10 shadow-lg">
         <div className="relative h-full flex items-center justify-between px-4 sm:px-8">
           <Link href="/" className="flex items-center gap-2">
             <span className="font-alliance text-xl sm:text-2xl font-bold text-[#ecefe8] tracking-tight">Climora</span>
@@ -23,241 +66,203 @@ export default function LandingPage() {
             <Link href="/dashboard" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Live Map</Link>
             <Link href="/analytics" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Analytics</Link>
             <Link href="/mitigation" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Mitigation</Link>
-            <Link href="/reports" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Reports</Link>
+            <Link href="/reports" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Reports & HAP</Link>
             <Link href="/citizen" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Citizen Action</Link>
           </nav>
 
-          <Link
-            href="/dashboard"
-            className="rounded-lg bg-emerald-400 hover:bg-emerald-300 text-gray-950 font-semibold px-4 py-1.5 text-xs transition-all shadow-sm"
+          <button
+            type="button"
+            onClick={() => handleEnterPlatform('government')}
+            className="rounded-lg bg-emerald-400 hover:bg-emerald-300 text-gray-950 font-bold px-4 py-2 text-xs transition-all shadow-md hover:scale-105 active:scale-95"
           >
-            Launch Dashboard →
-          </Link>
+            Launch Platform →
+          </button>
         </div>
       </header>
 
-      {/* Logo */}
-      <Link
-        href="/dashboard"
-        className="absolute left-4 sm:left-[34px] top-[70px] sm:top-[90px] w-[80px] h-[80px] sm:w-[153px] sm:h-[153px] z-20 hover:opacity-80 transition-opacity"
-      >
-        <Image
-          src="/images/landing/logo-vector.svg"
-          alt="Verdant Logo"
-          width={153}
-          height={153}
-          className="w-full h-full object-contain"
-        />
-      </Link>
-
       {/* Hero Section */}
-      <section className="relative pt-[140px] sm:pt-[200px] lg:pt-[280px] pb-0">
-        {/* Decorative Green Blobs - hidden below lg for performance */}
-        <div className="hidden lg:block absolute right-[-13px] top-[167px] w-[603px] h-[603px] z-0">
+      <section className="relative pt-[60px] sm:pt-[90px] lg:pt-[120px] pb-12">
+        {/* Decorative Green Blobs */}
+        <div className="hidden lg:block absolute right-[-13px] top-[167px] w-[500px] h-[500px] z-0 pointer-events-none opacity-90">
           <Image
             src="/images/landing/dark-green-1.svg"
             alt=""
-            width={603}
-            height={603}
+            width={500}
+            height={500}
             className="w-full h-full object-contain"
           />
-        </div>
-        <div className="hidden lg:block absolute right-[54px] top-[245px] w-[469px] h-[471px] z-0">
-          <Image
-            src="/images/landing/dark-green-5.svg"
-            alt=""
-            width={469}
-            height={471}
-            className="w-full h-full object-contain"
-          />
-        </div>
-        <div className="hidden lg:flex absolute right-[65.71px] top-[262.46px] w-[432.829px] h-[432.829px] items-center justify-center z-0">
-          <div className="rotate-[-15.69deg]">
-            <Image
-              src="/images/landing/dark-green-6.svg"
-              alt=""
-              width={351}
-              height={351}
-              className="w-[351px] h-[351px] object-contain"
-            />
-          </div>
-        </div>
-        <div className="hidden lg:flex absolute right-[121.95px] top-[315px] w-[320.053px] h-[325.011px] items-center justify-center z-0">
-          <div className="rotate-[24.77deg]">
-            <Image
-              src="/images/landing/dark-green-7.svg"
-              alt=""
-              width={238}
-              height={248}
-              className="w-[237.989px] h-[248.127px] object-contain"
-            />
-          </div>
-        </div>
-        <div className="hidden lg:flex absolute right-[164.75px] top-[360.83px] w-[229.754px] h-[230.42px] items-center justify-center z-0">
-          <div className="rotate-[-138.97deg]">
-            <Image
-              src="/images/landing/dark-green-9.svg"
-              alt=""
-              width={160}
-              height={166}
-              className="w-[159.687px] h-[166.489px] object-contain"
-            />
-          </div>
         </div>
 
         {/* Hero Text */}
-        <div className="relative z-10 px-4 sm:px-8 lg:px-[57px]">
-          <h1 className="font-alliance text-[2.5rem] sm:text-6xl md:text-7xl lg:text-[128px] leading-[1.15] text-[#1f2b26] tracking-tight lg:tracking-[-5.12px] max-w-full lg:w-[1136px]">
+        <div className="relative z-10 px-4 sm:px-8 lg:px-[60px]">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1f2b26]/10 border border-[#1f2b26]/20 mb-4 sm:mb-6">
+            <Sparkles className="h-3.5 w-3.5 text-[#1f2b26]" />
+            <span className="text-xs font-semibold text-[#1f2b26] tracking-tight uppercase">
+              Urban Heat Island Intelligence Platform · Indian Cities
+            </span>
+          </div>
+
+          <h1 className="font-alliance text-[2.5rem] sm:text-6xl md:text-7xl lg:text-[105px] leading-[1.08] text-[#1f2b26] tracking-tight lg:tracking-[-4.5px] max-w-full lg:w-[1100px]">
             <p className="mb-0">the new</p>
-            <p className="mb-0 text-[#010103]">blueprint</p>
+            <p className="mb-0 text-[#010103] font-extrabold">blueprint</p>
             <p className="mb-0">for a climate</p>
-            <p>resilient city.</p>
+            <p className="mb-0">resilient city.</p>
           </h1>
 
-          {/* Get Started CTA */}
-          <div className="mt-8 sm:mt-12 lg:mt-[86px] relative inline-block">
-            <div className="absolute left-0 top-[4px] sm:top-[8px] lg:top-[10px] w-full h-full lg:h-[108px] bg-[#c0ffbd]" />
-            <Link
-              href="/dashboard"
-              className="relative z-10 font-alliance text-[2rem] sm:text-5xl md:text-6xl lg:text-[128px] leading-[1.15] text-[#1f2b26] tracking-tight lg:tracking-[-5.12px] inline-block hover:opacity-80 transition-opacity"
-            >
-              get started. →
-            </Link>
-          </div>
-        </div>
-      </section>
+          {/* Platform Access Gate - Government vs Citizen vs Researcher */}
+          <div className="mt-10 sm:mt-14 max-w-5xl">
+            <div className="mb-4">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#1f2b26] bg-[#c0ffbd] px-2.5 py-1 rounded inline-block">
+                Select Your Access Role to Enter
+              </span>
+              <p className="text-sm text-gray-700 mt-1 font-medium">
+                Choose your identity to enter Climora with tailored tools, permissions, and dashboards:
+              </p>
+            </div>
 
-      {/* Definition Section */}
-      <section className="relative px-4 sm:px-8 lg:px-0 lg:min-h-[1100px]">
-        {/* Decorative Blobs - Left Side - hidden on mobile/tablet */}
-        <div className="hidden lg:block absolute left-[64px] top-[280px] w-[437.082px] h-[437.082px] z-0">
-          <Image
-            src="/images/landing/dark-green-10.svg"
-            alt=""
-            width={437}
-            height={437}
-            className="w-full h-full object-contain"
-          />
-        </div>
-        <div className="hidden lg:block absolute left-[113.67px] top-[335.88px] w-[338.987px] h-[324.087px] z-0">
-          <Image
-            src="/images/landing/dark-green-11.svg"
-            alt=""
-            width={339}
-            height={324}
-            className="w-full h-full object-contain"
-          />
-        </div>
-        <div className="hidden lg:flex absolute left-[145.95px] top-[365.68px] w-[264.632px] h-[264.632px] items-center justify-center z-0">
-          <div className="rotate-[4.31deg]">
-            <Image
-              src="/images/landing/dark-green-12.svg"
-              alt=""
-              width={247}
-              height={247}
-              className="w-[246.795px] h-[246.795px] object-contain"
-            />
-          </div>
-        </div>
-        {/* Additional nested decorative element */}
-        <div className="hidden lg:flex absolute left-[157.13px] top-[391.75px] w-[238.409px] h-[213.062px] items-center justify-center z-0">
-          <div className="rotate-[24.77deg]">
-            <div className="relative w-[196.029px] h-[144.196px] overflow-clip">
-              <div className="absolute inset-[5.77%_11.1%_5.63%_7.11%]">
-                <Image
-                  src="/images/landing/vector-1.svg"
-                  alt=""
-                  width={196}
-                  height={144}
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <div className="absolute left-[calc(50%+0.42px)] top-[9.53px] bottom-[9.46px] flex items-center justify-center w-[99.605px] -translate-x-1/2">
-                <div className="rotate-[-101.5deg] scale-y-[0.99] skew-x-[7.15deg] w-[100.359px] h-[84.014px]">
-                  <div className="relative w-full h-full overflow-clip">
-                    <div className="absolute inset-[5.77%_11.1%_5.63%_7.11%]">
-                      <Image
-                        src="/images/landing/vector-2.svg"
-                        alt=""
-                        width={100}
-                        height={84}
-                        className="w-full h-full object-contain"
-                      />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Government Portal Card */}
+              <div className="bg-[#1f2b26] text-white rounded-2xl p-6 border-2 border-[#1f2b26] hover:border-emerald-400 transition-all shadow-xl hover:-translate-y-1 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-400">
+                      <Building2 className="h-6 w-6" />
                     </div>
+                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                      Official Tier
+                    </span>
                   </div>
+                  <h3 className="font-alliance text-xl font-bold text-white mb-1">
+                    Municipal Authority & Urban Planners
+                  </h3>
+                  <p className="text-xs text-gray-300 leading-relaxed mb-4">
+                    For MCD, BBMP, Town Planning Authorities, and Disaster Management Cells (SDMA).
+                  </p>
+                  <ul className="text-xs text-gray-400 space-y-1.5 mb-6">
+                    <li className="flex items-center gap-1.5 text-gray-300">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                      Statutory Heat Action Plan (HAP) Dossiers
+                    </li>
+                    <li className="flex items-center gap-1.5 text-gray-300">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                      Municipal Budget Simulation (₹ Cr)
+                    </li>
+                    <li className="flex items-center gap-1.5 text-gray-300">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                      Ward Project Rollout Approvals
+                    </li>
+                  </ul>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => handleEnterPlatform('government')}
+                  className="w-full bg-emerald-400 hover:bg-emerald-300 text-gray-950 font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md"
+                >
+                  Enter as Municipal Authority
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+
+              {/* Citizen Portal Card */}
+              <div className="bg-white text-gray-950 rounded-2xl p-6 border-2 border-gray-300 hover:border-sky-500 transition-all shadow-xl hover:-translate-y-1 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="p-2.5 rounded-xl bg-sky-100 text-sky-600">
+                      <Users className="h-6 w-6" />
+                    </div>
+                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-sky-100 text-sky-700 border border-sky-300">
+                      Public Tier
+                    </span>
+                  </div>
+                  <h3 className="font-alliance text-xl font-bold text-gray-950 mb-1">
+                    Citizens & Community Action
+                  </h3>
+                  <p className="text-xs text-gray-600 leading-relaxed mb-4">
+                    For residents, community advocates, and environmental volunteer taskforces.
+                  </p>
+                  <ul className="text-xs text-gray-600 space-y-1.5 mb-6">
+                    <li className="flex items-center gap-1.5">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-sky-600 shrink-0" />
+                      Report Local Heat Hotspots & No-Shade Zones
+                    </li>
+                    <li className="flex items-center gap-1.5">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-sky-600 shrink-0" />
+                      Find Nearest Air-Conditioned Cooling Shelters
+                    </li>
+                    <li className="flex items-center gap-1.5">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-sky-600 shrink-0" />
+                      Volunteer for Urban Tree-Planting Drives
+                    </li>
+                  </ul>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleEnterPlatform('citizen')}
+                  className="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md"
+                >
+                  Enter as Citizen
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+
+              {/* Researcher Portal Card */}
+              <div className="bg-white text-gray-950 rounded-2xl p-6 border-2 border-gray-300 hover:border-purple-500 transition-all shadow-xl hover:-translate-y-1 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="p-2.5 rounded-xl bg-purple-100 text-purple-600">
+                      <Shield className="h-6 w-6" />
+                    </div>
+                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-purple-100 text-purple-700 border border-purple-300">
+                      Academic Tier
+                    </span>
+                  </div>
+                  <h3 className="font-alliance text-xl font-bold text-gray-950 mb-1">
+                    Climate Scientists & Researchers
+                  </h3>
+                  <p className="text-xs text-gray-600 leading-relaxed mb-4">
+                    For atmospheric research labs, IIT/IISc scholars, and meteorologists.
+                  </p>
+                  <ul className="text-xs text-gray-600 space-y-1.5 mb-6">
+                    <li className="flex items-center gap-1.5">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-purple-600 shrink-0" />
+                      NASA POWER Telemetry Observations
+                    </li>
+                    <li className="flex items-center gap-1.5">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-purple-600 shrink-0" />
+                      Sentinel-2 NDVI Vegetation Indices
+                    </li>
+                    <li className="flex items-center gap-1.5">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-purple-600 shrink-0" />
+                      Raw Microclimate Simulation Modeling
+                    </li>
+                  </ul>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleEnterPlatform('researcher')}
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition-all shadow-md"
+                >
+                  Enter as Researcher
+                  <ChevronRight className="h-4 w-4" />
+                </button>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Definition Content - Mobile & Tablet: flow layout */}
-        <div className="lg:hidden pt-12 pb-8 space-y-4 max-w-2xl ml-auto">
-          <div className="flex items-baseline gap-3">
-            <span className="font-alliance text-base text-[#1f2b26] tracking-[-0.96px] shrink-0">
-              (1)
-            </span>
-            <p className="font-alliance text-4xl sm:text-6xl leading-[1.2] text-[#1f2b26] tracking-tight">
-              Climora
-            </p>
-          </div>
-          <p className="font-alliance text-base sm:text-xl leading-normal text-[#1f2b26] tracking-tight">
-            <span>/klaɪˈmɔːrə/</span>
-            <span>{`   · `}</span>
-            <span>noun</span>
-          </p>
-          <p className="font-alliance text-sm sm:text-base leading-[1.755] text-black tracking-tight">
-            The strategic integration of lush, living vegetation into urban landscapes to create
-            biological cooling systems. In climate resilience, being &quot;Climora&quot; is the
-            measurable transition from heat-absorbing grey infrastructure (asphalt and concrete)
-            to heat-mitigating green infrastructure (canopy cover and carbon-sequestering
-            parklands).
-          </p>
-        </div>
-
-        {/* Desktop positioned content (lg and up only) */}
-        <p className="hidden lg:block absolute right-[106px] top-[264px] font-alliance text-[128px] leading-[1.2] text-[#1f2b26] text-right tracking-[-5.12px] w-[637px] z-10">
-          Climora
-        </p>
-
-        <p className="hidden lg:block absolute right-[720px] top-[264px] font-alliance text-[24px] text-[#1f2b26] tracking-[-0.96px] w-[32px] z-10">
-          (1)
-        </p>
-
-        <p className="hidden lg:block absolute right-[106px] top-[422px] font-alliance text-[36px] leading-[0] text-[#1f2b26] text-right tracking-[-1.44px] w-[611px] z-10">
-          <span className="leading-normal">/klaɪˈmɔːrə/</span>
-          <span className="leading-normal">{`   · `}</span>
-          <span className="leading-normal">noun</span>
-        </p>
-        <div className="hidden lg:flex absolute right-[105px] top-[559px] items-center justify-center w-[608.874px] z-10">
-          <div className="rotate-[0.19deg]">
-            <p className="font-alliance text-[24px] leading-[1.755] text-black text-right tracking-[-0.96px] w-[606.854px]">
-              The strategic integration of lush, living vegetation into urban landscapes to create
-              biological cooling systems. In climate resilience, being &quot;Climora&quot; is the
-              measurable transition from heat-absorbing grey infrastructure (asphalt and concrete)
-              to heat-mitigating green infrastructure (canopy cover and carbon-sequestering
-              parklands).
-            </p>
           </div>
         </div>
       </section>
 
       {/* Gallery Section */}
-      <section className="relative pb-10 sm:pb-16 lg:pb-20 pt-8">
+      <section className="relative pb-10 sm:pb-16 lg:pb-20 pt-8 border-t border-gray-300/80">
         <div className="px-4 sm:px-8 lg:px-[57px]">
-          {/* Title and number */}
           <div className="flex items-start gap-3 sm:gap-4 mb-6 sm:mb-8">
-            <p className="font-alliance text-4xl sm:text-6xl md:text-7xl lg:text-[128px] leading-[1.2] text-[#1f2b26] tracking-tight lg:tracking-[-5.12px]">
-              gallery
+            <p className="font-alliance text-4xl sm:text-6xl md:text-7xl lg:text-[96px] leading-[1.2] text-[#1f2b26] tracking-tight lg:tracking-[-4px]">
+              live platform preview
             </p>
-            <span className="font-alliance text-sm sm:text-base lg:text-[24px] text-[#1f2b26] tracking-[-0.96px] mt-4 sm:mt-8 lg:mt-[85px]">
-              (2)
-            </span>
           </div>
         </div>
 
         {/* Dashboard Image */}
-        <div className="relative w-full max-w-[1141px] aspect-[1141/412] rounded-xl sm:rounded-2xl lg:rounded-[25px] overflow-hidden mb-4 mx-auto px-4 sm:px-8 lg:px-0">
+        <div className="relative w-full max-w-[1141px] aspect-[1141/412] rounded-xl sm:rounded-2xl lg:rounded-[25px] overflow-hidden mb-4 mx-auto px-4 sm:px-8 lg:px-0 shadow-2xl">
           <Image
             src={dashboardImage}
             alt="Climora Dashboard - Indian cities"
@@ -267,30 +272,17 @@ export default function LandingPage() {
         </div>
 
         {/* Caption */}
-        <div className="px-4 sm:px-8 lg:px-[57px] max-w-[1101px] mx-auto">
-          <div className="font-alliance text-sm sm:text-base lg:text-[24px] leading-[1.755] text-black tracking-tight lg:tracking-[-0.96px]">
-            <p className="mb-0"> Climora DASHBOARD / Indian cities →</p>
-            <p>A visual showcase of urban heatmaps in the Indian cities.</p>
+        <div className="px-4 sm:px-8 lg:px-[57px] max-w-[1101px] mx-auto flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-2">
+          <div className="font-alliance text-sm sm:text-base leading-relaxed text-black">
+            <p className="font-bold">Climora GIS Heat Intelligence · Indian Metropolitan Coverage →</p>
+            <p className="text-gray-600">Active monitoring across Delhi, Mumbai, Bengaluru, Hyderabad, Chennai, Kolkata, and 50+ Smart Cities.</p>
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="relative pb-12 sm:pb-16 lg:pb-[100px] pt-8">
-        <div className="relative px-4 sm:px-8 lg:px-[80px]">
-          <div className="flex items-start gap-3 sm:gap-4 relative z-10 sm:justify-end">
-            <div className="flex items-baseline gap-3 flex-wrap max-w-full sm:max-w-[749px]">
-              <span className="font-alliance text-sm sm:text-base lg:text-[24px] text-[#1f2b26] tracking-[-0.96px] shrink-0 mt-4 sm:mt-8 lg:mt-[85px]">
-                (3)
-              </span>
-              <div className="relative inline-block">
-                <div className="absolute left-0 top-[4px] sm:top-[8px] w-full h-full bg-[#c0ffbd]" />
-                <p className="relative z-10 font-alliance text-xl sm:text-3xl md:text-4xl lg:text-[64px] leading-[0.97] text-black sm:text-right tracking-tight lg:tracking-[-2.56px]">
-                  Start your journey toward a more Climora city today. ↗
-                </p>
-              </div>
-            </div>
-          </div>
+          <Link
+            href="/dashboard"
+            className="px-5 py-2.5 bg-[#1f2b26] hover:bg-black text-white font-bold rounded-xl text-xs transition-all shadow-md shrink-0"
+          >
+            Open Interactive Live Map →
+          </Link>
         </div>
       </section>
 

@@ -1,8 +1,16 @@
 'use client';
 
+import 'leaflet/dist/leaflet.css';
 import dynamic from 'next/dynamic';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useMap } from 'react-leaflet';
+import {
+  CircleMarker,
+  MapContainer,
+  Polygon,
+  Popup,
+  TileLayer,
+  useMap,
+} from 'react-leaflet';
 import {
   generateHeatZones,
   generateInfrastructurePoints,
@@ -13,39 +21,18 @@ import {
 import { useDashboardStore } from '@/lib/store';
 import { getInfrastructureIcon, getPriorityColor } from '@/lib/utils';
 
-// Dynamic import for MapboxMap (client-side only)
+// Dynamic import for MapboxMap (client-side only for 3D view)
 const MapboxMap = dynamic(() => import('./MapboxMap').then((mod) => mod.MapboxMap), {
   ssr: false,
   loading: () => (
-    <div className="flex h-full w-full items-center justify-center bg-gray-100 dark:bg-gray-800">
+    <div className="flex h-full w-full items-center justify-center bg-gray-900">
       <div className="text-center">
         <div className="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent mx-auto" />
-        <p className="text-gray-600 dark:text-gray-400">Loading 3D map...</p>
+        <p className="text-gray-400">Loading 3D Mapbox...</p>
       </div>
     </div>
   ),
 });
-
-// Dynamic import for Leaflet components (client-side only)
-const MapContainer = dynamic(() => import('react-leaflet').then((mod) => mod.MapContainer), {
-  ssr: false,
-  loading: () => (
-    <div className="flex h-full w-full items-center justify-center bg-gray-100 dark:bg-gray-800">
-      <div className="text-center">
-        <div className="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent mx-auto" />
-        <p className="text-gray-600 dark:text-gray-400">Loading map...</p>
-      </div>
-    </div>
-  ),
-});
-const TileLayer = dynamic(() => import('react-leaflet').then((mod) => mod.TileLayer), {
-  ssr: false,
-});
-const CircleMarker = dynamic(() => import('react-leaflet').then((mod) => mod.CircleMarker), {
-  ssr: false,
-});
-const Polygon = dynamic(() => import('react-leaflet').then((mod) => mod.Polygon), { ssr: false });
-const Popup = dynamic(() => import('react-leaflet').then((mod) => mod.Popup), { ssr: false });
 
 function MapResizeHandler() {
   const map = useMap();
@@ -53,16 +40,18 @@ function MapResizeHandler() {
   useEffect(() => {
     map.invalidateSize();
     const container = map.getContainer();
-    const observer = new ResizeObserver(() => map.invalidateSize({ animate: false }));
+    const observer = new ResizeObserver(() => {
+      map.invalidateSize({ animate: false });
+    });
     observer.observe(container);
 
-    const timer = setTimeout(() => {
-      map.invalidateSize();
-    }, 250);
+    const timer1 = setTimeout(() => map.invalidateSize(), 150);
+    const timer2 = setTimeout(() => map.invalidateSize(), 500);
 
     return () => {
       observer.disconnect();
-      clearTimeout(timer);
+      clearTimeout(timer1);
+      clearTimeout(timer2);
     };
   }, [map]);
 
@@ -95,13 +84,11 @@ export function HeatMap() {
     mapZoom,
     enable3D,
   } = useDashboardStore();
+
   const [isMounted, setIsMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    // Wait for DOM to be ready
     setIsMounted(true);
   }, []);
 
@@ -127,10 +114,10 @@ export function HeatMap() {
 
   if (!isMounted) {
     return (
-      <div className="flex h-full w-full items-center justify-center bg-gray-100 dark:bg-gray-800">
+      <div className="flex h-full w-full items-center justify-center bg-gray-900">
         <div className="text-center">
           <div className="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent mx-auto" />
-          <p className="text-gray-600 dark:text-gray-400">Loading map...</p>
+          <p className="text-gray-400">Initializing Live Heat Map...</p>
         </div>
       </div>
     );
@@ -143,21 +130,28 @@ export function HeatMap() {
 
   // Render 2D Leaflet map
   return (
-    <div ref={containerRef} id="climora-map-view" className="relative h-full w-full min-h-[300px]">
+    <div
+      ref={containerRef}
+      id="climora-map-view"
+      className="relative h-full w-full min-h-[350px] bg-gray-950 overflow-hidden"
+    >
       <MapContainer
         center={mapCenter}
         zoom={mapZoom}
         className="h-full w-full"
         zoomControl={true}
         preferCanvas={true}
+        style={{ height: '100%', width: '100%', minHeight: '350px', backgroundColor: '#090d16' }}
         key={`climora-map-${selectedCity.id}`}
       >
         <MapResizeHandler />
         <MapController center={mapCenter} zoom={mapZoom} />
+
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
           crossOrigin="anonymous"
+          maxZoom={19}
         />
 
         {/* Heat layer: Heat zones (polygons) */}
@@ -175,7 +169,7 @@ export function HeatMap() {
                       : zone.severity === 'moderate'
                         ? '#f97316'
                         : '#facc15',
-                fillOpacity: 0.3,
+                fillOpacity: 0.35,
                 color:
                   zone.id === selectedHeatZone?.id
                     ? '#10b981'
@@ -193,15 +187,14 @@ export function HeatMap() {
               }}
             >
               <Popup>
-                <div className="text-sm">
-                  <p className="font-semibold text-base mb-1">{zone.name}</p>
-                  <p>
-                    Severity: <span className="font-medium capitalize">{zone.severity}</span>
+                <div className="text-sm p-1">
+                  <p className="font-bold text-base mb-1 text-gray-900">{zone.name}</p>
+                  <p className="text-xs text-gray-600">
+                    Severity: <span className="font-semibold capitalize text-red-600">{zone.severity}</span>
                   </p>
-                  <p>Avg Temp: {zone.avgTemperature.toFixed(1)}°C</p>
-                  <p>Max Temp: {zone.maxTemperature.toFixed(1)}°C</p>
-                  <p>Area: {zone.area.toFixed(2)} km²</p>
-                  <p>Vulnerability: {zone.vulnerabilityScore.toFixed(0)}/100</p>
+                  <p className="text-xs text-gray-700">Mean Temp: <strong>{zone.avgTemperature.toFixed(1)}°C</strong></p>
+                  <p className="text-xs text-gray-700">Peak Temp: <strong>{zone.maxTemperature.toFixed(1)}°C</strong></p>
+                  <p className="text-xs text-gray-700">Vulnerability Index: <strong>{zone.vulnerabilityScore.toFixed(0)}/100</strong></p>
                 </div>
               </Popup>
             </Polygon>
@@ -225,30 +218,21 @@ export function HeatMap() {
               }}
             >
               <Popup>
-                <div className="text-sm min-w-[200px]">
-                  <p className="font-semibold text-base mb-1">{rec.name}</p>
-                  <p className="mb-2 text-gray-600">{rec.description}</p>
-                  <div className="space-y-1">
-                    <p>
-                      Type:{' '}
-                      <span className="font-medium">
-                        {getInfrastructureIcon(rec.type)} {rec.type.replace('_', ' ')}
-                      </span>
+                <div className="text-sm min-w-[210px] p-1">
+                  <p className="font-bold text-base mb-1 text-gray-900">{rec.name}</p>
+                  <p className="mb-2 text-xs text-gray-600 leading-relaxed">{rec.description}</p>
+                  <div className="space-y-1 text-xs border-t pt-1.5 border-gray-200">
+                    <p className="text-gray-700">
+                      Type: <span className="font-semibold">{getInfrastructureIcon(rec.type)} {rec.type.replace('_', ' ')}</span>
                     </p>
-                    <p>
-                      Priority: <span className="font-medium capitalize">{rec.priority}</span>
+                    <p className="text-gray-700">
+                      Priority: <span className="font-semibold capitalize text-amber-600">{rec.priority}</span>
                     </p>
-                    <p>
-                      Cooling Effect:{' '}
-                      <span className="font-medium text-emerald-600">
-                        -{rec.estimatedCoolingEffect.toFixed(1)}°C
-                      </span>
+                    <p className="text-emerald-700 font-bold">
+                      Est. Cooling: -{rec.estimatedCoolingEffect.toFixed(1)}°C
                     </p>
-                    <p>
-                      Est. Cost:{' '}
-                      <span className="font-medium">
-                        ₹ {(rec.estimatedCost / 10000000).toFixed(2)} Crore
-                      </span>
+                    <p className="text-gray-700">
+                      Est. Budget: ₹ {(rec.estimatedCost / 10000000).toFixed(2)} Cr
                     </p>
                   </div>
                 </div>
@@ -263,20 +247,17 @@ export function HeatMap() {
               key={area.id}
               positions={area.coordinates}
               pathOptions={{
-                fillColor: '#22c55e',
-                fillOpacity: 0.4,
-                color: '#16a34a',
-                weight: 2,
+                fillColor: '#10b981',
+                fillOpacity: 0.45,
+                color: '#059669',
+                weight: 1.5,
               }}
             >
               <Popup>
-                <div className="text-sm">
-                  <p className="font-semibold text-base mb-1">{area.name}</p>
-                  <p>
-                    Type: <span className="font-medium capitalize">{area.type}</span>
-                  </p>
-                  <p>Area: {area.area.toFixed(2)} km²</p>
-                  <p>NDVI: {area.ndvi.toFixed(2)}</p>
+                <div className="text-sm p-1">
+                  <p className="font-bold text-base mb-1 text-gray-900">{area.name}</p>
+                  <p className="text-xs text-gray-600">Type: <span className="capitalize">{area.type}</span></p>
+                  <p className="text-xs text-emerald-700 font-semibold">NDVI Index: {area.ndvi.toFixed(2)}</p>
                 </div>
               </Popup>
             </Polygon>
@@ -297,11 +278,9 @@ export function HeatMap() {
               }}
             >
               <Popup>
-                <div className="text-sm">
-                  <p className="font-semibold text-base mb-1">{point.name}</p>
-                  <p>
-                    Type: <span className="font-medium capitalize">{point.type}</span>
-                  </p>
+                <div className="text-sm p-1">
+                  <p className="font-bold text-base mb-1 text-gray-900">{point.name}</p>
+                  <p className="text-xs text-gray-600">Type: <span className="capitalize">{point.type}</span></p>
                 </div>
               </Popup>
             </CircleMarker>
@@ -322,11 +301,11 @@ export function HeatMap() {
               }}
             >
               <Popup>
-                <div className="text-sm">
-                  <p className="font-semibold text-base mb-1">{sensor.name}</p>
-                  <p>Temperature: {sensor.temperature.toFixed(1)}°C</p>
-                  <p className="text-xs text-gray-500">
-                    Last reading: {new Date(sensor.lastReading).toLocaleString()}
+                <div className="text-sm p-1">
+                  <p className="font-bold text-base mb-1 text-gray-900">{sensor.name}</p>
+                  <p className="text-xs text-purple-700 font-bold">Telemetry: {sensor.temperature.toFixed(1)}°C</p>
+                  <p className="text-[10px] text-gray-500 mt-0.5">
+                    Updated: {new Date(sensor.lastReading).toLocaleTimeString()}
                   </p>
                 </div>
               </Popup>
@@ -334,14 +313,15 @@ export function HeatMap() {
           ))}
       </MapContainer>
 
-      {/* Map Controls Overlay */}
-      <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 z-[1000] flex flex-col gap-2">
-        <div className="rounded-lg bg-white/90 p-2 sm:p-3 shadow-lg backdrop-blur dark:bg-gray-900/90">
-          <p className="text-[10px] sm:text-xs font-medium text-gray-600 dark:text-gray-400 mb-0.5 sm:mb-1">
+      {/* Map City Info Pill */}
+      <div className="absolute bottom-3 left-3 z-[1000] flex flex-col gap-1.5 pointer-events-none">
+        <div className="rounded-lg bg-gray-950/90 border border-gray-800 p-2.5 shadow-2xl backdrop-blur pointer-events-auto">
+          <p className="text-xs font-bold text-white mb-0.5 flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
             {selectedCity.name}, {selectedCity.province}
           </p>
-          <p className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-500">
-            Pop: {selectedCity.population.toLocaleString()}
+          <p className="text-[11px] text-gray-400">
+            Population: {selectedCity.population.toLocaleString('en-IN')}
           </p>
         </div>
       </div>
