@@ -144,7 +144,7 @@ export function StatsCards() {
                   <p className="text-[10px] sm:text-xs font-medium text-gray-500 dark:text-gray-400 truncate">
                     {card.title}
                   </p>
-                  <p className="mt-1 min-w-0 text-lg font-bold tabular-nums text-gray-900 [overflow-wrap:anywhere] dark:text-white sm:text-2xl">
+                  <p className="mt-1 min-w-0 text-base sm:text-xl xl:text-2xl font-bold tabular-nums text-gray-900 whitespace-nowrap tracking-tight dark:text-white">
                     {card.isLoading ? (
                       <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
                     ) : (
