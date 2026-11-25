@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { City, GreenInfrastructureRecommendation, HeatZone, LayerType } from '@/types';
+import type { City, GreenInfrastructureRecommendation, HeatZone, LayerType, UserProfile, UserRole } from '@/types';
 import { INDIAN_CITIES } from './data';
 
 export type DashboardTab = 'map' | 'analytics' | 'actions';
@@ -55,6 +55,15 @@ interface DashboardStore {
   // 3D Visualization
   enable3D: boolean;
   setEnable3D: (enable: boolean) => void;
+
+  // Authentication & Role
+  userRole: UserRole;
+  setUserRole: (role: UserRole) => void;
+  userProfile: UserProfile | null;
+  setUserProfile: (profile: UserProfile | null) => void;
+  isAuthenticated: boolean;
+  setIsAuthenticated: (auth: boolean) => void;
+  logout: () => void;
 }
 
 export const useDashboardStore = create<DashboardStore>((set) => {
@@ -130,5 +139,26 @@ export const useDashboardStore = create<DashboardStore>((set) => {
     // 3D Visualization
     enable3D: false,
     setEnable3D: (enable) => set({ enable3D: enable }),
+
+    // Authentication & Role
+    userRole: 'government',
+    setUserRole: (role) => set({ userRole: role }),
+    userProfile: {
+      name: 'Aditi Sharma',
+      email: 'a.sharma@mcd.gov.in',
+      role: 'government',
+      organization: 'Municipal Corporation of Delhi (MCD)',
+      department: 'Urban Resilience & Environment Cell',
+      verified: true,
+    },
+    setUserProfile: (profile) => set({ userProfile: profile }),
+    isAuthenticated: true,
+    setIsAuthenticated: (auth) => set({ isAuthenticated: auth }),
+    logout: () =>
+      set({
+        isAuthenticated: false,
+        userProfile: null,
+        userRole: 'citizen',
+      }),
   };
 });

@@ -3,12 +3,13 @@
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { RotateCw, TrendingUp } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { generateHeatZones, generateRecommendations } from '@/lib/data';
 import { useDashboardStore } from '@/lib/store';
 import { getPriorityColor } from '@/lib/utils';
 
-const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
 
 export function MapboxMap() {
   const {
@@ -19,6 +20,7 @@ export function MapboxMap() {
     setSelectedRecommendation,
     mapCenter,
     mapZoom,
+    setEnable3D,
   } = useDashboardStore();
 
   const [isMounted, setIsMounted] = useState(false);
@@ -372,9 +374,12 @@ export function MapboxMap() {
           </div>
           <h3 className="text-base font-semibold text-gray-800 dark:text-gray-200 font-alliance">3D Map Unavailable</h3>
           <p className="text-sm text-gray-600 dark:text-gray-400">{mapError}</p>
-          <p className="text-xs text-gray-500 dark:text-gray-500">
-            Add <code className="rounded bg-gray-200 px-1.5 py-0.5 text-xs dark:bg-gray-700">NEXT_PUBLIC_MAPBOX_TOKEN</code> to your <code className="rounded bg-gray-200 px-1.5 py-0.5 text-xs dark:bg-gray-700">.env.local</code> file and restart the dev server.
-          </p>
+          <Button
+            onClick={() => setEnable3D(false)}
+            className="mt-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium"
+          >
+            Switch to 2D Heat Map
+          </Button>
         </div>
       </div>
     );

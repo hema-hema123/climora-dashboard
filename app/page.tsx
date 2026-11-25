@@ -12,10 +12,27 @@ export default function LandingPage() {
       </div>
 
       {/* Header */}
-      <header className="absolute top-0 left-0 right-0 h-[54px] bg-[#1f2b26] z-10">
-        <div className="relative h-full flex items-center justify-between px-4 sm:px-5">
-          <p className="font-alliance text-lg sm:text-[24px] text-[#ecefe8] tracking-[-0.96px]"> Climora</p>
-          <p className="font-alliance text-lg sm:text-[24px] text-white tracking-tight sm:tracking-[-3.6px]">© 2026</p>
+      <header className="absolute top-0 left-0 right-0 h-[60px] bg-[#1f2b26]/95 backdrop-blur z-30 border-b border-white/10">
+        <div className="relative h-full flex items-center justify-between px-4 sm:px-8">
+          <Link href="/" className="flex items-center gap-2">
+            <span className="font-alliance text-xl sm:text-2xl font-bold text-[#ecefe8] tracking-tight">Climora</span>
+            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+          </Link>
+
+          <nav className="hidden md:flex items-center gap-6">
+            <Link href="/dashboard" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Live Map</Link>
+            <Link href="/analytics" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Analytics</Link>
+            <Link href="/mitigation" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Mitigation</Link>
+            <Link href="/reports" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Reports</Link>
+            <Link href="/citizen" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Citizen Action</Link>
+          </nav>
+
+          <Link
+            href="/dashboard"
+            className="rounded-lg bg-emerald-400 hover:bg-emerald-300 text-gray-950 font-semibold px-4 py-1.5 text-xs transition-all shadow-sm"
+          >
+            Launch Dashboard →
+          </Link>
         </div>
       </header>
 

@@ -131,3 +131,14 @@ export interface ExportOptions {
   includeAnalytics: boolean;
   timeRange: TimeRange;
 }
+
+export type UserRole = 'government' | 'citizen' | 'researcher';
+
+export interface UserProfile {
+  name: string;
+  email: string;
+  role: UserRole;
+  organization?: string;
+  department?: string;
+  verified?: boolean;
+}
