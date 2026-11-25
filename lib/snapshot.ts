@@ -10,13 +10,13 @@ export async function captureMapSnapshot(cityId = 'delhi'): Promise<boolean> {
   const filename = `climora-${cityId}-map-snapshot-${timestamp}.png`;
 
   try {
-    // 1. Locate map container element
+    // 1. Locate map container element (prefer exact map container)
     const mapElement =
+      document.querySelector('.mapboxgl-map') ||
+      document.querySelector('.leaflet-container') ||
       document.getElementById('climora-map-view') ||
       document.getElementById('climora-mapbox-view') ||
       document.getElementById('climora-map-container') ||
-      document.querySelector('.leaflet-container') ||
-      document.querySelector('.mapboxgl-map') ||
       (document.querySelector('main') as HTMLElement | null);
 
     if (!mapElement) {
@@ -34,20 +34,23 @@ export async function captureMapSnapshot(cityId = 'delhi'): Promise<boolean> {
       scale: typeof window !== 'undefined' ? Math.min(window.devicePixelRatio || 2, 2) : 2,
       logging: false,
       backgroundColor: '#0a0f0d',
+      imageTimeout: 8000,
       ignoreElements: (element) => {
-        // Exclude transient controls if tagged
         return element.classList.contains('climora-no-capture');
       },
     });
 
-    // 4. Download canvas as PNG
+    // 3. Download canvas as PNG
     return new Promise((resolve) => {
       canvas.toBlob((blob) => {
         if (!blob) {
-          // Fallback to dataURL
-          const dataUrl = canvas.toDataURL('image/png');
-          triggerDownload(dataUrl, filename);
-          resolve(true);
+          try {
+            const dataUrl = canvas.toDataURL('image/png');
+            triggerDownload(dataUrl, filename);
+            resolve(true);
+          } catch {
+            resolve(false);
+          }
           return;
         }
 
@@ -63,6 +66,7 @@ export async function captureMapSnapshot(cityId = 'delhi'): Promise<boolean> {
     try {
       const fallbackCanvas =
         (document.querySelector('.mapboxgl-canvas') as HTMLCanvasElement | null) ||
+        (document.querySelector('.leaflet-container canvas') as HTMLCanvasElement | null) ||
         (document.querySelector('canvas') as HTMLCanvasElement | null);
 
       if (fallbackCanvas) {
