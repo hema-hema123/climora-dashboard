@@ -64,7 +64,13 @@ export function ExportPanel() {
       const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
       downloadBlob(blob, `verdant-${selectedCity.id}-data.json`);
     } else if (format === 'png') {
-      await captureMapSnapshot(selectedCity.id);
+      const success = await captureMapSnapshot(selectedCity.id);
+      setExporting(null);
+      if (success) {
+        setExported('png');
+        setTimeout(() => setExported(null), 2000);
+      }
+      return;
     }
 
     setExporting(null);
