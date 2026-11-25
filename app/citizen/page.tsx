@@ -4,12 +4,18 @@ import {
   AlertTriangle,
   Calendar,
   CheckCircle2,
+  CheckSquare,
+  Compass,
   Droplet,
+  Footprints,
   HeartHandshake,
   MapPin,
   Send,
   ShieldCheck,
+  Sparkles,
+  Square,
   Sun,
+  ThermometerSnowflake,
   Trees,
   Users,
 } from 'lucide-react';
@@ -27,6 +33,26 @@ export default function CitizenPage() {
   const [reportNotes, setReportNotes] = useState('');
   const [submittedMessage, setSubmittedMessage] = useState<string | null>(null);
   const [joinedDrives, setJoinedDrives] = useState<string[]>([]);
+
+  // Interactive Checklist State
+  const [checklist, setChecklist] = useState({
+    hydration: true,
+    clothing: false,
+    checkSeniors: false,
+    waterAnimals: true,
+  });
+
+  // Interactive Shaded Walk Navigator State
+  const [routeFrom, setRouteFrom] = useState('Metro Station Exit 3');
+  const [routeTo, setRouteTo] = useState('Central Community Market');
+  const [activeRoute, setActiveRoute] = useState<'shaded' | 'direct'>('shaded');
+  const [routeStarted, setRouteStarted] = useState(false);
+
+  const toggleChecklistItem = (key: keyof typeof checklist) => {
+    setChecklist((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const completedCount = Object.values(checklist).filter(Boolean).length;
 
   const coolingCenters = [
     {
@@ -141,6 +167,191 @@ export default function CitizenPage() {
         {/* Grid Layout: Left Column (Report Form + Volunteer Drives) / Right Column (Cooling Shelters) */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
+            {/* Interactive Shaded Walk Navigator */}
+            <Card className="bg-gradient-to-br from-gray-950 via-gray-900 to-emerald-950/40 border border-emerald-500/40 shadow-xl overflow-hidden">
+              <CardHeader className="border-b border-gray-800 pb-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                      <Footprints className="h-5 w-5 text-emerald-400" />
+                      Pedestrian Shaded Walk Navigator
+                    </CardTitle>
+                    <CardDescription className="text-xs text-gray-400">
+                      Find routes sheltered by tree canopies, covered colonnades, and free municipal water refill points.
+                    </CardDescription>
+                  </div>
+                  <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                    Live Planner
+                  </span>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-4 space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <div>
+                    <label className="text-gray-300 font-medium block mb-1">Starting Point</label>
+                    <input
+                      type="text"
+                      value={routeFrom}
+                      onChange={(e) => setRouteFrom(e.target.value)}
+                      className="w-full bg-gray-900 border border-gray-700 rounded-md px-3 py-1.5 text-white text-xs focus:outline-none focus:border-emerald-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-gray-300 font-medium block mb-1">Destination</label>
+                    <input
+                      type="text"
+                      value={routeTo}
+                      onChange={(e) => setRouteTo(e.target.value)}
+                      className="w-full bg-gray-900 border border-gray-700 rounded-md px-3 py-1.5 text-white text-xs focus:outline-none focus:border-emerald-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Route Option Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div
+                    onClick={() => setActiveRoute('shaded')}
+                    className={`p-3 rounded-xl border text-left cursor-pointer transition-all ${
+                      activeRoute === 'shaded'
+                        ? 'bg-emerald-950/80 border-emerald-400 ring-1 ring-emerald-400'
+                        : 'bg-gray-900/60 border-gray-800 hover:border-gray-700'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-bold text-emerald-400 flex items-center gap-1">
+                        <Trees className="h-3.5 w-3.5" />
+                        🌳 Shaded Green Route
+                      </span>
+                      <span className="text-[10px] font-bold bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded">
+                        -3.5°C Cooler
+                      </span>
+                    </div>
+                    <p className="text-xs text-white font-semibold">12 mins · 850m</p>
+                    <p className="text-[11px] text-gray-300 mt-1">
+                      85% shaded by Neem & Peepal canopy · 💧 2 Free RO water fountains on path
+                    </p>
+                    <p className="text-[10px] text-emerald-400 font-bold mt-2">
+                      {activeRoute === 'shaded' ? '✓ Recommended Safe Route Selected' : 'Click to Select'}
+                    </p>
+                  </div>
+
+                  <div
+                    onClick={() => setActiveRoute('direct')}
+                    className={`p-3 rounded-xl border text-left cursor-pointer transition-all ${
+                      activeRoute === 'direct'
+                        ? 'bg-red-950/80 border-red-400 ring-1 ring-red-400'
+                        : 'bg-gray-900/60 border-gray-800 hover:border-gray-700'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-bold text-red-400 flex items-center gap-1">
+                        <Sun className="h-3.5 w-3.5" />
+                        ☀️ Exposed Asphalt Highway
+                      </span>
+                      <span className="text-[10px] font-bold bg-red-500/20 text-red-300 px-2 py-0.5 rounded">
+                        Extreme 43.8°C
+                      </span>
+                    </div>
+                    <p className="text-xs text-white font-semibold">10 mins · 750m</p>
+                    <p className="text-[11px] text-gray-300 mt-1">
+                      0% tree shade · High surface radiant heat · Heat exhaustion risk
+                    </p>
+                    <p className="text-[10px] text-red-400 font-bold mt-2">
+                      {activeRoute === 'direct' ? '⚠ Unsafe Route Selected' : 'Click to Compare'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
+                  <span className="text-xs text-gray-300">
+                    {routeStarted
+                      ? '🚶 Turn right at Sector 6 Green Park -> Follow colonnade towards Market Plaza'
+                      : 'Choose your route above and start guided shaded walk.'}
+                  </span>
+                  <Button
+                    size="sm"
+                    onClick={() => setRouteStarted(!routeStarted)}
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs px-4 cursor-pointer"
+                  >
+                    {routeStarted ? 'End Navigation' : 'Start Shaded Walk →'}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Daily Citizen Heat Action Checklist */}
+            <Card className="bg-gray-950/80 border-gray-800">
+              <CardHeader className="border-b border-gray-800/80 pb-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-base font-bold text-white flex items-center gap-2">
+                      <ShieldCheck className="h-5 w-5 text-sky-400" />
+                      Today&apos;s Citizen Heat Action Checklist
+                    </CardTitle>
+                    <CardDescription className="text-xs text-gray-400">
+                      Simple actions to keep yourself, your family, and your neighborhood safe today.
+                    </CardDescription>
+                  </div>
+                  <span className="text-xs font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-500/30 px-2.5 py-1 rounded-full">
+                    {completedCount} / 4 Done
+                  </span>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-4 space-y-2.5">
+                {[
+                  {
+                    key: 'hydration' as const,
+                    title: 'Drink at least 3 Litres of Water',
+                    desc: 'Hydrate continuously; avoid sugary drinks during peak afternoon hours.',
+                  },
+                  {
+                    key: 'clothing' as const,
+                    title: 'Wear Loose Light-Colored Cotton Clothes',
+                    desc: 'Reflects heat and allows skin breathing.',
+                  },
+                  {
+                    key: 'checkSeniors' as const,
+                    title: 'Check on Elderly Family & Neighbors',
+                    desc: 'Elderly bodies have harder times regulating sudden heat jumps.',
+                  },
+                  {
+                    key: 'waterAnimals' as const,
+                    title: 'Place a Bowl of Water for Birds & Community Animals',
+                    desc: 'Keeps stray animals and urban wildlife alive through 43°C+ days.',
+                  },
+                ].map((item) => (
+                  <button
+                    key={item.key}
+                    type="button"
+                    onClick={() => toggleChecklistItem(item.key)}
+                    className={`w-full p-2.5 rounded-lg border text-left flex items-start gap-3 transition-all cursor-pointer ${
+                      checklist[item.key]
+                        ? 'bg-emerald-950/40 border-emerald-500/50 text-emerald-200'
+                        : 'bg-gray-900/40 border-gray-800 text-gray-300 hover:border-gray-700'
+                    }`}
+                  >
+                    <span className="mt-0.5 text-emerald-400 shrink-0">
+                      {checklist[item.key] ? (
+                        <CheckSquare className="h-4 w-4" />
+                      ) : (
+                        <Square className="h-4 w-4 text-gray-500" />
+                      )}
+                    </span>
+                    <div className="flex-1">
+                      <p
+                        className={`text-xs font-bold ${
+                          checklist[item.key] ? 'line-through text-emerald-400' : 'text-white'
+                        }`}
+                      >
+                        {item.title}
+                      </p>
+                      <p className="text-[11px] text-gray-400 mt-0.5">{item.desc}</p>
+                    </div>
+                  </button>
+                ))}
+              </CardContent>
+            </Card>
+
             {/* Community Hotspot Report Form */}
             <Card className="bg-gray-950/80 border-gray-800">
               <CardHeader className="border-b border-gray-800/80 pb-3">

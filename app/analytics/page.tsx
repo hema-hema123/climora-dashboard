@@ -13,6 +13,8 @@ import {
   Info,
   Layers,
   Thermometer,
+  ThermometerSnowflake,
+  Trees,
   TrendingUp,
   Users,
 } from 'lucide-react';
@@ -178,6 +180,49 @@ export default function AnalyticsPage() {
               <p className="text-[11px] text-gray-500 mt-1">Census 2021 + localized vulnerability scoring</p>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Action Directives Banner based on telemetry */}
+        <div className="bg-gradient-to-r from-gray-950 via-gray-900 to-emerald-950/40 border border-emerald-500/40 p-4 sm:p-5 rounded-2xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <div className="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-400 shrink-0 mt-0.5">
+              <ThermometerSnowflake className="h-6 w-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 mb-0.5">
+                <span className="text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/30">
+                  Data-Driven Action Plan
+                </span>
+                <span className="text-xs text-gray-400">{selectedCity.name} Hotspot Telemetry</span>
+              </div>
+              <h3 className="text-base sm:text-lg font-bold text-white">
+                3 Immediate Municipal & Citizen Directives
+              </h3>
+              <p className="text-xs text-gray-300 leading-relaxed max-w-2xl mt-1">
+                Surface heat is +{stats.heatIslandIntensity.toFixed(1)}°C above rural baselines. Here are the 3 top immediate actions to mitigate danger across {selectedCity.name}:
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <Button
+              size="sm"
+              onClick={() => router.push('/mitigation')}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center gap-1.5 shadow-md cursor-pointer"
+            >
+              <Trees className="h-3.5 w-3.5" />
+              Open Mitigation Action Planner →
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => router.push('/citizen')}
+              className="border-gray-700 text-sky-400 hover:bg-sky-950/40 text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
+            >
+              <Users className="h-3.5 w-3.5" />
+              Citizen Safety Alerts →
+            </Button>
+          </div>
         </div>
 
         {/* Longitudinal Temperature Chart */}

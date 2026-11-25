@@ -13,6 +13,7 @@ import {
   Filter,
   Plus,
   Share2,
+  Sparkles,
   ThermometerSnowflake,
   TreeDeciduous,
   Trees,
@@ -169,6 +170,66 @@ export default function MitigationPage() {
               <p className="text-xs text-gray-400">Capital cost + 5-year maintenance estimate</p>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Quick Action Plan Presets */}
+        <div className="bg-gray-900/60 border border-gray-800 p-3.5 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <span className="p-1 rounded bg-emerald-500/20 text-emerald-400">
+              <Sparkles className="h-4 w-4" />
+            </span>
+            <div>
+              <span className="text-xs font-bold text-white block">1-Click Action Plan Presets</span>
+              <span className="text-[11px] text-gray-400">Instantly populate municipal intervention packages</span>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                const urgentIds = allRecommendations
+                  .filter((r) => r.priority === 'critical' || r.priority === 'high')
+                  .map((r) => r.id);
+                urgentIds.forEach((id) => {
+                  if (!implementedRecommendations.includes(id)) toggleImplementedRecommendation(id);
+                });
+              }}
+              className="text-xs border-red-500/40 text-red-300 hover:bg-red-950/40 h-8 cursor-pointer"
+            >
+              ⚡ Emergency Heat Response ({allRecommendations.filter((r) => r.priority === 'critical').length} Critical)
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                const treeIds = allRecommendations
+                  .filter((r) => r.type === 'tree_planting' || r.type === 'urban_park')
+                  .map((r) => r.id);
+                treeIds.forEach((id) => {
+                  if (!implementedRecommendations.includes(id)) toggleImplementedRecommendation(id);
+                });
+              }}
+              className="text-xs border-emerald-500/40 text-emerald-300 hover:bg-emerald-950/40 h-8 cursor-pointer"
+            >
+              🌳 Maximum Green Canopy Package
+            </Button>
+            {implementedRecommendations.length > 0 && (
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => {
+                  [...implementedRecommendations].forEach((id) =>
+                    toggleImplementedRecommendation(id),
+                  );
+                }}
+                className="text-xs text-gray-400 hover:text-white h-8 cursor-pointer"
+              >
+                Reset Allocation
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* Filter Pills */}

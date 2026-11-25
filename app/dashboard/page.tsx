@@ -1,7 +1,9 @@
 'use client';
 
-import { BarChart3, Map as MapIcon, TreeDeciduous } from 'lucide-react';
+import { BarChart3, Map as MapIcon, Sparkles, TreeDeciduous } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { useState } from 'react';
+import { ActionSimulator } from '@/components/analytics/ActionSimulator';
 import { CityComparison } from '@/components/analytics/CityComparison';
 import { HeatZoneList } from '@/components/analytics/HeatZoneList';
 import { ImpactProjections } from '@/components/analytics/ImpactProjections';
@@ -29,7 +31,9 @@ const HeatMap = dynamic(() => import('@/components/map/HeatMap').then((mod) => m
 });
 
 export default function DashboardPage() {
-  const { dashboardTab, setDashboardTab, desktopSidebarOpen } = useDashboardStore();
+  const { dashboardTab, setDashboardTab, desktopSidebarOpen, implementedRecommendations } =
+    useDashboardStore();
+  const [rightPanelTab, setRightPanelTab] = useState<'actions' | 'charts'>('actions');
 
   return (
     <DashboardShell>
@@ -52,8 +56,8 @@ export default function DashboardPage() {
                   Analytics
                 </TabsTrigger>
                 <TabsTrigger value="actions" className="flex-1 gap-2">
-                  <TreeDeciduous className="h-4 w-4" />
-                  Actions
+                  <TreeDeciduous className="h-4 w-4 text-emerald-400" />
+                  Action Plans ({implementedRecommendations.length})
                 </TabsTrigger>
               </TabsList>
             </div>
@@ -79,6 +83,7 @@ export default function DashboardPage() {
             </TabsContent>
 
             <TabsContent value="actions" className="flex-1 overflow-auto p-4 space-y-4 m-0">
+              <ActionSimulator />
               <RecommendationsPanel />
               <ExportPanel />
             </TabsContent>
@@ -111,14 +116,57 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* Right Panel - Charts & Analytics */}
-              <div className="w-[320px] xl:w-[400px] shrink-0 overflow-y-auto border-l border-gray-200 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-900">
-                <div className="space-y-4">
-                  <TemperatureChart />
-                  <CityComparison />
-                  <HeatZoneList />
-                  <ImpactProjections />
-                  <ExportPanel />
+              {/* Right Panel - Action Plans & Analytics Toggle */}
+              <div className="w-[340px] xl:w-[420px] shrink-0 flex flex-col overflow-hidden border-l border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900">
+                {/* Action vs Analytics Tab Switcher */}
+                <div className="p-3 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 shrink-0">
+                  <div className="flex items-center gap-1.5 p-1 bg-gray-100 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800">
+                    <button
+                      type="button"
+                      onClick={() => setRightPanelTab('actions')}
+                      className={cn(
+                        'flex-1 py-1.5 px-2 rounded-md text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer',
+                        rightPanelTab === 'actions'
+                          ? 'bg-emerald-600 text-white shadow-sm'
+                          : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white',
+                      )}
+                    >
+                      <TreeDeciduous className="h-3.5 w-3.5" />
+                      ⚡ Action Plans ({implementedRecommendations.length})
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setRightPanelTab('charts')}
+                      className={cn(
+                        'flex-1 py-1.5 px-2 rounded-md text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer',
+                        rightPanelTab === 'charts'
+                          ? 'bg-emerald-600 text-white shadow-sm'
+                          : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white',
+                      )}
+                    >
+                      <BarChart3 className="h-3.5 w-3.5" />
+                      📊 Trends & Charts
+                    </button>
+                  </div>
+                </div>
+
+                {/* Tab Content Area */}
+                <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                  {rightPanelTab === 'actions' ? (
+                    <>
+                      <ActionSimulator />
+                      <RecommendationsPanel />
+                      <ExportPanel />
+                    </>
+                  ) : (
+                    <>
+                      <TemperatureChart />
+                      <CityComparison />
+                      <HeatZoneList />
+                      <ImpactProjections />
+                      <ExportPanel />
+                    </>
+                  )}
                 </div>
               </div>
             </div>

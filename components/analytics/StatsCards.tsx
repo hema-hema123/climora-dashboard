@@ -132,9 +132,26 @@ export function StatsCards() {
 
   return (
     <TooltipProvider delayDuration={200}>
-      <p className="mb-2 text-xs text-gray-500 dark:text-gray-400">
-        City indicators · {selectedCity.name}, {selectedCity.province}
-      </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2.5">
+        <p className="text-xs font-semibold text-gray-400 flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+          Live Telemetry · {selectedCity.name}, {selectedCity.province}
+        </p>
+
+        {implementedRecs.length > 0 ? (
+          <div className="flex items-center gap-2 bg-emerald-950/70 border border-emerald-500/40 px-3 py-1 rounded-full text-xs text-emerald-300">
+            <span className="font-bold">{implementedRecs.length} Action Plan Sites Active:</span>
+            <span className="text-white font-extrabold bg-emerald-800 px-1.5 py-0.5 rounded text-[11px]">
+              -{(implementedRecs.reduce((s, r) => s + r.estimatedCoolingEffect, 0)).toFixed(1)}°C Relief
+            </span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 bg-gray-900/80 border border-gray-800 px-3 py-1 rounded-full text-xs text-gray-400">
+            <span>Action Mode: Baseline</span>
+            <span className="text-emerald-400 text-[11px] font-medium">⚡ Open Action Plans to simulate cooling</span>
+          </div>
+        )}
+      </div>
       <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-6">
         {cards.map((card) => (
           <Card key={card.title} className="overflow-hidden">

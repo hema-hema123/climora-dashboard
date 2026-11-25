@@ -1,9 +1,22 @@
 'use client';
 
-import { Building2, CheckCircle2, ChevronRight, Shield, Sparkles, Users } from 'lucide-react';
+import {
+  Building2,
+  CheckCircle2,
+  ChevronRight,
+  Droplets,
+  Flame,
+  RefreshCw,
+  Shield,
+  Sparkles,
+  ThermometerSnowflake,
+  Trees,
+  Users,
+} from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import Footer from '@/components/layout/Footer';
 import { useDashboardStore } from '@/lib/store';
 import type { UserRole } from '@/types';
@@ -12,6 +25,17 @@ import dashboardImage from './dashboard/verdantimage.png';
 export default function LandingPage() {
   const router = useRouter();
   const { setUserRole, setUserProfile, setIsAuthenticated } = useDashboardStore();
+
+  // Interactive Front-Page Sandbox
+  const [sandboxTrees, setSandboxTrees] = useState(false);
+  const [sandboxRoofs, setSandboxRoofs] = useState(false);
+  const [sandboxMisting, setSandboxMisting] = useState(false);
+
+  const baseTemp = 43.9;
+  const coolingOffset =
+    (sandboxTrees ? 0.8 : 0) + (sandboxRoofs ? 0.6 : 0) + (sandboxMisting ? 0.5 : 0);
+  const currentTemp = (baseTemp - coolingOffset).toFixed(1);
+  const citizensSaved = Math.round(coolingOffset * 85000);
 
   const handleEnterPlatform = (role: UserRole) => {
     setUserRole(role);
@@ -244,6 +268,134 @@ export default function LandingPage() {
                 >
                   Enter as Researcher
                   <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Interactive Live Cooling Sandbox */}
+            <div className="mt-8 bg-[#1f2b26] text-white rounded-2xl p-6 border border-emerald-500/30 shadow-2xl">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-800 pb-4 mb-4">
+                <div>
+                  <span className="text-[10px] font-bold tracking-wider uppercase bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/30 inline-block mb-1">
+                    ⚡ 5-Second Cooling Sandbox
+                  </span>
+                  <h3 className="text-lg font-bold text-white">
+                    Try an Action Plan: Click below to simulate urban cooling in real-time
+                  </h3>
+                  <p className="text-xs text-gray-300">
+                    See how quick, actionable cooling interventions immediately lower peak ground heat for Delhi:
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-4 bg-gray-950/80 px-4 py-2.5 rounded-xl border border-gray-800 shrink-0">
+                  <div className="text-right">
+                    <span className="text-[10px] uppercase font-bold text-gray-400 block">Delhi Surface Heat</span>
+                    <span className={`text-2xl font-black tabular-nums ${
+                      coolingOffset > 0 ? 'text-emerald-400' : 'text-red-400'
+                    }`}>
+                      {currentTemp}°C
+                    </span>
+                  </div>
+                  {coolingOffset > 0 && (
+                    <div className="border-l border-gray-800 pl-3">
+                      <span className="text-[10px] uppercase font-bold text-emerald-400 block">Cooling Drop</span>
+                      <span className="text-xl font-bold text-emerald-300">
+                        -{coolingOffset.toFixed(1)}°C
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* 3 Simple Action Toggles */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setSandboxTrees(!sandboxTrees)}
+                  className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                    sandboxTrees
+                      ? 'bg-emerald-950/80 border-emerald-400 shadow-md shadow-emerald-950'
+                      : 'bg-gray-900/60 border-gray-800 hover:border-gray-700'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-400">
+                      <Trees className="h-4 w-4" />
+                    </span>
+                    <span className="text-xs font-bold text-emerald-400">-0.8°C</span>
+                  </div>
+                  <p className="text-xs font-bold text-white">1. Plant 1,200 Shade Trees</p>
+                  <p className="text-[10px] text-gray-400 mt-0.5">Expands roadside canopy cover</p>
+                  <span className="mt-2 inline-block text-[10px] font-semibold text-emerald-400">
+                    {sandboxTrees ? '✓ Active in Plan' : '+ Tap to Add'}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSandboxRoofs(!sandboxRoofs)}
+                  className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                    sandboxRoofs
+                      ? 'bg-sky-950/80 border-sky-400 shadow-md shadow-sky-950'
+                      : 'bg-gray-900/60 border-gray-800 hover:border-gray-700'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="p-1.5 rounded-lg bg-sky-500/20 text-sky-400">
+                      <Building2 className="h-4 w-4" />
+                    </span>
+                    <span className="text-xs font-bold text-sky-400">-0.6°C</span>
+                  </div>
+                  <p className="text-xs font-bold text-white">2. Solar-Reflective Cool Roofs</p>
+                  <p className="text-[10px] text-gray-400 mt-0.5">Reflects 85% of rooftop heat</p>
+                  <span className="mt-2 inline-block text-[10px] font-semibold text-sky-400">
+                    {sandboxRoofs ? '✓ Active in Plan' : '+ Tap to Add'}
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSandboxMisting(!sandboxMisting)}
+                  className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                    sandboxMisting
+                      ? 'bg-cyan-950/80 border-cyan-400 shadow-md shadow-cyan-950'
+                      : 'bg-gray-900/60 border-gray-800 hover:border-gray-700'
+                  }`}
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="p-1.5 rounded-lg bg-cyan-500/20 text-cyan-400">
+                      <Droplets className="h-4 w-4" />
+                    </span>
+                    <span className="text-xs font-bold text-cyan-400">-0.5°C</span>
+                  </div>
+                  <p className="text-xs font-bold text-white">3. Water Misting Cannons</p>
+                  <p className="text-[10px] text-gray-400 mt-0.5">Transit hub evaporative mist</p>
+                  <span className="mt-2 inline-block text-[10px] font-semibold text-cyan-400">
+                    {sandboxMisting ? '✓ Active in Plan' : '+ Tap to Add'}
+                  </span>
+                </button>
+              </div>
+
+              {/* Action Result Footer */}
+              <div className="mt-4 pt-3 border-t border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+                <span className="text-gray-300">
+                  {coolingOffset > 0 ? (
+                    <span className="text-emerald-400 font-semibold flex items-center gap-1.5">
+                      <CheckCircle2 className="h-4 w-4" />
+                      Simulated Impact: ~{citizensSaved.toLocaleString('en-IN')} residents protected from severe heat stroke!
+                    </span>
+                  ) : (
+                    '👉 Select any intervention above to start the simulation'
+                  )}
+                </span>
+
+                <button
+                  type="button"
+                  onClick={() => handleEnterPlatform('government')}
+                  className="bg-emerald-400 hover:bg-emerald-300 text-gray-950 font-bold px-4 py-2 rounded-lg text-xs flex items-center gap-1.5 transition-all shadow-md shrink-0 cursor-pointer"
+                >
+                  Launch Full Climate Action Platform
+                  <ChevronRight className="h-3.5 w-3.5" />
                 </button>
               </div>
             </div>
