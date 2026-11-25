@@ -124,8 +124,8 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Recommendations Panel */}
-          <div className="w-[280px] xl:w-[350px] shrink-0 overflow-y-auto border-l border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950">
+          {/* Recommendations Panel - Visible on ultra-wide screens */}
+          <div className="hidden 2xl:block w-[300px] xl:w-[340px] shrink-0 overflow-y-auto border-l border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950">
             <RecommendationsPanel />
           </div>
         </div>

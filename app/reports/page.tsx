@@ -107,7 +107,7 @@ export default function ReportsPage() {
 
   return (
     <DashboardShell>
-      <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 bg-gray-900/95 text-gray-100 print:bg-white print:text-black">
+      <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full text-gray-100 print:bg-white print:text-black">
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-800 pb-5 print:hidden">
           <div>

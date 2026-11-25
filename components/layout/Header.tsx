@@ -395,6 +395,27 @@ export function Header() {
         </div>
       </header>
 
+      {/* Mobile & Tablet Sub-Navbar for 1-Tap Page Switching */}
+      <div className="lg:hidden flex items-center gap-2 px-3 py-2 bg-gray-950/95 border-b border-gray-800/80 overflow-x-auto no-scrollbar scroll-smooth w-full z-40 sticky top-16">
+        {navLinks.map((link) => {
+          const isActive = pathname === link.href;
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap shrink-0 transition-all ${
+                isActive
+                  ? 'bg-emerald-500/20 text-emerald-400 font-semibold border border-emerald-500/50 shadow-sm'
+                  : 'text-gray-400 hover:text-white bg-gray-900 border border-gray-800'
+              }`}
+            >
+              <link.icon className="h-3.5 w-3.5" />
+              <span>{link.label}</span>
+            </Link>
+          );
+        })}
+      </div>
+
       {/* Role & Authentication Switcher Modal */}
       <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
     </>

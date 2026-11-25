@@ -51,12 +51,34 @@ function MapResizeHandler() {
   const map = useMap();
 
   useEffect(() => {
+    map.invalidateSize();
     const container = map.getContainer();
     const observer = new ResizeObserver(() => map.invalidateSize({ animate: false }));
     observer.observe(container);
 
-    return () => observer.disconnect();
+    const timer = setTimeout(() => {
+      map.invalidateSize();
+    }, 250);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(timer);
+    };
   }, [map]);
+
+  return null;
+}
+
+function MapController({ center, zoom }: { center: [number, number]; zoom: number }) {
+  const map = useMap();
+
+  useEffect(() => {
+    map.setView(center, zoom, { animate: true });
+    const timer = setTimeout(() => {
+      map.invalidateSize();
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [map, center, zoom]);
 
   return null;
 }
@@ -121,16 +143,17 @@ export function HeatMap() {
 
   // Render 2D Leaflet map
   return (
-    <div ref={containerRef} id="climora-map-view" className="relative h-full w-full">
+    <div ref={containerRef} id="climora-map-view" className="relative h-full w-full min-h-[300px]">
       <MapContainer
         center={mapCenter}
         zoom={mapZoom}
         className="h-full w-full"
         zoomControl={true}
         preferCanvas={true}
-        key={`map-${selectedCity.id}-${mapZoom}-${mapCenter[0]}-${mapCenter[1]}`}
+        key={`climora-map-${selectedCity.id}`}
       >
         <MapResizeHandler />
+        <MapController center={mapCenter} zoom={mapZoom} />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
