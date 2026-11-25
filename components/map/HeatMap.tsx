@@ -127,13 +127,14 @@ export function HeatMap() {
         zoom={mapZoom}
         className="h-full w-full"
         zoomControl={true}
+        preferCanvas={true}
         key={`map-${selectedCity.id}-${mapZoom}-${mapCenter[0]}-${mapCenter[1]}`}
       >
         <MapResizeHandler />
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          crossOrigin=""
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          crossOrigin="anonymous"
         />
 
         {/* Heat layer: Heat zones (polygons) */}
