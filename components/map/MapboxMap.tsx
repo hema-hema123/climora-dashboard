@@ -407,6 +407,22 @@ export function MapboxMap() {
     <div id="climora-mapbox-view" className="relative h-full w-full">
       <div ref={mapContainer} className="h-full w-full" />
 
+      {/* Top Floating Control - Switch to 2D Map */}
+      <div className="absolute top-3 right-12 z-[1000] flex items-center bg-gray-950/95 border border-gray-800 rounded-lg p-1 backdrop-blur shadow-2xl gap-2 text-[11px] font-medium">
+        <span className="px-2 py-0.5 text-purple-300 font-bold flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-full bg-purple-400 animate-pulse" />
+          Mapbox 3D Extrusion
+        </span>
+        <button
+          type="button"
+          onClick={() => setEnable3D(false)}
+          className="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition-all cursor-pointer flex items-center gap-1 shadow-sm"
+        >
+          <span>🗺️</span>
+          <span>Switch to 2D Clean Map</span>
+        </button>
+      </div>
+
       {/* Rotation Slider */}
       <div className="absolute bottom-0 left-0 right-0 z-[1000] border-t border-gray-200 bg-white px-3 py-2 sm:px-4 sm:py-3 dark:border-gray-800 dark:bg-gray-950">
         <div className="flex items-center gap-2 sm:gap-3">
