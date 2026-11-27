@@ -3,11 +3,14 @@
 import {
   BarChart3,
   Building2,
+  CheckCircle2,
+  ChevronDown,
   Download,
   FileImage,
   FileSpreadsheet,
   FileText,
   Info,
+  KeyRound,
   Layers,
   MapPin,
   Menu,
@@ -15,6 +18,7 @@ import {
   PanelLeftOpen,
   Search,
   Shield,
+  ShieldCheck,
   TreeDeciduous,
   Users,
   X,
@@ -41,12 +45,15 @@ import {
 } from '@/lib/data';
 import { captureMapSnapshot } from '@/lib/snapshot';
 import { useDashboardStore } from '@/lib/store';
+import type { UserRole } from '@/types';
+import { cn } from '@/lib/utils';
 
 export function Header() {
   const pathname = usePathname();
   const [cityQuery, setCityQuery] = useState('');
   const [citySearchOpen, setCitySearchOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authDefaultRole, setAuthDefaultRole] = useState<UserRole>('government');
 
   const {
     selectedCity,
@@ -57,6 +64,7 @@ export function Header() {
     desktopSidebarOpen,
     setDesktopSidebarOpen,
     userRole,
+    setUserRole,
     userProfile,
     showToast,
   } = useDashboardStore();
@@ -247,8 +255,8 @@ export function Header() {
             </DropdownMenu>
           </div>
 
-          {/* City Search Bar */}
-          <div className="relative w-[130px] sm:w-[170px] md:w-[200px]">
+          {/* City Search Bar - Proportional responsive width */}
+          <div className="relative w-[110px] sm:w-[140px] md:w-[160px] lg:w-[140px] xl:w-[180px] shrink-0">
             <Search
               className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400"
               aria-hidden="true"
@@ -273,7 +281,7 @@ export function Header() {
                   setCityQuery('');
                   setCitySearchOpen(true);
                 }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-gray-400 hover:text-gray-100"
+                className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-gray-400 hover:text-gray-100 cursor-pointer"
               >
                 <X className="h-3 w-3" />
               </button>
@@ -290,7 +298,7 @@ export function Header() {
                       type="button"
                       onMouseDown={(event) => event.preventDefault()}
                       onClick={() => handleCityChange(city.id)}
-                      className="flex w-full items-center justify-between rounded-md px-2.5 py-1.5 text-left text-xs hover:bg-gray-800"
+                      className="flex w-full items-center justify-between rounded-md px-2.5 py-1.5 text-left text-xs hover:bg-gray-800 cursor-pointer"
                     >
                       <span className="font-medium">{city.name}</span>
                       <span className="text-[10px] text-gray-400">{city.province}</span>
@@ -303,37 +311,160 @@ export function Header() {
             )}
           </div>
 
-          {/* Role Switcher Badge */}
-          <button
-            type="button"
-            onClick={() => setAuthModalOpen(true)}
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold border transition-all ${
-              userRole === 'government'
-                ? 'bg-emerald-950/60 text-emerald-300 border-emerald-500/50 hover:bg-emerald-900/60'
-                : userRole === 'citizen'
-                  ? 'bg-sky-950/60 text-sky-300 border-sky-500/50 hover:bg-sky-900/60'
-                  : 'bg-purple-950/60 text-purple-300 border-purple-500/50 hover:bg-purple-900/60'
-            }`}
-            title="Click to switch between Government, Citizen, or Researcher roles"
-          >
-            {userRole === 'government' ? (
-              <Building2 className="h-3.5 w-3.5 text-emerald-400" />
-            ) : userRole === 'citizen' ? (
-              <Users className="h-3.5 w-3.5 text-sky-400" />
-            ) : (
-              <Shield className="h-3.5 w-3.5 text-purple-400" />
-            )}
-            <span className="hidden md:inline">
-              {userRole === 'government'
-                ? 'Govt Portal'
-                : userRole === 'citizen'
-                  ? 'Citizen Portal'
-                  : 'Researcher'}
-            </span>
-            <span className="text-[10px] font-normal text-gray-400 hidden xl:inline">
-              ({userProfile?.name?.split(' ')[0] || 'User'})
-            </span>
-          </button>
+          {/* Role & Access Controller Dropdown - Cleanly Proportioned */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                className={cn(
+                  'h-9 px-2 sm:px-2.5 rounded-lg flex items-center gap-1.5 text-xs font-semibold border transition-all cursor-pointer shadow-sm shrink-0',
+                  userRole === 'government'
+                    ? 'bg-emerald-950/80 text-emerald-300 border-emerald-500/50 hover:bg-emerald-900/80'
+                    : userRole === 'citizen'
+                      ? 'bg-sky-950/80 text-sky-300 border-sky-500/50 hover:bg-sky-900/80'
+                      : 'bg-purple-950/80 text-purple-300 border-purple-500/50 hover:bg-purple-900/80',
+                )}
+                title="Current Portal Role & Identity"
+              >
+                {userRole === 'government' ? (
+                  <Building2 className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                ) : userRole === 'citizen' ? (
+                  <Users className="h-3.5 w-3.5 text-sky-400 shrink-0" />
+                ) : (
+                  <Shield className="h-3.5 w-3.5 text-purple-400 shrink-0" />
+                )}
+
+                <span className="font-bold text-white whitespace-nowrap text-[11px] sm:text-xs">
+                  {userRole === 'government'
+                    ? 'Govt'
+                    : userRole === 'citizen'
+                      ? 'Citizen'
+                      : 'Research'}
+                </span>
+
+                {userProfile?.verified ? (
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shrink-0" title="Verified Identity" />
+                ) : (
+                  <span className="h-1.5 w-1.5 rounded-full bg-amber-400 shrink-0" title="Unverified" />
+                )}
+
+                <ChevronDown className="h-3 w-3 text-gray-400 shrink-0" />
+              </button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent align="end" className="w-64 bg-gray-950 border border-gray-800 text-gray-200 p-2 shadow-2xl font-alliance">
+              <div className="px-2 py-1.5 border-b border-gray-800 mb-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                    Active Clearance
+                  </span>
+                  <span
+                    className={cn(
+                      'text-[9px] font-semibold px-1.5 py-0.5 rounded border',
+                      userProfile?.verified
+                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                        : 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                    )}
+                  >
+                    {userProfile?.verified ? 'Verified ✓' : 'Unverified'}
+                  </span>
+                </div>
+                <p className="text-xs font-bold text-white mt-1 truncate">
+                  {userProfile?.name || (userRole === 'government' ? 'Municipal Officer' : userRole === 'citizen' ? 'Citizen Resident' : 'Scholar')}
+                </p>
+                <p className="text-[10px] text-gray-400 truncate">
+                  {userProfile?.organization || 'Municipal Authority'}
+                </p>
+                {userProfile?.officerId && (
+                  <p className="text-[10px] text-emerald-400 font-mono mt-0.5">
+                    ID: {userProfile.officerId}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-0.5 my-1">
+                <span className="text-[9px] font-bold uppercase tracking-wider text-gray-500 px-2 py-0.5 block">
+                  Switch Portal View
+                </span>
+
+                <DropdownMenuItem
+                  onClick={() => {
+                    if (userRole !== 'government' && (!userProfile?.verified || userProfile?.role !== 'government')) {
+                      setAuthDefaultRole('government');
+                      setAuthModalOpen(true);
+                      showToast('🏛️ Municipal Officer Verification Required', 'warning');
+                    } else {
+                      setUserRole('government');
+                      showToast('🏛️ Switched to Municipal Authority mode', 'info');
+                    }
+                  }}
+                  className={cn(
+                    'cursor-pointer flex items-center justify-between py-1.5 px-2 rounded-md text-xs',
+                    userRole === 'government' && 'bg-emerald-950/60 text-emerald-300 font-semibold',
+                  )}
+                >
+                  <span className="flex items-center gap-2">
+                    <Building2 className="h-3.5 w-3.5 text-emerald-400" />
+                    <span>🏛️ Municipal Authority</span>
+                  </span>
+                  {userRole === 'government' && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />}
+                </DropdownMenuItem>
+
+                <DropdownMenuItem
+                  onClick={() => {
+                    setUserRole('citizen');
+                    showToast('👥 Switched to Citizen Portal mode', 'info');
+                  }}
+                  className={cn(
+                    'cursor-pointer flex items-center justify-between py-1.5 px-2 rounded-md text-xs',
+                    userRole === 'citizen' && 'bg-sky-950/60 text-sky-300 font-semibold',
+                  )}
+                >
+                  <span className="flex items-center gap-2">
+                    <Users className="h-3.5 w-3.5 text-sky-400" />
+                    <span>👥 Citizen & Resident</span>
+                  </span>
+                  {userRole === 'citizen' && <CheckCircle2 className="h-3.5 w-3.5 text-sky-400" />}
+                </DropdownMenuItem>
+
+                <DropdownMenuItem
+                  onClick={() => {
+                    if (userRole !== 'researcher' && (!userProfile?.verified || userProfile?.role !== 'researcher')) {
+                      setAuthDefaultRole('researcher');
+                      setAuthModalOpen(true);
+                      showToast('🔬 Academic Research Clearance Required', 'warning');
+                    } else {
+                      setUserRole('researcher');
+                      showToast('🔬 Switched to Climate Researcher mode', 'info');
+                    }
+                  }}
+                  className={cn(
+                    'cursor-pointer flex items-center justify-between py-1.5 px-2 rounded-md text-xs',
+                    userRole === 'researcher' && 'bg-purple-950/60 text-purple-300 font-semibold',
+                  )}
+                >
+                  <span className="flex items-center gap-2">
+                    <Shield className="h-3.5 w-3.5 text-purple-400" />
+                    <span>🔬 Climate Researcher</span>
+                  </span>
+                  {userRole === 'researcher' && <CheckCircle2 className="h-3.5 w-3.5 text-purple-400" />}
+                </DropdownMenuItem>
+              </div>
+
+              <DropdownMenuSeparator className="bg-gray-800 my-1" />
+
+              <DropdownMenuItem
+                onClick={() => {
+                  setAuthDefaultRole(userRole);
+                  setAuthModalOpen(true);
+                }}
+                className="cursor-pointer text-xs text-emerald-400 hover:text-emerald-300 font-medium py-1.5 px-2 flex items-center gap-2"
+              >
+                <KeyRound className="h-3.5 w-3.5" />
+                <span>Verify / Update Credentials</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           {/* Quick Export Dropdown */}
           <DropdownMenu>
