@@ -17,6 +17,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { AuthModal } from '@/components/auth/AuthModal';
 import Footer from '@/components/layout/Footer';
 import { useDashboardStore } from '@/lib/store';
 import type { UserRole } from '@/types';
@@ -24,7 +25,10 @@ import dashboardImage from './dashboard/verdantimage.png';
 
 export default function LandingPage() {
   const router = useRouter();
-  const { setUserRole, setUserProfile, setIsAuthenticated, showToast } = useDashboardStore();
+  const { userProfile, isAuthenticated, showToast } = useDashboardStore();
+
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authRole, setAuthRole] = useState<UserRole>('government');
 
   // Interactive Front-Page Sandbox
   const [sandboxTrees, setSandboxTrees] = useState(false);
@@ -37,41 +41,9 @@ export default function LandingPage() {
   const currentTemp = (baseTemp - coolingOffset).toFixed(1);
   const citizensSaved = Math.round(coolingOffset * 85000);
 
-  const handleEnterPlatform = (role: UserRole) => {
-    setUserRole(role);
-    if (role === 'government') {
-      setUserProfile({
-        name: 'Dr. Rajesh Verma',
-        email: 'r.verma@mcd.gov.in',
-        role: 'government',
-        organization: 'Municipal Corporation of Delhi (MCD)',
-        department: 'Urban Resilience Cell',
-        verified: true,
-      });
-      showToast('🏛️ Welcome to Municipal Authority & Planning Portal', 'success');
-    } else if (role === 'citizen') {
-      setUserProfile({
-        name: 'Priya Sundaram',
-        email: 'priya.s@gmail.com',
-        role: 'citizen',
-        organization: 'Citizen Community Action Group',
-        department: 'Ward 24 Residents',
-        verified: true,
-      });
-      showToast('👥 Welcome to Citizen Heat Safety Portal', 'success');
-    } else {
-      setUserProfile({
-        name: 'Prof. A. Sengupta',
-        email: 'asengupta@iitd.ac.in',
-        role: 'researcher',
-        organization: 'Center for Atmospheric Sciences, IIT Delhi',
-        department: 'Climate Telemetry Lab',
-        verified: true,
-      });
-      showToast('🔬 Welcome to Climate Science Telemetry Lab', 'success');
-    }
-    setIsAuthenticated(true);
-    router.push('/dashboard');
+  const handleOpenAuth = (role: UserRole) => {
+    setAuthRole(role);
+    setAuthModalOpen(true);
   };
 
   return (
@@ -100,15 +72,15 @@ export default function LandingPage() {
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => handleEnterPlatform('citizen')}
-              className="hidden sm:inline-flex rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium px-3 py-1.5 text-xs transition-all border border-white/20"
+              onClick={() => handleOpenAuth('citizen')}
+              className="hidden sm:inline-flex rounded-lg bg-white/10 hover:bg-white/20 text-white font-medium px-3 py-1.5 text-xs transition-all border border-white/20 cursor-pointer"
             >
               👥 Citizen Portal
             </button>
             <button
               type="button"
-              onClick={() => handleEnterPlatform('government')}
-              className="rounded-lg bg-emerald-400 hover:bg-emerald-300 text-gray-950 font-bold px-3.5 py-1.5 text-xs transition-all shadow-md hover:scale-105 active:scale-95"
+              onClick={() => handleOpenAuth('government')}
+              className="rounded-lg bg-emerald-400 hover:bg-emerald-300 text-gray-950 font-bold px-3.5 py-1.5 text-xs transition-all shadow-md hover:scale-105 active:scale-95 cursor-pointer"
             >
               Launch Platform →
             </button>
@@ -189,10 +161,10 @@ export default function LandingPage() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => handleEnterPlatform('government')}
+                  onClick={() => handleOpenAuth('government')}
                   className="w-full bg-emerald-400 hover:bg-emerald-300 text-gray-950 font-bold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer"
                 >
-                  Enter as Municipal Authority
+                  Verify & Enter as Municipal Authority
                   <ChevronRight className="h-3.5 w-3.5" />
                 </button>
               </div>
@@ -231,10 +203,10 @@ export default function LandingPage() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => handleEnterPlatform('citizen')}
+                  onClick={() => handleOpenAuth('citizen')}
                   className="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer"
                 >
-                  Enter as Citizen
+                  Verify & Enter as Citizen
                   <ChevronRight className="h-3.5 w-3.5" />
                 </button>
               </div>
@@ -273,10 +245,10 @@ export default function LandingPage() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => handleEnterPlatform('researcher')}
+                  onClick={() => handleOpenAuth('researcher')}
                   className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer"
                 >
-                  Enter as Researcher
+                  Verify & Enter as Researcher
                   <ChevronRight className="h-3.5 w-3.5" />
                 </button>
               </div>
@@ -401,10 +373,10 @@ export default function LandingPage() {
 
                 <button
                   type="button"
-                  onClick={() => handleEnterPlatform('government')}
+                  onClick={() => handleOpenAuth('government')}
                   className="bg-emerald-400 hover:bg-emerald-300 text-gray-950 font-bold px-3.5 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition-all shadow-md shrink-0 cursor-pointer"
                 >
-                  Launch Full Climate Action Platform
+                  Verify Credentials & Launch Full Platform
                   <ChevronRight className="h-3.5 w-3.5" />
                 </button>
               </div>
@@ -449,6 +421,13 @@ export default function LandingPage() {
       </section>
 
       <Footer />
+
+      {/* Role Verification & Authentication Dialog */}
+      <AuthModal
+        open={authModalOpen}
+        onOpenChange={setAuthModalOpen}
+        defaultRole={authRole}
+      />
     </div>
   );
 }

@@ -420,7 +420,7 @@ export function Header() {
       </div>
 
       {/* Role & Authentication Switcher Modal */}
-      <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
+      <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} defaultRole={userRole} />
     </>
   );
 }

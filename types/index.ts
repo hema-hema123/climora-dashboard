@@ -141,4 +141,6 @@ export interface UserProfile {
   organization?: string;
   department?: string;
   verified?: boolean;
+  officerId?: string;
+  badge?: string;
 }

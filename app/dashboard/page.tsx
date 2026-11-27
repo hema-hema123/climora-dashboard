@@ -1,12 +1,14 @@
 'use client';
 
 import {
+  AlertTriangle,
   BarChart3,
   Building2,
   Footprints,
   Layers,
   Map as MapIcon,
   Shield,
+  ShieldCheck,
   Sparkles,
   TreeDeciduous,
   Users,
@@ -19,6 +21,7 @@ import { HeatZoneList } from '@/components/analytics/HeatZoneList';
 import { ImpactProjections } from '@/components/analytics/ImpactProjections';
 import { StatsCards } from '@/components/analytics/StatsCards';
 import { TemperatureChart } from '@/components/analytics/TemperatureChart';
+import { AuthModal } from '@/components/auth/AuthModal';
 import { CitizenDashboardPanel } from '@/components/citizen/CitizenDashboardPanel';
 import { TimeSlider } from '@/components/controls/TimeSlider';
 import { ExportPanel } from '@/components/export/ExportPanel';
@@ -26,6 +29,7 @@ import { DashboardShell } from '@/components/layout/DashboardShell';
 import { RecommendationsPanel } from '@/components/recommendations/RecommendationsPanel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { type DashboardTab, useDashboardStore } from '@/lib/store';
+import type { UserRole } from '@/types';
 import { cn } from '@/lib/utils';
 
 // Dynamic import for HeatMap (Leaflet requires client-side rendering)
@@ -49,11 +53,14 @@ export default function DashboardPage() {
     implementedRecommendations,
     userRole,
     setUserRole,
+    userProfile,
     showToast,
   } = useDashboardStore();
 
   const [govSubTab, setGovSubTab] = useState<'actions' | 'charts'>('actions');
   const [researchSubTab, setResearchSubTab] = useState<'trends' | 'projections'>('trends');
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authDefaultRole, setAuthDefaultRole] = useState<UserRole>('government');
 
   return (
     <DashboardShell>
@@ -145,18 +152,18 @@ export default function DashboardPage() {
         {/* Desktop Layout */}
         <div className="hidden lg:flex lg:flex-1 lg:overflow-hidden">
           {/* Main Content Area */}
-          <div className="flex flex-1 flex-col overflow-hidden">
+          <div className="flex flex-1 flex-col overflow-hidden min-w-0">
             {/* Stats Row - Compact & high-density */}
             <div className="shrink-0 border-b border-gray-800 bg-gray-950/90 px-3 py-2 backdrop-blur">
               <StatsCards />
             </div>
 
             {/* Map and Context Panel Row */}
-            <div className="flex flex-1 overflow-hidden">
+            <div className="flex flex-1 overflow-hidden min-w-0">
               {/* Map Section */}
               <div
                 className={cn(
-                  'flex flex-1 flex-col overflow-hidden transition-all duration-300',
+                  'flex flex-1 flex-col overflow-hidden transition-all duration-300 min-w-0',
                   !desktopSidebarOpen && 'bg-gray-900',
                 )}
               >
@@ -168,26 +175,26 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* Right Panel - Tailored directly to user role */}
-              <div className="w-[360px] xl:w-[430px] shrink-0 flex flex-col overflow-hidden border-l border-gray-800 bg-gray-900/95">
+              {/* Right Panel - Tailored directly to user role, strictly bounded */}
+              <div className="w-[360px] xl:w-[420px] shrink-0 flex flex-col overflow-hidden border-l border-gray-800 bg-gray-900/95">
                 {/* Role Switcher Pill Header */}
                 <div className="p-2.5 border-b border-gray-800 bg-gray-950 shrink-0">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-1.5">
+                  <div className="flex items-center justify-between mb-2 gap-2">
+                    <div className="flex items-center gap-1.5 min-w-0">
                       {userRole === 'government' ? (
-                        <span className="p-1 rounded bg-emerald-500/20 text-emerald-400">
+                        <span className="p-1 rounded bg-emerald-500/20 text-emerald-400 shrink-0">
                           <Building2 className="h-3.5 w-3.5" />
                         </span>
                       ) : userRole === 'citizen' ? (
-                        <span className="p-1 rounded bg-sky-500/20 text-sky-400">
+                        <span className="p-1 rounded bg-sky-500/20 text-sky-400 shrink-0">
                           <Users className="h-3.5 w-3.5" />
                         </span>
                       ) : (
-                        <span className="p-1 rounded bg-purple-500/20 text-purple-400">
+                        <span className="p-1 rounded bg-purple-500/20 text-purple-400 shrink-0">
                           <Shield className="h-3.5 w-3.5" />
                         </span>
                       )}
-                      <span className="text-xs font-bold text-white">
+                      <span className="text-xs font-bold text-white truncate">
                         {userRole === 'government'
                           ? 'Municipal Authority Hub'
                           : userRole === 'citizen'
@@ -196,22 +203,33 @@ export default function DashboardPage() {
                       </span>
                     </div>
 
-                    <span
+                    {/* Official Verification Badge */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAuthDefaultRole(userRole);
+                        setAuthModalOpen(true);
+                      }}
                       className={cn(
-                        'text-[10px] font-semibold px-2 py-0.5 rounded border',
-                        userRole === 'government'
-                          ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30'
-                          : userRole === 'citizen'
-                            ? 'bg-sky-500/10 text-sky-300 border-sky-500/30'
-                            : 'bg-purple-500/10 text-purple-300 border-purple-500/30',
+                        'text-[10px] font-semibold px-2 py-0.5 rounded border transition-all cursor-pointer flex items-center gap-1 shrink-0',
+                        userProfile?.verified
+                          ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/20'
+                          : 'bg-amber-500/10 text-amber-300 border-amber-500/30 hover:bg-amber-500/20',
                       )}
+                      title="Click to view credentials or re-verify identity"
                     >
-                      {userRole === 'government'
-                        ? '🏛️ Official'
-                        : userRole === 'citizen'
-                          ? '👥 Resident'
-                          : '🔬 Academic'}
-                    </span>
+                      {userProfile?.verified ? (
+                        <>
+                          <ShieldCheck className="h-3 w-3 text-emerald-400 shrink-0" />
+                          <span className="truncate">{userProfile.badge || 'Verified ✓'}</span>
+                        </>
+                      ) : (
+                        <>
+                          <AlertTriangle className="h-3 w-3 text-amber-400 shrink-0" />
+                          <span>Verify Identity</span>
+                        </>
+                      )}
+                    </button>
                   </div>
 
                   {/* 3-Role Switching Segment */}
@@ -219,8 +237,14 @@ export default function DashboardPage() {
                     <button
                       type="button"
                       onClick={() => {
-                        setUserRole('government');
-                        showToast('🏛️ Switched to Municipal Authority mode', 'info');
+                        if (userProfile?.role !== 'government' || !userProfile?.verified) {
+                          setAuthDefaultRole('government');
+                          setAuthModalOpen(true);
+                          showToast('🏛️ Municipal Officer Clearance Required', 'warning');
+                        } else {
+                          setUserRole('government');
+                          showToast('🏛️ Switched to Municipal Authority mode', 'info');
+                        }
                       }}
                       className={cn(
                         'py-1 px-1.5 rounded-md text-[11px] font-semibold flex items-center justify-center gap-1 transition-all cursor-pointer',
@@ -251,8 +275,14 @@ export default function DashboardPage() {
                     <button
                       type="button"
                       onClick={() => {
-                        setUserRole('researcher');
-                        showToast('🔬 Switched to Climate Telemetry Researcher mode', 'info');
+                        if (userProfile?.role !== 'researcher' || !userProfile?.verified) {
+                          setAuthDefaultRole('researcher');
+                          setAuthModalOpen(true);
+                          showToast('🔬 Academic Research Clearance Required', 'warning');
+                        } else {
+                          setUserRole('researcher');
+                          showToast('🔬 Switched to Climate Telemetry Researcher mode', 'info');
+                        }
                       }}
                       className={cn(
                         'py-1 px-1.5 rounded-md text-[11px] font-semibold flex items-center justify-center gap-1 transition-all cursor-pointer',
@@ -335,7 +365,7 @@ export default function DashboardPage() {
                 )}
 
                 {/* Role Specific Content Body */}
-                <div className="flex-1 overflow-y-auto p-3 space-y-3">
+                <div className="flex-1 overflow-y-auto p-3 space-y-3 w-full max-w-full">
                   {userRole === 'citizen' ? (
                     /* 1. CITIZEN VIEW: Safety alerts, turn-by-turn shaded walk, cooling shelters, 1-click reports */
                     <CitizenDashboardPanel />
@@ -378,15 +408,15 @@ export default function DashboardPage() {
               </div>
             </div>
           </div>
-
-          {/* Ultra-wide recommendations auxiliary panel */}
-          {userRole === 'government' && (
-            <div className="hidden 2xl:block w-[320px] xl:w-[350px] shrink-0 overflow-y-auto border-l border-gray-800 bg-gray-950 p-3">
-              <RecommendationsPanel />
-            </div>
-          )}
         </div>
       </div>
+
+      {/* Role Verification & Authentication Dialog */}
+      <AuthModal
+        open={authModalOpen}
+        onOpenChange={setAuthModalOpen}
+        defaultRole={authDefaultRole}
+      />
     </DashboardShell>
   );
 }

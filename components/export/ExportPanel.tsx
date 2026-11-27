@@ -113,32 +113,32 @@ export function ExportPanel() {
   ];
 
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2 text-base font-semibold">
-          <Download className="h-4 w-4 text-emerald-500" />
-          Export Data
+    <Card className="w-full border border-gray-800 bg-gray-950/80 font-alliance rounded-xl overflow-hidden shadow-lg">
+      <CardHeader className="p-3 border-b border-gray-800">
+        <CardTitle className="flex items-center gap-2 text-sm font-semibold text-white">
+          <Download className="h-4 w-4 text-emerald-400" />
+          Export Official Heat Data
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-3 gap-2">
+      <CardContent className="p-3">
+        <div className="grid grid-cols-3 gap-1.5 w-full">
           {exportOptions.map((option) => (
             <Button
               key={option.format}
               variant="outline"
-              className="h-auto flex-col gap-1 p-3 min-w-0"
+              className="h-auto flex-col gap-1 p-2 min-w-0 border-gray-800 bg-gray-900/60 hover:bg-gray-800 cursor-pointer overflow-hidden"
               onClick={() => handleExport(option.format)}
               disabled={exporting !== null}
             >
               {exporting === option.format ? (
-                <div className="h-5 w-5 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
               ) : exported === option.format ? (
-                <Check className="h-5 w-5 text-emerald-500" />
+                <Check className="h-4 w-4 text-emerald-400" />
               ) : (
-                <span className="text-gray-600 dark:text-gray-400 shrink-0">{option.icon}</span>
+                <span className="text-gray-400 shrink-0">{option.icon}</span>
               )}
-              <span className="text-xs font-medium text-center break-words">{option.title}</span>
-              <span className="text-[10px] text-gray-400 text-center break-words line-clamp-2 max-w-full">
+              <span className="text-[11px] font-semibold text-center truncate w-full text-white">{option.title}</span>
+              <span className="text-[9px] text-gray-400 text-center truncate w-full">
                 {option.description}
               </span>
             </Button>

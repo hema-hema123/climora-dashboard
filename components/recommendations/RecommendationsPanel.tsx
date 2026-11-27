@@ -90,61 +90,61 @@ export function RecommendationsPanel() {
   };
 
   return (
-    <Card className="h-full flex flex-col font-alliance lg:mr-0 lg:border-r-0 lg:rounded-r-none">
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center justify-between text-base font-semibold font-alliance">
-          <span className="flex items-center gap-2">
-            <TreeDeciduous className="h-4 w-4 text-emerald-500" />
+    <Card className="w-full border border-gray-800 bg-gray-950/80 font-alliance rounded-xl overflow-hidden shadow-lg">
+      <CardHeader className="p-3 border-b border-gray-800">
+        <CardTitle className="flex items-center justify-between text-sm font-semibold font-alliance text-white">
+          <span className="flex items-center gap-1.5">
+            <TreeDeciduous className="h-4 w-4 text-emerald-400" />
             Actionable Cooling Sites
           </span>
           <div className="flex items-center gap-1.5">
-            <Badge variant="default" className="text-xs font-alliance bg-emerald-600 text-white">
+            <Badge variant="default" className="text-[10px] font-alliance bg-emerald-600 text-white">
               {implementedRecommendations.length} active
             </Badge>
-            <Badge variant="outline" className="text-xs font-alliance text-gray-400">
+            <Badge variant="outline" className="text-[10px] font-alliance text-gray-400">
               {recommendations.length} total
             </Badge>
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col overflow-hidden min-h-0 font-alliance">
+      <CardContent className="p-3 font-alliance w-full overflow-hidden">
         {/* Summary Stats */}
-        <div className="mb-3 grid grid-cols-3 gap-2 shrink-0">
-          <div className="rounded-lg bg-blue-50 p-2.5 dark:bg-blue-950/60 border border-blue-900/30">
-            <div className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400">
-              <Thermometer className="h-3.5 w-3.5" />
-              <span className="text-[10px] font-medium">Avg Cooling</span>
+        <div className="mb-2.5 grid grid-cols-3 gap-1.5 shrink-0">
+          <div className="rounded-lg bg-blue-50 p-2 dark:bg-blue-950/60 border border-blue-900/30 text-center min-w-0">
+            <div className="flex items-center justify-center gap-1 text-blue-600 dark:text-blue-400">
+              <Thermometer className="h-3 w-3" />
+              <span className="text-[9px] font-medium truncate">Avg Cooling</span>
             </div>
-            <p className="mt-0.5 text-base font-bold text-blue-700 dark:text-blue-300">
+            <p className="mt-0.5 text-xs sm:text-sm font-bold text-blue-700 dark:text-blue-300 truncate">
               {formatTemperatureDifference(-totalCooling)}
             </p>
           </div>
-          <div className="rounded-lg bg-emerald-50 p-2.5 dark:bg-emerald-950/60 border border-emerald-900/30">
-            <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
-              <Ruler className="h-3.5 w-3.5" />
-              <span className="text-[10px] font-medium">Total Area</span>
+          <div className="rounded-lg bg-emerald-50 p-2 dark:bg-emerald-950/60 border border-emerald-900/30 text-center min-w-0">
+            <div className="flex items-center justify-center gap-1 text-emerald-600 dark:text-emerald-400">
+              <Ruler className="h-3 w-3" />
+              <span className="text-[9px] font-medium truncate">Total Area</span>
             </div>
-            <p className="mt-0.5 text-sm font-bold text-emerald-700 dark:text-emerald-300">
+            <p className="mt-0.5 text-xs sm:text-sm font-bold text-emerald-700 dark:text-emerald-300 truncate">
               {formatArea(totalArea)}
             </p>
           </div>
-          <div className="rounded-lg bg-red-50 p-2.5 dark:bg-red-950/60 border border-red-900/30">
-            <div className="flex items-center gap-1.5 text-red-600 dark:text-red-400">
-              <TreeDeciduous className="h-3.5 w-3.5" />
-              <span className="text-[10px] font-medium">Urgent Priority</span>
+          <div className="rounded-lg bg-red-50 p-2 dark:bg-red-950/60 border border-red-900/30 text-center min-w-0">
+            <div className="flex items-center justify-center gap-1 text-red-600 dark:text-red-400">
+              <TreeDeciduous className="h-3 w-3" />
+              <span className="text-[9px] font-medium truncate">Urgent Priority</span>
             </div>
-            <p className="mt-0.5 text-sm font-bold text-red-700 dark:text-red-300">
+            <p className="mt-0.5 text-xs sm:text-sm font-bold text-red-700 dark:text-red-300 truncate">
               {criticalCount} sites
             </p>
           </div>
         </div>
 
         {/* Quick Action Presets */}
-        <div className="mb-3 flex items-center justify-between gap-2 shrink-0 bg-gray-900/70 p-2 rounded-lg border border-gray-800">
+        <div className="mb-2.5 flex items-center justify-between gap-2 shrink-0 bg-gray-900/70 p-1.5 rounded-lg border border-gray-800">
           <button
             type="button"
             onClick={handleAllocateUrgent}
-            className="text-[11px] font-semibold text-emerald-400 hover:text-emerald-300 bg-emerald-950/80 border border-emerald-500/40 rounded px-2 py-1 transition-all cursor-pointer flex items-center gap-1"
+            className="text-[10px] font-semibold text-emerald-400 hover:text-emerald-300 bg-emerald-950/80 border border-emerald-500/40 rounded px-2 py-0.5 transition-all cursor-pointer flex items-center gap-1"
           >
             ⚡ Allocate {criticalCount} Urgent Sites
           </button>
@@ -152,7 +152,7 @@ export function RecommendationsPanel() {
             <button
               type="button"
               onClick={handleClearAll}
-              className="text-[11px] text-gray-400 hover:text-gray-200 transition-colors cursor-pointer"
+              className="text-[10px] text-gray-400 hover:text-gray-200 transition-colors cursor-pointer"
             >
               Reset All
             </button>
@@ -160,7 +160,7 @@ export function RecommendationsPanel() {
         </div>
 
         {/* Recommendations List */}
-        <div className="flex-1 space-y-2 overflow-y-auto pr-1 min-h-0">
+        <div className="space-y-2 max-h-[380px] overflow-y-auto pr-1 w-full">
           {recommendations.map((rec) => (
             <RecommendationCard
               key={rec.id}
