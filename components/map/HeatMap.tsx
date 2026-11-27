@@ -89,7 +89,27 @@ export function HeatMap() {
   } = useDashboardStore();
 
   const [isMounted, setIsMounted] = useState(false);
+  const [mapStyle, setMapStyle] = useState<'voyager' | 'dark' | 'satellite' | 'osm'>('voyager');
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const tileLayerConfig = {
+    voyager: {
+      url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+      attribution: '&copy; CARTO &copy; OpenStreetMap',
+    },
+    dark: {
+      url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+      attribution: '&copy; CARTO &copy; OpenStreetMap',
+    },
+    satellite: {
+      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      attribution: '&copy; Esri, Maxar, Earthstar Geographics',
+    },
+    osm: {
+      url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      attribution: '&copy; OpenStreetMap contributors',
+    },
+  }[mapStyle];
 
   useEffect(() => {
     setIsMounted(true);
@@ -151,8 +171,9 @@ export function HeatMap() {
         <MapController center={mapCenter} zoom={mapZoom} />
 
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          key={mapStyle}
+          attribution={tileLayerConfig.attribution}
+          url={tileLayerConfig.url}
           crossOrigin="anonymous"
           maxZoom={19}
         />
@@ -349,6 +370,52 @@ export function HeatMap() {
             </CircleMarker>
           ))}
       </MapContainer>
+
+      {/* Map Style Selector Pill */}
+      <div className="absolute top-3 right-12 z-[1000] flex items-center bg-gray-950/90 border border-gray-800 rounded-lg p-1 backdrop-blur shadow-2xl gap-1 text-[11px] font-medium">
+        <button
+          type="button"
+          onClick={() => {
+            setMapStyle('voyager');
+            showToast('Map style: CARTO Clean Voyager', 'info');
+          }}
+          className={`px-2 py-0.5 rounded transition-all cursor-pointer ${
+            mapStyle === 'voyager'
+              ? 'bg-emerald-600 text-white font-bold'
+              : 'text-gray-400 hover:text-white'
+          }`}
+        >
+          🗺️ Clean
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setMapStyle('dark');
+            showToast('Map style: High-Contrast Dark Thermal', 'info');
+          }}
+          className={`px-2 py-0.5 rounded transition-all cursor-pointer ${
+            mapStyle === 'dark'
+              ? 'bg-emerald-600 text-white font-bold'
+              : 'text-gray-400 hover:text-white'
+          }`}
+        >
+          🌙 Dark
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setMapStyle('satellite');
+            showToast('Map style: High-Resolution Satellite Imagery', 'info');
+          }}
+          className={`px-2 py-0.5 rounded transition-all cursor-pointer ${
+            mapStyle === 'satellite'
+              ? 'bg-emerald-600 text-white font-bold'
+              : 'text-gray-400 hover:text-white'
+          }`}
+        >
+          🛰️ Satellite
+        </button>
+      </div>
 
       {/* Map City Info Pill */}
       <div className="absolute bottom-3 left-3 z-[1000] flex flex-col gap-1.5 pointer-events-none">

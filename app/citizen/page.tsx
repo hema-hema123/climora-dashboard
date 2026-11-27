@@ -164,7 +164,7 @@ export default function CitizenPage() {
 
   return (
     <DashboardShell>
-      <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full text-gray-100">
+      <div className="p-3 sm:p-5 lg:p-6 space-y-4 max-w-7xl mx-auto w-full text-gray-100">
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-800 pb-5">
           <div>
