@@ -64,6 +64,11 @@ interface DashboardStore {
   isAuthenticated: boolean;
   setIsAuthenticated: (auth: boolean) => void;
   logout: () => void;
+
+  // Optimistic Global Toast Notification
+  activeToast: { id: string; message: string; type: 'success' | 'info' | 'warning' } | null;
+  showToast: (message: string, type?: 'success' | 'info' | 'warning') => void;
+  clearToast: () => void;
 }
 
 export const useDashboardStore = create<DashboardStore>((set) => {
@@ -160,5 +165,16 @@ export const useDashboardStore = create<DashboardStore>((set) => {
         userProfile: null,
         userRole: 'citizen',
       }),
+
+    // Optimistic Global Toast Notification
+    activeToast: null,
+    showToast: (message, type = 'success') => {
+      const id = Math.random().toString(36).substring(2, 9);
+      set({ activeToast: { id, message, type } });
+      setTimeout(() => {
+        set((state) => (state.activeToast?.id === id ? { activeToast: null } : {}));
+      }, 3500);
+    },
+    clearToast: () => set({ activeToast: null }),
   };
 });

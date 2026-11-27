@@ -25,7 +25,7 @@ import { useDashboardStore } from '@/lib/store';
 import { formatNumber } from '@/lib/utils';
 
 export function ActionSimulator() {
-  const { selectedCity, userRole } = useDashboardStore();
+  const { selectedCity, userRole, showToast } = useDashboardStore();
 
   // Interactive slider values
   const [treeCanopyBoost, setTreeCanopyBoost] = useState<number>(25); // %
@@ -53,6 +53,10 @@ export function ActionSimulator() {
     setDispatchFeedback(
       `✓ Official Action Plan dispatched for ${selectedCity.name}! Emergency misting and shade directives sent to municipal ward officers.`,
     );
+    showToast(
+      `🚀 Action Plan Dispatched for ${selectedCity.name}! Municipal directives transmitted.`,
+      'success',
+    );
     setTimeout(() => {
       setDispatchFeedback(null);
     }, 5000);
@@ -63,6 +67,7 @@ export function ActionSimulator() {
     setCoolRoofsPercent(15);
     setWaterMistingUnits(6);
     setActionDispatched(false);
+    showToast('Simulation parameters reset to default baseline', 'info');
   };
 
   const handlePrintPlan = () => {

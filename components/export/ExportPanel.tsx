@@ -11,12 +11,13 @@ import { useDashboardStore } from '@/lib/store';
 type ExportFormat = 'png' | 'csv' | 'json';
 
 export function ExportPanel() {
-  const { selectedCity, selectedDate } = useDashboardStore();
+  const { selectedCity, selectedDate, showToast } = useDashboardStore();
   const [exporting, setExporting] = useState<ExportFormat | null>(null);
   const [exported, setExported] = useState<ExportFormat | null>(null);
 
   const handleExport = async (format: ExportFormat) => {
     setExporting(format);
+    showToast(`Generating ${format.toUpperCase()} export...`, 'info');
 
     // Simulate export delay
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -75,6 +76,7 @@ export function ExportPanel() {
 
     setExporting(null);
     setExported(format);
+    showToast(`📥 Downloaded ${format.toUpperCase()} dataset for ${selectedCity.name}`, 'success');
     setTimeout(() => setExported(null), 2000);
   };
 

@@ -31,7 +31,7 @@ import { useDashboardStore } from '@/lib/store';
 
 export default function AnalyticsPage() {
   const router = useRouter();
-  const { selectedCity, selectedDate, userRole } = useDashboardStore();
+  const { selectedCity, selectedDate, userRole, showToast } = useDashboardStore();
   const [selectedTimeframe, setSelectedTimeframe] = useState<'30days' | 'seasonal' | 'annual'>('30days');
 
   const stats = generateCityStats(selectedCity);
@@ -68,8 +68,11 @@ export default function AnalyticsPage() {
             <div className="flex rounded-lg bg-gray-800 p-1 border border-gray-700">
               <button
                 type="button"
-                onClick={() => setSelectedTimeframe('30days')}
-                className={`px-3 py-1 text-xs rounded-md font-medium transition-all ${
+                onClick={() => {
+                  setSelectedTimeframe('30days');
+                  showToast('Telemetry set to 30-Day Daily Satellite Observations', 'info');
+                }}
+                className={`px-3 py-1 text-xs rounded-md font-medium transition-all cursor-pointer ${
                   selectedTimeframe === '30days'
                     ? 'bg-emerald-600 text-white shadow-sm'
                     : 'text-gray-400 hover:text-white'
@@ -79,8 +82,11 @@ export default function AnalyticsPage() {
               </button>
               <button
                 type="button"
-                onClick={() => setSelectedTimeframe('seasonal')}
-                className={`px-3 py-1 text-xs rounded-md font-medium transition-all ${
+                onClick={() => {
+                  setSelectedTimeframe('seasonal');
+                  showToast('Telemetry set to Seasonal Microclimate Profile', 'info');
+                }}
+                className={`px-3 py-1 text-xs rounded-md font-medium transition-all cursor-pointer ${
                   selectedTimeframe === 'seasonal'
                     ? 'bg-emerald-600 text-white shadow-sm'
                     : 'text-gray-400 hover:text-white'
@@ -90,8 +96,11 @@ export default function AnalyticsPage() {
               </button>
               <button
                 type="button"
-                onClick={() => setSelectedTimeframe('annual')}
-                className={`px-3 py-1 text-xs rounded-md font-medium transition-all ${
+                onClick={() => {
+                  setSelectedTimeframe('annual');
+                  showToast('Telemetry set to Annual Historical Matrix (2025-2026)', 'info');
+                }}
+                className={`px-3 py-1 text-xs rounded-md font-medium transition-all cursor-pointer ${
                   selectedTimeframe === 'annual'
                     ? 'bg-emerald-600 text-white shadow-sm'
                     : 'text-gray-400 hover:text-white'

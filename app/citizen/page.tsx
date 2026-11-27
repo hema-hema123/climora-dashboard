@@ -26,13 +26,33 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useDashboardStore } from '@/lib/store';
 
 export default function CitizenPage() {
-  const { selectedCity } = useDashboardStore();
+  const { selectedCity, showToast } = useDashboardStore();
 
   const [reportLocation, setReportLocation] = useState('');
   const [reportType, setReportType] = useState('no_shade');
   const [reportNotes, setReportNotes] = useState('');
   const [submittedMessage, setSubmittedMessage] = useState<string | null>(null);
   const [joinedDrives, setJoinedDrives] = useState<string[]>([]);
+
+  // Optimistic Citizen Tracked Reports
+  const [userReports, setUserReports] = useState([
+    {
+      id: 'CLR-4821',
+      location: 'Dwarka Sector 12 Metro Walkway',
+      type: 'Missing Shade & Barren Asphalt',
+      status: 'Scheduled for Tree Planting',
+      date: 'Yesterday, 2:15 PM',
+      officer: 'S. Sharma (MCD Zone 4)',
+    },
+    {
+      id: 'CLR-3790',
+      location: 'Lajpat Nagar Central Bus Terminal',
+      type: 'Broken Drinking Water Dispenser',
+      status: 'Repaired & Operational',
+      date: '3 days ago',
+      officer: 'R. K. Gupta (Delhi Jal Board)',
+    },
+  ]);
 
   // Interactive Checklist State
   const [checklist, setChecklist] = useState({
@@ -49,7 +69,11 @@ export default function CitizenPage() {
   const [routeStarted, setRouteStarted] = useState(false);
 
   const toggleChecklistItem = (key: keyof typeof checklist) => {
-    setChecklist((prev) => ({ ...prev, [key]: !prev[key] }));
+    const newState = !checklist[key];
+    setChecklist((prev) => ({ ...prev, [key]: newState }));
+    if (newState) {
+      showToast('✓ Great job! Safety checklist item completed.', 'success');
+    }
   };
 
   const completedCount = Object.values(checklist).filter(Boolean).length;
@@ -101,19 +125,40 @@ export default function CitizenPage() {
     e.preventDefault();
     if (!reportLocation.trim()) return;
 
+    const newTicketId = `CLR-${Math.floor(1000 + Math.random() * 9000)}`;
+    const newReport = {
+      id: newTicketId,
+      location: reportLocation,
+      type:
+        reportType === 'no_shade'
+          ? 'No Tree Shade / Barren Asphalt'
+          : reportType === 'missing_shelter'
+            ? 'Missing Bus Stop Canopy'
+            : reportType === 'water_needed'
+              ? 'Broken Drinking Water Dispenser'
+              : 'Loss of Canopy',
+      status: 'Transmitted to Municipal Green Taskforce',
+      date: 'Just now',
+      officer: 'Assigned to Ward Climate Inspector',
+    };
+
+    setUserReports([newReport, ...userReports]);
     setSubmittedMessage(
-      `Thank you! Your report for "${reportLocation}" has been logged and transmitted to the Municipal Climate Resilience Cell. Ticket: #CLR-${Math.floor(1000 + Math.random() * 9000)}`,
+      `✓ Thank you! Your report for "${reportLocation}" has been logged and transmitted to the Municipal Climate Resilience Cell. Ticket: #${newTicketId}`,
     );
+    showToast(`📋 Report #${newTicketId} logged with Municipal Climate Cell!`, 'success');
     setReportLocation('');
     setReportNotes('');
-    setTimeout(() => setSubmittedMessage(null), 5000);
+    setTimeout(() => setSubmittedMessage(null), 6000);
   };
 
-  const handleToggleJoinDrive = (id: string) => {
+  const handleToggleJoinDrive = (id: string, title: string) => {
     if (joinedDrives.includes(id)) {
       setJoinedDrives(joinedDrives.filter((d) => d !== id));
+      showToast(`Unregistered from ${title}`, 'info');
     } else {
       setJoinedDrives([...joinedDrives, id]);
+      showToast(`🌱 You are registered for ${title}!`, 'success');
     }
   };
 
@@ -265,17 +310,58 @@ export default function CitizenPage() {
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
                   <span className="text-xs text-gray-300">
                     {routeStarted
-                      ? '🚶 Turn right at Sector 6 Green Park -> Follow colonnade towards Market Plaza'
+                      ? `🚶 Active Guided Walk: ${routeFrom} → ${routeTo} (-3.5°C cooler)`
                       : 'Choose your route above and start guided shaded walk.'}
                   </span>
                   <Button
                     size="sm"
-                    onClick={() => setRouteStarted(!routeStarted)}
+                    onClick={() => {
+                      const next = !routeStarted;
+                      setRouteStarted(next);
+                      if (next) {
+                        showToast(`🚶 Shaded Walk Navigation active (-3.5°C cooler)`, 'success');
+                      } else {
+                        showToast('Navigation ended', 'info');
+                      }
+                    }}
                     className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs px-4 cursor-pointer"
                   >
                     {routeStarted ? 'End Navigation' : 'Start Shaded Walk →'}
                   </Button>
                 </div>
+
+                {/* Turn-by-turn guidance */}
+                {routeStarted && (
+                  <div className="mt-3 p-3.5 bg-emerald-950/70 border border-emerald-500/50 rounded-xl space-y-2.5 text-xs animate-in fade-in">
+                    <div className="flex items-center justify-between border-b border-emerald-900/60 pb-2">
+                      <span className="font-bold text-white flex items-center gap-1.5">
+                        <Footprints className="h-4 w-4 text-emerald-400" />
+                        Live Shaded Navigation Steps ({routeFrom} → {routeTo})
+                      </span>
+                      <span className="text-[10px] font-bold bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded">
+                        Active Pedestrian Guidance
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
+                      <div className="bg-gray-950/60 p-2 rounded-lg border border-gray-800">
+                        <p className="font-bold text-emerald-400">1. Depart {routeFrom}</p>
+                        <p className="text-gray-300">Exit via Gate 3 · Enter covered pedestrian walkway (36.8°C)</p>
+                      </div>
+                      <div className="bg-gray-950/60 p-2 rounded-lg border border-gray-800">
+                        <p className="font-bold text-emerald-400">2. Green Canopy Corridor</p>
+                        <p className="text-gray-300">Walk 350m along Sector 6 Neem Tree Avenue (-3.5°C cool)</p>
+                      </div>
+                      <div className="bg-gray-950/60 p-2 rounded-lg border border-gray-800">
+                        <p className="font-bold text-cyan-400">3. Hydration Refill Point</p>
+                        <p className="text-gray-300">Free Municipal RO dispenser opposite Community Library</p>
+                      </div>
+                      <div className="bg-gray-950/60 p-2 rounded-lg border border-gray-800">
+                        <p className="font-bold text-emerald-400">4. Arrive at {routeTo}</p>
+                        <p className="text-gray-300">Enter shaded market colonnade with misting fans</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -421,13 +507,56 @@ export default function CitizenPage() {
                   <div className="flex justify-end">
                     <Button
                       type="submit"
-                      className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs flex items-center gap-1.5"
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs flex items-center gap-1.5 cursor-pointer"
                     >
                       <Send className="h-3.5 w-3.5" />
                       Submit Citizen Heat Report
                     </Button>
                   </div>
                 </form>
+              </CardContent>
+            </Card>
+
+            {/* Real-time Tracked Citizen Reports Feed */}
+            <Card className="bg-gray-950/80 border-gray-800">
+              <CardHeader className="border-b border-gray-800/80 pb-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-base font-bold text-white flex items-center gap-2">
+                      <ShieldCheck className="h-5 w-5 text-emerald-400" />
+                      My Tracked Community Reports & Resolution Status
+                    </CardTitle>
+                    <CardDescription className="text-xs text-gray-400">
+                      Live status of your submitted heat hotspot and tree canopy requests.
+                    </CardDescription>
+                  </div>
+                  <span className="text-xs font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-500/30 px-2.5 py-1 rounded-full">
+                    {userReports.length} Active Tickets
+                  </span>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-4 space-y-3">
+                {userReports.map((report) => (
+                  <div
+                    key={report.id}
+                    className="p-3.5 rounded-lg bg-gray-900/60 border border-gray-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs"
+                  >
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-mono font-bold text-emerald-400">#{report.id}</span>
+                        <span className="text-gray-400">•</span>
+                        <span className="font-semibold text-white">{report.location}</span>
+                      </div>
+                      <p className="text-gray-400 text-[11px]">{report.type}</p>
+                      <p className="text-gray-500 text-[10px] mt-1">Logged: {report.date} · {report.officer}</p>
+                    </div>
+                    <div className="shrink-0">
+                      <span className="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                        {report.status}
+                      </span>
+                    </div>
+                  </div>
+                ))}
               </CardContent>
             </Card>
 
@@ -466,8 +595,8 @@ export default function CitizenPage() {
                       </div>
                       <Button
                         size="sm"
-                        onClick={() => handleToggleJoinDrive(drive.id)}
-                        className={`text-xs font-semibold shrink-0 ${
+                        onClick={() => handleToggleJoinDrive(drive.id, drive.title)}
+                        className={`text-xs font-semibold shrink-0 cursor-pointer ${
                           isJoined
                             ? 'bg-emerald-600 text-white'
                             : 'bg-gray-800 text-gray-200 hover:bg-gray-700'

@@ -9,8 +9,15 @@ import { useDashboardStore } from '@/lib/store';
 import { formatTemperature } from '@/lib/utils';
 
 export function HeatZoneList() {
-  const { selectedCity, selectedDate, setSelectedHeatZone, setMapView, setDashboardTab } =
-    useDashboardStore();
+  const {
+    selectedCity,
+    selectedDate,
+    selectedHeatZone,
+    setSelectedHeatZone,
+    setMapView,
+    setDashboardTab,
+    showToast,
+  } = useDashboardStore();
 
   const zones = useMemo(() => {
     return generateHeatZones(selectedCity, selectedDate).slice(0, 5);
@@ -31,10 +38,10 @@ export function HeatZoneList() {
 
   const handleZoneClick = (zone: (typeof zones)[0]) => {
     setSelectedHeatZone(zone);
-    // Calculate center of the heat zone polygon
     const center = calculatePolygonCenter(zone.coordinates);
     setMapView(center, 15);
     setDashboardTab('map');
+    showToast(`📍 Focused map on ${zone.name} (${formatTemperature(zone.avgTemperature)})`, 'info');
   };
 
   return (
@@ -47,37 +54,51 @@ export function HeatZoneList() {
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          {zones.map((zone, index) => (
-            <button
-              type="button"
-              key={zone.id}
-              aria-label={`View ${zone.name} heat zone on map`}
-              onClick={() => handleZoneClick(zone)}
-              className="flex w-full items-center gap-3 rounded-lg border border-gray-100 bg-gray-50/50 p-3 text-left transition-colors hover:border-emerald-200 hover:bg-emerald-50/50 dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-emerald-800 dark:hover:bg-emerald-950/30"
-            >
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-red-100 text-sm font-bold text-red-600 dark:bg-red-900 dark:text-red-400">
-                {index + 1}
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="truncate font-medium text-gray-900 dark:text-white">{zone.name}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  {zone.area.toFixed(2)} km² · Vulnerability: {zone.vulnerabilityScore.toFixed(0)}
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="font-semibold text-red-600 dark:text-red-400">
-                  {formatTemperature(zone.avgTemperature)}
-                </p>
-                <Badge
-                  variant={zone.severity as 'extreme' | 'high' | 'moderate' | 'low'}
-                  className="text-xs"
-                >
-                  {zone.severity}
-                </Badge>
-              </div>
-              <ArrowRight className="h-4 w-4 text-gray-400" />
-            </button>
-          ))}
+          {zones.map((zone, index) => {
+            const isSelected = selectedHeatZone?.id === zone.id;
+            return (
+              <button
+                type="button"
+                key={zone.id}
+                aria-label={`View ${zone.name} heat zone on map`}
+                onClick={() => handleZoneClick(zone)}
+                className={`flex w-full items-center gap-3 rounded-lg border p-3 text-left transition-all cursor-pointer ${
+                  isSelected
+                    ? 'border-emerald-500 bg-emerald-950/40 ring-1 ring-emerald-500'
+                    : 'border-gray-100 bg-gray-50/50 hover:border-emerald-200 hover:bg-emerald-50/50 dark:border-gray-800 dark:bg-gray-900/50 dark:hover:border-emerald-800 dark:hover:bg-emerald-950/30'
+                }`}
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-red-100 text-sm font-bold text-red-600 dark:bg-red-900 dark:text-red-400">
+                  {index + 1}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <p className="truncate font-medium text-gray-900 dark:text-white">{zone.name}</p>
+                    {isSelected && (
+                      <span className="text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-1.5 py-0.2 rounded">
+                        Active
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    {zone.area.toFixed(2)} km² · Vulnerability: {zone.vulnerabilityScore.toFixed(0)}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold text-red-600 dark:text-red-400">
+                    {formatTemperature(zone.avgTemperature)}
+                  </p>
+                  <Badge
+                    variant={zone.severity as 'extreme' | 'high' | 'moderate' | 'low'}
+                    className="text-xs"
+                  >
+                    {zone.severity}
+                  </Badge>
+                </div>
+                <ArrowRight className="h-4 w-4 text-gray-400" />
+              </button>
+            );
+          })}
         </div>
       </CardContent>
     </Card>

@@ -58,6 +58,7 @@ export function Header() {
     setDesktopSidebarOpen,
     userRole,
     userProfile,
+    showToast,
   } = useDashboardStore();
 
   const matchingCities = useMemo(() => {
@@ -74,10 +75,12 @@ export function Header() {
       setSelectedCity(city);
       setCityQuery('');
       setCitySearchOpen(false);
+      showToast(`📍 Platform centered on ${city.name}, ${city.province}`, 'info');
     }
   };
 
   const handleExport = async (format: 'csv' | 'json' | 'png') => {
+    showToast(`Generating ${format.toUpperCase()} export...`, 'info');
     const stats = generateCityStats(selectedCity);
     const zones = generateHeatZones(selectedCity, selectedDate);
     const recommendations = generateRecommendations(selectedCity, selectedDate);

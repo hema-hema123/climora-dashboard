@@ -45,6 +45,7 @@ export function RecommendationsPanel() {
     selectedRecommendation,
     implementedRecommendations,
     toggleImplementedRecommendation,
+    showToast,
   } = useDashboardStore();
 
   const recommendations = useMemo(() => {
@@ -75,12 +76,17 @@ export function RecommendationsPanel() {
         toggleImplementedRecommendation(r.id);
       }
     });
+    showToast(
+      `⚡ Allocated ${urgentRecs.length} urgent hotspot interventions to municipal plan!`,
+      'success',
+    );
   };
 
   const handleClearAll = () => {
     [...implementedRecommendations].forEach((id) => {
       toggleImplementedRecommendation(id);
     });
+    showToast('Cleared all active allocations', 'info');
   };
 
   return (
@@ -182,7 +188,8 @@ interface RecommendationCardProps {
 }
 
 function RecommendationCard({ recommendation, isSelected }: RecommendationCardProps) {
-  const { implementedRecommendations, toggleImplementedRecommendation } = useDashboardStore();
+  const { implementedRecommendations, toggleImplementedRecommendation, showToast } =
+    useDashboardStore();
   const isImplemented = implementedRecommendations.includes(recommendation.id);
 
   const handleClick = (e: React.MouseEvent) => {
@@ -190,6 +197,14 @@ function RecommendationCard({ recommendation, isSelected }: RecommendationCardPr
     e.preventDefault();
     e.stopPropagation();
     toggleImplementedRecommendation(recommendation.id);
+    if (!isImplemented) {
+      showToast(
+        `✓ Allocated: ${recommendation.name} (-${recommendation.estimatedCoolingEffect.toFixed(1)}°C)`,
+        'success',
+      );
+    } else {
+      showToast(`Removed ${recommendation.name} from plan`, 'info');
+    }
   };
 
   return (

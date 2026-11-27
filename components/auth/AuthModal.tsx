@@ -19,7 +19,7 @@ interface AuthModalProps {
 }
 
 export function AuthModal({ open, onOpenChange }: AuthModalProps) {
-  const { userRole, setUserRole, userProfile, setUserProfile, setIsAuthenticated } =
+  const { userRole, setUserRole, userProfile, setUserProfile, setIsAuthenticated, showToast } =
     useDashboardStore();
 
   const [selectedRole, setSelectedRole] = useState<UserRole>(userRole);
@@ -63,6 +63,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
     setUserRole(selectedRole);
     setUserProfile(updatedProfile);
     setIsAuthenticated(true);
+    showToast(`🛡️ Profile updated: ${name} (${selectedRole.toUpperCase()})`, 'success');
     onOpenChange(false);
   };
 

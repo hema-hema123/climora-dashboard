@@ -22,7 +22,7 @@ import { captureMapSnapshot } from '@/lib/snapshot';
 import { useDashboardStore } from '@/lib/store';
 
 export default function ReportsPage() {
-  const { selectedCity, selectedDate, userRole } = useDashboardStore();
+  const { selectedCity, selectedDate, userRole, showToast } = useDashboardStore();
   const [downloadingFormat, setDownloadingFormat] = useState<string | null>(null);
 
   const stats = generateCityStats(selectedCity);
@@ -33,6 +33,7 @@ export default function ReportsPage() {
 
   const handleExportCsv = () => {
     setDownloadingFormat('csv');
+    showToast(`Generating Official CSV Dossier for ${selectedCity.name}...`, 'info');
     const csvContent = [
       ['CLIMORA MUNICIPAL HEAT VULNERABILITY REPORT - OFFICIAL DOSSIER'],
       ['City', selectedCity.name, selectedCity.province],
@@ -71,11 +72,13 @@ export default function ReportsPage() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    showToast(`✓ Downloaded CSV Report for ${selectedCity.name}`, 'success');
     setTimeout(() => setDownloadingFormat(null), 1000);
   };
 
   const handleExportJson = () => {
     setDownloadingFormat('json');
+    showToast(`Generating Heat Action Plan JSON package...`, 'info');
     const dossier = {
       project: 'Climora - Urban Heat Island Intelligence Platform',
       classification: isGovernment ? 'OFFICIAL MUNICIPAL DOCUMENT' : 'PUBLIC CITIZEN REPORT',
@@ -96,10 +99,12 @@ export default function ReportsPage() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    showToast(`✓ Downloaded JSON Dossier for ${selectedCity.name}`, 'success');
     setTimeout(() => setDownloadingFormat(null), 1000);
   };
 
   const handlePrint = () => {
+    showToast('Preparing print-ready Heat Action Plan Dossier...', 'info');
     if (typeof window !== 'undefined') {
       window.print();
     }

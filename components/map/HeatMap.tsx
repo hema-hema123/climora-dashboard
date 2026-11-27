@@ -80,6 +80,9 @@ export function HeatMap() {
     selectedHeatZone,
     setSelectedHeatZone,
     setSelectedRecommendation,
+    implementedRecommendations,
+    toggleImplementedRecommendation,
+    showToast,
     mapCenter,
     mapZoom,
     enable3D,
@@ -183,7 +186,10 @@ export function HeatMap() {
                 weight: zone.id === selectedHeatZone?.id ? 4 : 2,
               }}
               eventHandlers={{
-                click: () => setSelectedHeatZone(zone),
+                click: () => {
+                  setSelectedHeatZone(zone);
+                  showToast(`📍 Selected ${zone.name} heat zone (${zone.avgTemperature.toFixed(1)}°C)`, 'info');
+                },
               }}
             >
               <Popup>
@@ -202,43 +208,74 @@ export function HeatMap() {
 
         {/* Recommendations Layer */}
         {activeLayers.includes('recommendations') &&
-          recommendations.map((rec) => (
-            <CircleMarker
-              key={rec.id}
-              center={rec.location}
-              radius={8}
-              pathOptions={{
-                fillColor: getPriorityColor(rec.priority),
-                fillOpacity: 0.9,
-                color: '#ffffff',
-                weight: 2,
-              }}
-              eventHandlers={{
-                click: () => setSelectedRecommendation(rec),
-              }}
-            >
-              <Popup>
-                <div className="text-sm min-w-[210px] p-1">
-                  <p className="font-bold text-base mb-1 text-gray-900">{rec.name}</p>
-                  <p className="mb-2 text-xs text-gray-600 leading-relaxed">{rec.description}</p>
-                  <div className="space-y-1 text-xs border-t pt-1.5 border-gray-200">
-                    <p className="text-gray-700">
-                      Type: <span className="font-semibold">{getInfrastructureIcon(rec.type)} {rec.type.replace('_', ' ')}</span>
-                    </p>
-                    <p className="text-gray-700">
-                      Priority: <span className="font-semibold capitalize text-amber-600">{rec.priority}</span>
-                    </p>
-                    <p className="text-emerald-700 font-bold">
-                      Est. Cooling: -{rec.estimatedCoolingEffect.toFixed(1)}°C
-                    </p>
-                    <p className="text-gray-700">
-                      Est. Budget: ₹ {(rec.estimatedCost / 10000000).toFixed(2)} Cr
-                    </p>
+          recommendations.map((rec) => {
+            const isAllocated = implementedRecommendations.includes(rec.id);
+            return (
+              <CircleMarker
+                key={rec.id}
+                center={rec.location}
+                radius={isAllocated ? 10 : 8}
+                pathOptions={{
+                  fillColor: getPriorityColor(rec.priority),
+                  fillOpacity: 0.9,
+                  color: isAllocated ? '#10b981' : '#ffffff',
+                  weight: isAllocated ? 3.5 : 2,
+                }}
+                eventHandlers={{
+                  click: () => setSelectedRecommendation(rec),
+                }}
+              >
+                <Popup>
+                  <div className="text-sm min-w-[220px] p-1">
+                    <div className="flex items-center justify-between gap-1 mb-1">
+                      <p className="font-bold text-base text-gray-900">{rec.name}</p>
+                      {isAllocated && (
+                        <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded">
+                          ✓ Allocated
+                        </span>
+                      )}
+                    </div>
+                    <p className="mb-2 text-xs text-gray-600 leading-relaxed">{rec.description}</p>
+                    <div className="space-y-1 text-xs border-t pt-1.5 border-gray-200">
+                      <p className="text-gray-700">
+                        Type: <span className="font-semibold">{getInfrastructureIcon(rec.type)} {rec.type.replace('_', ' ')}</span>
+                      </p>
+                      <p className="text-gray-700">
+                        Priority: <span className="font-semibold capitalize text-amber-600">{rec.priority}</span>
+                      </p>
+                      <p className="text-emerald-700 font-bold">
+                        Est. Cooling: -{rec.estimatedCoolingEffect.toFixed(1)}°C
+                      </p>
+                      <p className="text-gray-700">
+                        Est. Budget: ₹ {(rec.estimatedCost / 10000000).toFixed(2)} Cr
+                      </p>
+                    </div>
+                    <div className="pt-2.5">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleImplementedRecommendation(rec.id);
+                          if (!isAllocated) {
+                            showToast(`✓ Added ${rec.name} to municipal plan! (-${rec.estimatedCoolingEffect.toFixed(1)}°C)`, 'success');
+                          } else {
+                            showToast(`Removed ${rec.name} from municipal plan`, 'info');
+                          }
+                        }}
+                        className={`w-full py-1.5 px-2 rounded text-xs font-bold transition-all cursor-pointer ${
+                          isAllocated
+                            ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm'
+                            : 'bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border border-emerald-300'
+                        }`}
+                      >
+                        {isAllocated ? '✓ In Active Action Plan' : '+ Allocate to Action Plan'}
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </Popup>
-            </CircleMarker>
-          ))}
+                </Popup>
+              </CircleMarker>
+            );
+          })}
 
         {/* Vegetation Layer */}
         {activeLayers.includes('vegetation') &&

@@ -28,8 +28,14 @@ import { formatCurrency } from '@/lib/utils';
 import type { GreenInfrastructureRecommendation } from '@/types';
 
 export default function MitigationPage() {
-  const { selectedCity, selectedDate, implementedRecommendations, toggleImplementedRecommendation, userRole } =
-    useDashboardStore();
+  const {
+    selectedCity,
+    selectedDate,
+    implementedRecommendations,
+    toggleImplementedRecommendation,
+    userRole,
+    showToast,
+  } = useDashboardStore();
 
   const [filterType, setFilterType] = useState<string>('all');
   const [approvalFeedback, setApprovalFeedback] = useState<string | null>(null);
@@ -52,10 +58,12 @@ export default function MitigationPage() {
   const isGovernment = userRole === 'government';
 
   const handleApproveBatch = () => {
+    const sanctionId = `SANCTION/MCD-2026/URC-${Math.floor(100 + Math.random() * 900)}`;
     setApprovalFeedback(
-      `Approved ${implementedRecs.length} infrastructure projects for Phase-1 municipal allocation under Smart Cities Climate Mission.`,
+      `✓ Official Sanction Order ${sanctionId}: Approved ${implementedRecs.length} infrastructure projects for Phase-1 municipal rollout under Smart Cities Climate Mission. Total Budget: ₹ ${totalCostCr.toFixed(2)} Cr · Cooling relief: -${totalCooling.toFixed(1)}°C.`,
     );
-    setTimeout(() => setApprovalFeedback(null), 4000);
+    showToast(`🏛️ Municipal Rollout Sanctioned! Budget: ₹ ${totalCostCr.toFixed(2)} Cr`, 'success');
+    setTimeout(() => setApprovalFeedback(null), 8000);
   };
 
   return (
@@ -103,9 +111,18 @@ export default function MitigationPage() {
         </div>
 
         {approvalFeedback && (
-          <div className="p-4 bg-emerald-950/80 border border-emerald-500/40 rounded-lg flex items-center gap-3 text-emerald-300 text-sm animate-in fade-in">
-            <CheckCircle className="h-5 w-5 text-emerald-400 shrink-0" />
-            <span>{approvalFeedback}</span>
+          <div className="p-4 bg-emerald-950/80 border border-emerald-500/50 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-emerald-300 text-xs sm:text-sm animate-in fade-in">
+            <div className="flex items-center gap-3">
+              <CheckCircle className="h-5 w-5 text-emerald-400 shrink-0" />
+              <span>{approvalFeedback}</span>
+            </div>
+            <Button
+              size="sm"
+              onClick={() => typeof window !== 'undefined' && window.print()}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold shrink-0 cursor-pointer"
+            >
+              Print Sanction Letter
+            </Button>
           </div>
         )}
 
@@ -195,6 +212,10 @@ export default function MitigationPage() {
                 urgentIds.forEach((id) => {
                   if (!implementedRecommendations.includes(id)) toggleImplementedRecommendation(id);
                 });
+                showToast(
+                  `⚡ Emergency Heat Response package activated (${urgentIds.length} critical sites)`,
+                  'success',
+                );
               }}
               className="text-xs border-red-500/40 text-red-300 hover:bg-red-950/40 h-8 cursor-pointer"
             >
@@ -210,6 +231,7 @@ export default function MitigationPage() {
                 treeIds.forEach((id) => {
                   if (!implementedRecommendations.includes(id)) toggleImplementedRecommendation(id);
                 });
+                showToast('🌳 Maximum Green Canopy package activated', 'success');
               }}
               className="text-xs border-emerald-500/40 text-emerald-300 hover:bg-emerald-950/40 h-8 cursor-pointer"
             >
@@ -223,6 +245,7 @@ export default function MitigationPage() {
                   [...implementedRecommendations].forEach((id) =>
                     toggleImplementedRecommendation(id),
                   );
+                  showToast('Mitigation plan allocations reset', 'info');
                 }}
                 className="text-xs text-gray-400 hover:text-white h-8 cursor-pointer"
               >
@@ -330,10 +353,20 @@ export default function MitigationPage() {
                     <Button
                       type="button"
                       size="sm"
-                      onClick={() => toggleImplementedRecommendation(rec.id)}
-                      className={`w-full text-xs font-semibold transition-all ${
+                      onClick={() => {
+                        toggleImplementedRecommendation(rec.id);
+                        if (!isImplemented) {
+                          showToast(
+                            `✓ Allocated ${rec.name} (-${rec.estimatedCoolingEffect.toFixed(1)}°C)`,
+                            'success',
+                          );
+                        } else {
+                          showToast(`Removed ${rec.name} from plan`, 'info');
+                        }
+                      }}
+                      className={`w-full text-xs font-semibold transition-all cursor-pointer ${
                         isImplemented
-                          ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                          ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-md'
                           : 'bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700'
                       }`}
                     >
