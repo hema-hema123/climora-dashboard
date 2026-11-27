@@ -6,6 +6,8 @@ import {
   Building2,
   Footprints,
   Layers,
+  Lock,
+  LogOut,
   Map as MapIcon,
   Shield,
   ShieldCheck,
@@ -14,7 +16,8 @@ import {
   Users,
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { ActionSimulator } from '@/components/analytics/ActionSimulator';
 import { CityComparison } from '@/components/analytics/CityComparison';
 import { HeatZoneList } from '@/components/analytics/HeatZoneList';
@@ -46,6 +49,7 @@ const HeatMap = dynamic(() => import('@/components/map/HeatMap').then((mod) => m
 });
 
 export default function DashboardPage() {
+  const router = useRouter();
   const {
     dashboardTab,
     setDashboardTab,
@@ -54,6 +58,8 @@ export default function DashboardPage() {
     userRole,
     setUserRole,
     userProfile,
+    hasSelectedRole,
+    exitPortal,
     showToast,
   } = useDashboardStore();
 
@@ -61,6 +67,13 @@ export default function DashboardPage() {
   const [researchSubTab, setResearchSubTab] = useState<'trends' | 'projections'>('trends');
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authDefaultRole, setAuthDefaultRole] = useState<UserRole>('government');
+
+  useEffect(() => {
+    // If user arrives at dashboard without selecting a role, prompt mandatory role gate
+    if (!hasSelectedRole) {
+      setAuthModalOpen(true);
+    }
+  }, [hasSelectedRole]);
 
   return (
     <DashboardShell>
@@ -232,67 +245,25 @@ export default function DashboardPage() {
                     </button>
                   </div>
 
-                  {/* 3-Role Switching Segment */}
-                  <div className="grid grid-cols-3 gap-1 p-1 bg-gray-900 rounded-lg border border-gray-800">
+                  {/* Locked Active Role Session Banner */}
+                  <div className="flex items-center justify-between p-2 bg-gray-900 rounded-lg border border-gray-800 text-[11px]">
+                    <div className="flex items-center gap-1.5 text-gray-300 min-w-0">
+                      <Lock className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                      <span className="font-medium text-gray-400">Locked Role:</span>
+                      <span className="font-bold text-white capitalize truncate">{userRole} Portal</span>
+                    </div>
                     <button
                       type="button"
                       onClick={() => {
-                        if (userProfile?.role !== 'government' || !userProfile?.verified) {
-                          setAuthDefaultRole('government');
-                          setAuthModalOpen(true);
-                          showToast('🏛️ Municipal Officer Clearance Required', 'warning');
-                        } else {
-                          setUserRole('government');
-                          showToast('🏛️ Switched to Municipal Authority mode', 'info');
-                        }
+                        exitPortal();
+                        showToast('🚪 Exited portal session. Please select your role to enter again.', 'info');
+                        router.push('/');
                       }}
-                      className={cn(
-                        'py-1 px-1.5 rounded-md text-[11px] font-semibold flex items-center justify-center gap-1 transition-all cursor-pointer',
-                        userRole === 'government'
-                          ? 'bg-emerald-600 text-white shadow-sm'
-                          : 'text-gray-400 hover:text-white',
-                      )}
+                      className="text-[10px] text-rose-400 hover:text-rose-300 font-semibold transition-colors flex items-center gap-1 cursor-pointer bg-rose-950/40 hover:bg-rose-900/50 px-2 py-1 rounded border border-rose-500/30 shrink-0"
+                      title="Exit to front entrance to choose another role"
                     >
-                      <span>🏛️</span>
-                      <span>Govt</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setUserRole('citizen');
-                        showToast('👥 Switched to Citizen Portal mode', 'info');
-                      }}
-                      className={cn(
-                        'py-1 px-1.5 rounded-md text-[11px] font-semibold flex items-center justify-center gap-1 transition-all cursor-pointer',
-                        userRole === 'citizen'
-                          ? 'bg-sky-600 text-white shadow-sm'
-                          : 'text-gray-400 hover:text-white',
-                      )}
-                    >
-                      <span>👥</span>
-                      <span>Citizen</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (userProfile?.role !== 'researcher' || !userProfile?.verified) {
-                          setAuthDefaultRole('researcher');
-                          setAuthModalOpen(true);
-                          showToast('🔬 Academic Research Clearance Required', 'warning');
-                        } else {
-                          setUserRole('researcher');
-                          showToast('🔬 Switched to Climate Telemetry Researcher mode', 'info');
-                        }
-                      }}
-                      className={cn(
-                        'py-1 px-1.5 rounded-md text-[11px] font-semibold flex items-center justify-center gap-1 transition-all cursor-pointer',
-                        userRole === 'researcher'
-                          ? 'bg-purple-600 text-white shadow-sm'
-                          : 'text-gray-400 hover:text-white',
-                      )}
-                    >
-                      <span>🔬</span>
-                      <span>Research</span>
+                      <LogOut className="h-3 w-3" />
+                      <span>Exit Portal (बाहर निकलें)</span>
                     </button>
                   </div>
                 </div>

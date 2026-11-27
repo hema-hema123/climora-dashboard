@@ -37,7 +37,7 @@ interface AuthModalProps {
 export function AuthModal({ open, onOpenChange, defaultRole }: AuthModalProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { userRole, setUserRole, userProfile, setUserProfile, setIsAuthenticated, showToast } =
+  const { userRole, setUserRole, userProfile, setUserProfile, setIsAuthenticated, hasSelectedRole, selectRoleAndEnter, showToast } =
     useDashboardStore();
 
   const [activeRole, setActiveRole] = useState<UserRole>(defaultRole || userRole);
@@ -140,12 +140,10 @@ export function AuthModal({ open, onOpenChange, defaultRole }: AuthModalProps) {
         verified: true,
       };
 
-      setUserRole('government');
-      setUserProfile(verifiedProfile);
-      setIsAuthenticated(true);
+      selectRoleAndEnter('government', verifiedProfile);
       showToast(`🏛️ Municipal Clearance Granted: ${verifiedProfile.name} (${verifiedProfile.officerId})`, 'success');
       onOpenChange(false);
-      if (pathname === '/') router.push('/dashboard');
+      router.push('/dashboard');
       return;
     }
 
@@ -174,12 +172,10 @@ export function AuthModal({ open, onOpenChange, defaultRole }: AuthModalProps) {
         verified: true,
       };
 
-      setUserRole('citizen');
-      setUserProfile(verifiedProfile);
-      setIsAuthenticated(true);
+      selectRoleAndEnter('citizen', verifiedProfile);
       showToast(`👥 Resident Verified: ${verifiedProfile.name} (${verifiedProfile.badge})`, 'success');
       onOpenChange(false);
-      if (pathname === '/') router.push('/dashboard');
+      router.push('/dashboard');
       return;
     }
 
@@ -205,12 +201,10 @@ export function AuthModal({ open, onOpenChange, defaultRole }: AuthModalProps) {
         verified: true,
       };
 
-      setUserRole('researcher');
-      setUserProfile(verifiedProfile);
-      setIsAuthenticated(true);
+      selectRoleAndEnter('researcher', verifiedProfile);
       showToast(`🔬 Academic Clearance: ${verifiedProfile.name} (${researcherScholarId.trim()})`, 'success');
       onOpenChange(false);
-      if (pathname === '/') router.push('/dashboard');
+      router.push('/dashboard');
       return;
     }
   };
@@ -554,27 +548,37 @@ export function AuthModal({ open, onOpenChange, defaultRole }: AuthModalProps) {
           )}
 
           {/* Action Buttons */}
-          <div className="flex items-center justify-end gap-2 pt-2 border-t border-gray-800">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              className="border-gray-700 text-gray-300 hover:bg-gray-800 text-xs"
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              className={`text-xs font-bold text-white shadow-lg cursor-pointer ${
-                activeRole === 'government'
-                  ? 'bg-emerald-600 hover:bg-emerald-500'
-                  : activeRole === 'citizen'
-                    ? 'bg-sky-600 hover:bg-sky-500'
-                    : 'bg-purple-600 hover:bg-purple-500'
-              }`}
-            >
-              Verify Credentials & Unlock Portal →
-            </Button>
+          <div className="flex items-center justify-between pt-2 border-t border-gray-800">
+            <span className="text-[10px] text-gray-400">
+              🔒 Role locks upon entry for secure session auditing
+            </span>
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  if (!hasSelectedRole && pathname === '/dashboard') {
+                    router.push('/');
+                  }
+                  onOpenChange(false);
+                }}
+                className="border-gray-700 text-gray-300 hover:bg-gray-800 text-xs cursor-pointer"
+              >
+                {!hasSelectedRole && pathname === '/dashboard' ? 'Return to Home' : 'Cancel'}
+              </Button>
+              <Button
+                type="submit"
+                className={`text-xs font-bold text-white shadow-lg cursor-pointer ${
+                  activeRole === 'government'
+                    ? 'bg-emerald-600 hover:bg-emerald-500'
+                    : activeRole === 'citizen'
+                      ? 'bg-sky-600 hover:bg-sky-500'
+                      : 'bg-purple-600 hover:bg-purple-500'
+                }`}
+              >
+                Verify & Enter Portal →
+              </Button>
+            </div>
           </div>
         </form>
       </DialogContent>

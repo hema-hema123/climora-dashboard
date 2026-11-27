@@ -57,12 +57,16 @@ interface DashboardStore {
   setEnable3D: (enable: boolean) => void;
 
   // Authentication & Role
+  hasSelectedRole: boolean;
+  setHasSelectedRole: (selected: boolean) => void;
   userRole: UserRole;
   setUserRole: (role: UserRole) => void;
   userProfile: UserProfile | null;
   setUserProfile: (profile: UserProfile | null) => void;
   isAuthenticated: boolean;
   setIsAuthenticated: (auth: boolean) => void;
+  selectRoleAndEnter: (role: UserRole, profile: UserProfile | null) => void;
+  exitPortal: () => void;
   logout: () => void;
 
   // Optimistic Global Toast Notification
@@ -145,26 +149,65 @@ export const useDashboardStore = create<DashboardStore>((set) => {
     enable3D: false,
     setEnable3D: (enable) => set({ enable3D: enable }),
 
-    // Authentication & Role
-    userRole: 'government',
+    // Authentication & Role - Locked session architecture
+    hasSelectedRole: false,
+    setHasSelectedRole: (selected) => set({ hasSelectedRole: selected }),
+    userRole: 'citizen',
     setUserRole: (role) => set({ userRole: role }),
-    userProfile: {
-      name: 'Aditi Sharma',
-      email: 'a.sharma@mcd.gov.in',
-      role: 'government',
-      organization: 'Municipal Corporation of Delhi (MCD)',
-      department: 'Urban Resilience & Environment Cell',
-      verified: true,
-    },
+    userProfile: null,
     setUserProfile: (profile) => set({ userProfile: profile }),
-    isAuthenticated: true,
+    isAuthenticated: false,
     setIsAuthenticated: (auth) => set({ isAuthenticated: auth }),
-    logout: () =>
+    selectRoleAndEnter: (role, profile) => {
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.setItem('climora_role_active', role);
+          if (profile) {
+            localStorage.setItem('climora_profile_active', JSON.stringify(profile));
+          }
+        } catch {
+          // Ignore localStorage errors
+        }
+      }
       set({
-        isAuthenticated: false,
-        userProfile: null,
+        userRole: role,
+        userProfile: profile,
+        hasSelectedRole: true,
+        isAuthenticated: true,
+      });
+    },
+    exitPortal: () => {
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.removeItem('climora_role_active');
+          localStorage.removeItem('climora_profile_active');
+        } catch {
+          // Ignore localStorage errors
+        }
+      }
+      set({
         userRole: 'citizen',
-      }),
+        userProfile: null,
+        hasSelectedRole: false,
+        isAuthenticated: false,
+      });
+    },
+    logout: () => {
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.removeItem('climora_role_active');
+          localStorage.removeItem('climora_profile_active');
+        } catch {
+          // Ignore localStorage errors
+        }
+      }
+      set({
+        userRole: 'citizen',
+        userProfile: null,
+        hasSelectedRole: false,
+        isAuthenticated: false,
+      });
+    },
 
     // Optimistic Global Toast Notification
     activeToast: null,

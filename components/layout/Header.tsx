@@ -12,6 +12,8 @@ import {
   Info,
   KeyRound,
   Layers,
+  Lock,
+  LogOut,
   MapPin,
   Menu,
   PanelLeftClose,
@@ -25,7 +27,7 @@ import {
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 import { AuthModal } from '@/components/auth/AuthModal';
 import { Button } from '@/components/ui/button';
@@ -50,6 +52,7 @@ import { cn } from '@/lib/utils';
 
 export function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const [cityQuery, setCityQuery] = useState('');
   const [citySearchOpen, setCitySearchOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
@@ -66,6 +69,7 @@ export function Header() {
     userRole,
     setUserRole,
     userProfile,
+    exitPortal,
     showToast,
   } = useDashboardStore();
 
@@ -382,74 +386,30 @@ export function Header() {
                 )}
               </div>
 
-              <div className="space-y-0.5 my-1">
-                <span className="text-[9px] font-bold uppercase tracking-wider text-gray-500 px-2 py-0.5 block">
-                  Switch Portal View
-                </span>
-
-                <DropdownMenuItem
-                  onClick={() => {
-                    if (userRole !== 'government' && (!userProfile?.verified || userProfile?.role !== 'government')) {
-                      setAuthDefaultRole('government');
-                      setAuthModalOpen(true);
-                      showToast('🏛️ Municipal Officer Verification Required', 'warning');
-                    } else {
-                      setUserRole('government');
-                      showToast('🏛️ Switched to Municipal Authority mode', 'info');
-                    }
-                  }}
-                  className={cn(
-                    'cursor-pointer flex items-center justify-between py-1.5 px-2 rounded-md text-xs',
-                    userRole === 'government' && 'bg-emerald-950/60 text-emerald-300 font-semibold',
-                  )}
-                >
-                  <span className="flex items-center gap-2">
-                    <Building2 className="h-3.5 w-3.5 text-emerald-400" />
-                    <span>🏛️ Municipal Authority</span>
-                  </span>
-                  {userRole === 'government' && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />}
-                </DropdownMenuItem>
-
-                <DropdownMenuItem
-                  onClick={() => {
-                    setUserRole('citizen');
-                    showToast('👥 Switched to Citizen Portal mode', 'info');
-                  }}
-                  className={cn(
-                    'cursor-pointer flex items-center justify-between py-1.5 px-2 rounded-md text-xs',
-                    userRole === 'citizen' && 'bg-sky-950/60 text-sky-300 font-semibold',
-                  )}
-                >
-                  <span className="flex items-center gap-2">
-                    <Users className="h-3.5 w-3.5 text-sky-400" />
-                    <span>👥 Citizen & Resident</span>
-                  </span>
-                  {userRole === 'citizen' && <CheckCircle2 className="h-3.5 w-3.5 text-sky-400" />}
-                </DropdownMenuItem>
-
-                <DropdownMenuItem
-                  onClick={() => {
-                    if (userRole !== 'researcher' && (!userProfile?.verified || userProfile?.role !== 'researcher')) {
-                      setAuthDefaultRole('researcher');
-                      setAuthModalOpen(true);
-                      showToast('🔬 Academic Research Clearance Required', 'warning');
-                    } else {
-                      setUserRole('researcher');
-                      showToast('🔬 Switched to Climate Researcher mode', 'info');
-                    }
-                  }}
-                  className={cn(
-                    'cursor-pointer flex items-center justify-between py-1.5 px-2 rounded-md text-xs',
-                    userRole === 'researcher' && 'bg-purple-950/60 text-purple-300 font-semibold',
-                  )}
-                >
-                  <span className="flex items-center gap-2">
-                    <Shield className="h-3.5 w-3.5 text-purple-400" />
-                    <span>🔬 Climate Researcher</span>
-                  </span>
-                  {userRole === 'researcher' && <CheckCircle2 className="h-3.5 w-3.5 text-purple-400" />}
-                </DropdownMenuItem>
+              {/* Locked Portal Session Info */}
+              <div className="p-2 my-1.5 rounded-lg bg-gray-900 border border-gray-800 text-[11px] space-y-1">
+                <div className="flex items-center gap-1.5 text-emerald-400 font-semibold">
+                  <Lock className="h-3.5 w-3.5 shrink-0" />
+                  <span>Role Locked for Active Session</span>
+                </div>
+                <p className="text-[10px] text-gray-400 leading-relaxed">
+                  Inside the platform, role switching is locked. To access a different portal, please exit to the front entrance.
+                </p>
               </div>
+
+              <DropdownMenuSeparator className="bg-gray-800 my-1" />
+
+              <DropdownMenuItem
+                onClick={() => {
+                  exitPortal();
+                  showToast('🚪 Exited portal session. Select your role to re-enter.', 'info');
+                  router.push('/');
+                }}
+                className="cursor-pointer text-xs text-rose-400 hover:text-rose-300 font-semibold py-2 px-2.5 flex items-center gap-2 hover:bg-rose-950/40 rounded-md transition-colors"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+                <span>Exit Portal to Switch Role (बाहर निकलें)</span>
+              </DropdownMenuItem>
 
               <DropdownMenuSeparator className="bg-gray-800 my-1" />
 
