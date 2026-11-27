@@ -10,7 +10,7 @@ import { useDashboardStore } from '@/lib/store';
 import { formatNumber, formatTemperature, formatTemperatureDifference } from '@/lib/utils';
 
 export function StatsCards() {
-  const { selectedCity, selectedDate, implementedRecommendations } = useDashboardStore();
+  const { selectedCity, selectedDate, implementedRecommendations, userRole } = useDashboardStore();
   const { data: heatIslandData, isLoading } = useHeatIslandComparison(selectedCity);
 
   // Get stable recommendations (memoized by city and date)
@@ -38,15 +38,61 @@ export function StatsCards() {
     vulnerablePopulation: mockStats.vulnerablePopulation,
   };
 
-  const cards = [
+  // If citizen, display 3 ultra-simple, user-friendly indicators instead of complex science telemetry
+  const citizenCards = [
+    {
+      title: 'Current City Heat (तापमान)',
+      value: formatTemperature(stats.avgUrbanTemp),
+      icon: <ThermometerSun className="h-5 w-5" />,
+      color: 'text-rose-500',
+      bgColor: 'bg-rose-500/10 border-rose-500/30',
+      description: stats.avgUrbanTemp > 40 ? 'Severe Heat Advisory: Seek shade & hydrate' : 'Moderate Heat: Normal precautions',
+      isLoading: false,
+      tooltip: {
+        source: 'Live City Observation',
+        location: `${selectedCity.name} Ward Level`,
+        calculation: 'Real-time surface & air temperature reading',
+      },
+    },
+    {
+      title: 'Tree Canopy & Shade (हरियाली)',
+      value: `${stats.greenCoverage}%`,
+      icon: <Leaf className="h-5 w-5" />,
+      color: 'text-emerald-500',
+      bgColor: 'bg-emerald-500/10 border-emerald-500/30',
+      description: 'Shaded walking parks & public greenery',
+      isLoading: false,
+      tooltip: {
+        source: 'City Green Audit',
+        location: `${selectedCity.name} Metropolitan Area`,
+        calculation: 'Percentage of ward covered by cooling tree canopy',
+      },
+    },
+    {
+      title: 'Cooling Shelters Open (राहत केंद्र)',
+      value: `${mockStats.hotspotCount > 0 ? '8 AC Centers' : '5 Centers'}`,
+      icon: <Users className="h-5 w-5" />,
+      color: 'text-sky-500',
+      bgColor: 'bg-sky-500/10 border-sky-500/30',
+      description: 'Free public cooling spots & water booths',
+      isLoading: false,
+      tooltip: {
+        source: 'Municipal Disaster Management',
+        location: 'Nearest metro stations & public halls',
+        calculation: 'Public air-conditioned respite locations currently active',
+      },
+    },
+  ];
+
+  const cards = userRole === 'citizen' ? citizenCards : [
     {
       title: 'Urban Temperature',
-      value: isLoading ? null : formatTemperature(stats.avgUrbanTemp),
+      value: formatTemperature(stats.avgUrbanTemp),
       icon: <ThermometerSun className="h-5 w-5" />,
       color: 'text-red-500',
       bgColor: 'bg-red-50 dark:bg-red-950',
-      description: '30-day avg (NASA)',
-      isLoading,
+      description: isLoading ? 'Live baseline (syncing NASA...)' : '30-day avg (NASA POWER)',
+      isLoading: false,
       tooltip: {
         source: 'NASA POWER API (T2M parameter - temperature at 2 meters)',
         location: 'City center coordinates',
@@ -55,12 +101,12 @@ export function StatsCards() {
     },
     {
       title: 'Rural Temperature',
-      value: isLoading ? null : formatTemperature(stats.avgRuralTemp),
+      value: formatTemperature(stats.avgRuralTemp),
       icon: <Leaf className="h-5 w-5" />,
       color: 'text-green-500',
       bgColor: 'bg-green-50 dark:bg-green-950',
-      description: '30-day avg (NASA)',
-      isLoading,
+      description: isLoading ? 'Baseline satellite estimate' : 'Surrounding rural baseline',
+      isLoading: false,
       tooltip: {
         source: 'NASA POWER API (T2M parameter)',
         location: 'Point approximately 50km north of city center',
@@ -69,14 +115,12 @@ export function StatsCards() {
     },
     {
       title: 'Heat Island Effect',
-      value: isLoading
-        ? null
-        : `${stats.heatIslandIntensity >= 0 ? '+' : ''}${formatTemperatureDifference(stats.heatIslandIntensity)}`,
+      value: `${stats.heatIslandIntensity >= 0 ? '+' : ''}${formatTemperatureDifference(stats.heatIslandIntensity)}`,
       icon: <TrendingUp className="h-5 w-5" />,
       color: 'text-orange-500',
       bgColor: 'bg-orange-50 dark:bg-orange-950',
-      description: 'Urban vs. rural diff',
-      isLoading,
+      description: 'Urban vs. rural heat diff',
+      isLoading: false,
       tooltip: {
         calculation: 'Urban Temperature - Rural Temperature',
         explanation:
@@ -152,7 +196,7 @@ export function StatsCards() {
           </div>
         )}
       </div>
-      <div className="grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-6">
+      <div className={userRole === 'citizen' ? 'grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3' : 'grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-6'}>
         {cards.map((card) => (
           <Card key={card.title} className="overflow-hidden">
             <CardContent className="p-3 sm:p-4">

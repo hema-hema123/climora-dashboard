@@ -392,7 +392,7 @@ export function HeatMap() {
       </MapContainer>
 
       {/* Map Style & Mode Selector Pill */}
-      <div className="absolute top-3 right-12 z-[1000] flex items-center bg-gray-950/95 border border-gray-800 rounded-lg p-1 backdrop-blur shadow-2xl gap-1 text-[11px] font-medium">
+      <div className="absolute top-3 right-12 z-[850] flex items-center bg-gray-950/95 border border-gray-800 rounded-lg p-1 backdrop-blur shadow-2xl gap-1 text-[11px] font-medium">
         <button
           type="button"
           onClick={() => {
@@ -470,7 +470,7 @@ export function HeatMap() {
       </div>
 
       {/* Map City Info Pill */}
-      <div className="absolute bottom-3 left-3 z-[1000] flex flex-col gap-1.5 pointer-events-none">
+      <div className="absolute bottom-3 left-3 z-[850] flex flex-col gap-1.5 pointer-events-none">
         <div className="rounded-lg bg-gray-950/95 border border-gray-800 p-2.5 shadow-2xl backdrop-blur pointer-events-auto">
           <div className="flex items-center justify-between gap-3 mb-0.5">
             <p className="text-xs font-bold text-white flex items-center gap-1.5">

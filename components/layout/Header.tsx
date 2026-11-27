@@ -156,7 +156,7 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-gray-800 bg-gray-950/95 px-3 sm:px-4 backdrop-blur supports-[backdrop-filter]:bg-gray-950/80 w-full">
+      <header className="sticky top-0 z-[10000] flex h-16 items-center justify-between border-b border-gray-800 bg-gray-950/95 px-3 sm:px-4 backdrop-blur supports-[backdrop-filter]:bg-gray-950/80 w-full">
         {/* Left Side: Logo & Sidebar Toggles */}
         <div className="flex items-center gap-2 sm:gap-4 shrink-0">
           <Button
